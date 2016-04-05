@@ -150,11 +150,11 @@ function installBreakpointsObject(){
             for (var hookName in hooks) {
                 var hooksWithName = hooks[hookName];
                 hooks[hookName] = hooksWithName.filter(function(hook){
-                    return hook.id !== id;
+                    return hook.id != id;
                 })
             }
 
-            delete objAndProp[id];
+            delete objectsAndPropsByDebugId[id];
         }
 
 
@@ -177,31 +177,18 @@ function installBreakpointsObject(){
             var before = options.before;
             var after = options.after;
 
-            var originalProp = getPropertyDescriptor(object, prop);
-            var isSimpleValue = "value" in originalProp; // rather than getter + setter
-
-            Object.defineProperty(object, prop, {
-                get: function(){
-                    var retVal;
-                    before("get");
-                    if (isSimpleValue) {
-                        retVal = originalProp.value;
-                    } else {
-                        retVal = originalProp.get.apply(this, arguments);    
-                    }
-                    after("get");
-                    return retVal;
+            return debugObj(object, prop, {
+                propertyGetBefore: function(){
+                    before("get")
                 },
-                set: function(newValue){
-                    var retVal;
-                    before("set");
-                    if (isSimpleValue) {
-                        retVal = originalProp.value = newValue;
-                    } else {
-                        retVal = originalProp.set.apply(this, arguments);
-                    }
-                    after("set");
-                    return retVal;
+                propertyGetAfter: function(){
+                    after("get")
+                },
+                propertySetBefore: function(){
+                    before("set")
+                },
+                propertySetAfter: function(){
+                    after("set")
                 }
             });
         }
@@ -216,7 +203,7 @@ function installBreakpointsObject(){
                     before = options.before;
                     after = options.after;
                 }
-                debugPropertyAccess(object, prop, {
+                return debugPropertyAccess(object, prop, {
                     before: function(accessType){
                         if (accessTypeToDebug === accessType) {
                             if (before) {
@@ -246,17 +233,15 @@ function installBreakpointsObject(){
                 after = options.after;
             }
 
-            var originalFunction = object[prop];
-            object[prop] = function(){
-                if (before) {
-                    before();
-                }
-                var retVal = originalFunction();
-                if (after) {
-                    after();
-                }
-                return retVal
+            var hooks = {};
+            if (before) {
+                hooks.propertyCallBefore = before;
             }
+            if (after){
+                hooks.propertyCallAfter = after;
+            }
+
+            return debugObj(object, prop, hooks)
         }
 
         window.breakpoints = {
@@ -268,7 +253,8 @@ function installBreakpointsObject(){
                 resetDebug(id);
             },
             _registry: registry,
-            _debugObj: debugObj
+            _debugObj: debugObj,
+            _objectsAndPropsByDebugId: objectsAndPropsByDebugId
 
         }
     })();

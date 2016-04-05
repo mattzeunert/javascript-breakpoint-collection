@@ -98,57 +98,47 @@ function getUnactivatedBreakpoints(){
 }
 
 function activateBreakpoint(breakpoint){
-    var code = "";
+    var code = "var debugIds = [];";
     var {debugPropertyGets, debugPropertySets, debugCalls} = breakpoint;
     if (debugPropertyGets) {
         debugPropertyGets.forEach(function(property){
-            code += "breakpoints.debugPropertyGet(" + property.obj + ", \"" + property.prop + "\");";
+            code += "debugIds.push(breakpoints.debugPropertyGet(" + property.obj + ", \"" + property.prop + "\"));";
         })
     }
     if (debugPropertySets) {
         debugPropertySets.forEach(function(property){
-            code += "breakpoints.debugPropertySet(" + property.obj + ", \"" + property.prop + "\");";
+            code += "debugIds.push(breakpoints.debugPropertySet(" + property.obj + ", \"" + property.prop + "\"));";
         })
     }
     if (debugCalls) {
         debugCalls.forEach(function(property){
-            code += "breakpoints.debugCall(" + property.obj + ", \"" + property.prop + "\");";
+            code += "debugIds.push(breakpoints.debugCall(" + property.obj + ", \"" + property.prop + "\"));";
         })
     }
+    code += "debugIds;"
     console.log("eval code", code)
-    chrome.devtools.inspectedWindow.eval(code, function(){
-        console.log("done eval code", arguments)
+    chrome.devtools.inspectedWindow.eval(code, function(debugIds){
+        console.log("done eval activate code", arguments)
+        breakpoint.activated = true;
+        breakpoint.debugIds = debugIds;
+        app.update();
     });
-
-    breakpoint.activated = true;
-    app.update();
 }
 
 function deactivateBreakpoint(breakpoint) {
     var code = "";
-    var {debugPropertyGets, debugPropertySets, debugCalls} = breakpoint;
-    if (debugPropertyGets) {
-        debugPropertyGets.forEach(function(property){
-            code += "breakpoints.disableDebugPropertyGet(" + property.obj + ", \"" + property.prop + "\");";
-        })
-    }
-    if (debugPropertySets) {
-        debugPropertySets.forEach(function(property){
-            code += "breakpoints.disableDebugPropertySet(" + property.obj + ", \"" + property.prop + "\");";
-        })
-    }
-    if (debugCalls) {
-        debugCalls.forEach(function(property){
-            code += "breakpoints.disbleDebugCall(" + property.obj + ", \"" + property.prop + "\");";
-        })
-    }
-    console.log("eval code", code)
+    breakpoint.debugIds.forEach(function(debugId){
+        code += "breakpoints.reset(" + debugId + ");"
+    })
+    console.log("eval deactivate", code)
     chrome.devtools.inspectedWindow.eval(code, function(){
-        console.log("done eval code", arguments)
-    });
+        console.log("done eval deactivate code", arguments)
+        breakpoint.debugIds = undefined
+        breakpoint.activated = false;
+        app.update();
+    })
 
-    breakpoint.activated = false;
-    app.update();
+    
 }
 
 var app = null;
