@@ -199,6 +199,20 @@ function installBreakpointsObject(){
                 if (options === undefined) {
                     before = debuggerFunction;
                 }
+                else if (typeof options === "string") {
+                    var hookType = options;
+                    if (hookType === "trace") {
+                        before = function(){
+                            console.trace("About to " + accessTypeToDebug + " " + prop + " property on", object);
+                        }
+                    } else if (hookType==="debugger"){
+                        before = function(){
+                            debugger;
+                        }
+                    } else {
+                        throw "Invalid hook type"
+                    }
+                }
                 else {
                     before = options.before;
                     after = options.after;
@@ -226,6 +240,19 @@ function installBreakpointsObject(){
             var before, after;
             if (options === undefined) {
                 before = debuggerFunction;
+            } else if (typeof options === "string") {
+                var hookType = options;
+                if (hookType === "trace") {
+                    before = function(){
+                        console.trace("About to call " + prop + " function on", object);
+                    }
+                } else if (hookType==="debugger"){
+                    before = function(){
+                        debugger
+                    }
+                } else {
+                    throw "Invalid hook type"
+                }
             } else if (typeof options === "function") {
                 before = options;
             } else {

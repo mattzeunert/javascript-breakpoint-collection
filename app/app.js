@@ -70,10 +70,15 @@ class ActivatedBreakpointListItem extends React.Component {
                 onClick={() => deactivateBreakpoint(this.props.breakpoint)}>
                 x
             </button>
+            <select
+                value={this.props.breakpoint.hookType}
+                onChange={(event) => updateBreakpoint(this.props.breakpoint, event.target.value)}>
+                <option value="debugger">debugger</option>
+                <option value="trace">trace</option>
+            </select>
         </div>
     }
 }
-
 
 class ActivatedBreakpointList extends React.Component {
     render(){
@@ -97,22 +102,28 @@ function getUnactivatedBreakpoints(){
     return breakpoints.filter(bp => !bp.activated);
 }
 
-function activateBreakpoint(breakpoint){
+function activateBreakpoint(breakpoint, options){
+    if (!options) {
+        options = {
+            hookType: "debugger"
+        }
+    }
+    var hookType = options.hookType;
     var code = "var debugIds = [];";
     var {debugPropertyGets, debugPropertySets, debugCalls} = breakpoint;
     if (debugPropertyGets) {
         debugPropertyGets.forEach(function(property){
-            code += "debugIds.push(breakpoints.debugPropertyGet(" + property.obj + ", \"" + property.prop + "\"));";
+            code += "debugIds.push(breakpoints.debugPropertyGet(" + property.obj + ", \"" + property.prop + "\", \"" + hookType + "\"));";
         })
     }
     if (debugPropertySets) {
         debugPropertySets.forEach(function(property){
-            code += "debugIds.push(breakpoints.debugPropertySet(" + property.obj + ", \"" + property.prop + "\"));";
+            code += "debugIds.push(breakpoints.debugPropertySet(" + property.obj + ", \"" + property.prop + "\", \"" + hookType + "\"));";
         })
     }
     if (debugCalls) {
         debugCalls.forEach(function(property){
-            code += "debugIds.push(breakpoints.debugCall(" + property.obj + ", \"" + property.prop + "\"));";
+            code += "debugIds.push(breakpoints.debugCall(" + property.obj + ", \"" + property.prop + "\", \"" + hookType + "\"));";
         })
     }
     code += "debugIds;"
@@ -121,11 +132,12 @@ function activateBreakpoint(breakpoint){
         console.log("done eval activate code", arguments)
         breakpoint.activated = true;
         breakpoint.debugIds = debugIds;
+        breakpoint.hookType = hookType;
         app.update();
     });
 }
 
-function deactivateBreakpoint(breakpoint) {
+function deactivateBreakpoint(breakpoint, cb) {
     var code = "";
     breakpoint.debugIds.forEach(function(debugId){
         code += "breakpoints.reset(" + debugId + ");"
@@ -136,9 +148,17 @@ function deactivateBreakpoint(breakpoint) {
         breakpoint.debugIds = undefined
         breakpoint.activated = false;
         app.update();
-    })
+        if (cb) {cb()}
+    })   
+}
 
-    
+function updateBreakpoint(breakpoint, traceOrDebugger){
+    console.log("updateBreakpoint", traceOrDebugger)
+    deactivateBreakpoint(breakpoint, function(){
+        activateBreakpoint(breakpoint, {
+            hookType: traceOrDebugger
+        })
+    });
 }
 
 var app = null;
