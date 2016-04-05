@@ -63,8 +63,13 @@ class UnactivatedBreakpointList extends React.Component {
 
 class ActivatedBreakpointListItem extends React.Component {
     render(){
-        return <div>
+        return <div className="activated-breakpiont-list-item">
             {this.props.breakpoint.title}
+            <button
+                className="delete" 
+                onClick={() => deactivateBreakpoint(this.props.breakpoint)}>
+                x
+            </button>
         </div>
     }
 }
@@ -116,6 +121,33 @@ function activateBreakpoint(breakpoint){
     });
 
     breakpoint.activated = true;
+    app.update();
+}
+
+function deactivateBreakpoint(breakpoint) {
+    var code = "";
+    var {debugPropertyGets, debugPropertySets, debugCalls} = breakpoint;
+    if (debugPropertyGets) {
+        debugPropertyGets.forEach(function(property){
+            code += "breakpoints.disableDebugPropertyGet(" + property.obj + ", \"" + property.prop + "\");";
+        })
+    }
+    if (debugPropertySets) {
+        debugPropertySets.forEach(function(property){
+            code += "breakpoints.disableDebugPropertySet(" + property.obj + ", \"" + property.prop + "\");";
+        })
+    }
+    if (debugCalls) {
+        debugCalls.forEach(function(property){
+            code += "breakpoints.disbleDebugCall(" + property.obj + ", \"" + property.prop + "\");";
+        })
+    }
+    console.log("eval code", code)
+    chrome.devtools.inspectedWindow.eval(code, function(){
+        console.log("done eval code", arguments)
+    });
+
+    breakpoint.activated = false;
     app.update();
 }
 

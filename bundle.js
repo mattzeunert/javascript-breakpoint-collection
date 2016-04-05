@@ -193,10 +193,21 @@
 	    _createClass(ActivatedBreakpointListItem, [{
 	        key: "render",
 	        value: function render() {
+	            var _this5 = this;
+
 	            return _react2.default.createElement(
 	                "div",
-	                null,
-	                this.props.breakpoint.title
+	                { className: "activated-breakpiont-list-item" },
+	                this.props.breakpoint.title,
+	                _react2.default.createElement(
+	                    "button",
+	                    {
+	                        className: "delete",
+	                        onClick: function onClick() {
+	                            return deactivateBreakpoint(_this5.props.breakpoint);
+	                        } },
+	                    "x"
+	                )
 	            );
 	        }
 	    }]);
@@ -274,6 +285,36 @@
 	    });
 
 	    breakpoint.activated = true;
+	    app.update();
+	}
+
+	function deactivateBreakpoint(breakpoint) {
+	    var code = "";
+	    var debugPropertyGets = breakpoint.debugPropertyGets;
+	    var debugPropertySets = breakpoint.debugPropertySets;
+	    var debugCalls = breakpoint.debugCalls;
+
+	    if (debugPropertyGets) {
+	        debugPropertyGets.forEach(function (property) {
+	            code += "breakpoints.disableDebugPropertyGet(" + property.obj + ", \"" + property.prop + "\");";
+	        });
+	    }
+	    if (debugPropertySets) {
+	        debugPropertySets.forEach(function (property) {
+	            code += "breakpoints.disableDebugPropertySet(" + property.obj + ", \"" + property.prop + "\");";
+	        });
+	    }
+	    if (debugCalls) {
+	        debugCalls.forEach(function (property) {
+	            code += "breakpoints.disbleDebugCall(" + property.obj + ", \"" + property.prop + "\");";
+	        });
+	    }
+	    console.log("eval code", code);
+	    chrome.devtools.inspectedWindow.eval(code, function () {
+	        console.log("done eval code", arguments);
+	    });
+
+	    breakpoint.activated = false;
 	    app.update();
 	}
 
