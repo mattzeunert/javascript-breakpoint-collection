@@ -86,8 +86,73 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	var App = function (_React$Component) {
-	    _inherits(App, _React$Component);
+	var breakpoints = [{
+	    title: "debugCookieReads",
+	    debugPropertyGetters: ["document.cookie"]
+	}, {
+	    title: "debugCookieWrites",
+	    debugPropertySetters: ["document.cookie"]
+	}, {
+	    title: "debuAlertCalls",
+	    debugCalls: ["window.alert"]
+	}, {
+	    title: "debugConsoleErrorCalls",
+	    debugCalls: ["window.console.error"]
+	}, {
+	    title: "debugConsoleLogCalls",
+	    debugCalls: ["window.console.log"]
+	}];
+
+	var BreakpointListItem = function (_React$Component) {
+	    _inherits(BreakpointListItem, _React$Component);
+
+	    function BreakpointListItem() {
+	        _classCallCheck(this, BreakpointListItem);
+
+	        return _possibleConstructorReturn(this, Object.getPrototypeOf(BreakpointListItem).apply(this, arguments));
+	    }
+
+	    _createClass(BreakpointListItem, [{
+	        key: "render",
+	        value: function render() {
+	            return _react2.default.createElement(
+	                "div",
+	                null,
+	                this.props.breakpoint.title
+	            );
+	        }
+	    }]);
+
+	    return BreakpointListItem;
+	}(_react2.default.Component);
+
+	var BreakpointList = function (_React$Component2) {
+	    _inherits(BreakpointList, _React$Component2);
+
+	    function BreakpointList() {
+	        _classCallCheck(this, BreakpointList);
+
+	        return _possibleConstructorReturn(this, Object.getPrototypeOf(BreakpointList).apply(this, arguments));
+	    }
+
+	    _createClass(BreakpointList, [{
+	        key: "render",
+	        value: function render() {
+	            return _react2.default.createElement(
+	                "div",
+	                null,
+	                this.props.breakpoints.map(function (bp) {
+	                    return _react2.default.createElement(BreakpointListItem, { breakpoint: bp });
+	                })
+	            );
+	        }
+	    }]);
+
+	    return BreakpointList;
+	}(_react2.default.Component);
+
+	var App = function (_React$Component3) {
+	    _inherits(App, _React$Component3);
 
 	    function App() {
 	        _classCallCheck(this, App);
@@ -101,7 +166,7 @@
 	            return _react2.default.createElement(
 	                "div",
 	                null,
-	                " rendered by react"
+	                _react2.default.createElement(BreakpointList, { breakpoints: breakpoints })
 	            );
 	        }
 	    }]);
