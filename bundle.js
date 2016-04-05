@@ -88,19 +88,34 @@
 
 	var breakpoints = [{
 	    title: "debugCookieReads",
-	    debugPropertyGetters: ["document.cookie"]
+	    debugPropertyGets: [{
+	        obj: "document",
+	        prop: "cookie"
+	    }]
 	}, {
 	    title: "debugCookieWrites",
-	    debugPropertySetters: ["document.cookie"]
+	    debugPropertySets: [{
+	        obj: "document",
+	        prop: "cookie"
+	    }]
 	}, {
 	    title: "debuAlertCalls",
-	    debugCalls: ["window.alert"]
+	    debugCalls: [{
+	        obj: "window",
+	        prop: "alert"
+	    }]
 	}, {
 	    title: "debugConsoleErrorCalls",
-	    debugCalls: ["window.console.error"]
+	    debugCalls: [{
+	        obj: "window.console",
+	        prop: "log"
+	    }]
 	}, {
 	    title: "debugConsoleLogCalls",
-	    debugCalls: ["window.console.log"]
+	    debugCalls: [{
+	        obj: "window.console",
+	        prop: "log"
+	    }]
 	}];
 
 	var BreakpointListItem = function (_React$Component) {
@@ -115,9 +130,13 @@
 	    _createClass(BreakpointListItem, [{
 	        key: "render",
 	        value: function render() {
+	            var _this2 = this;
+
 	            return _react2.default.createElement(
 	                "div",
-	                null,
+	                { onClick: function onClick() {
+	                        return _this2.props.onClick();
+	                    } },
 	                this.props.breakpoint.title
 	            );
 	        }
@@ -142,7 +161,11 @@
 	                "div",
 	                null,
 	                this.props.breakpoints.map(function (bp) {
-	                    return _react2.default.createElement(BreakpointListItem, { breakpoint: bp });
+	                    return _react2.default.createElement(BreakpointListItem, {
+	                        onClick: function onClick() {
+	                            return activateBreakpoint(bp);
+	                        },
+	                        breakpoint: bp });
 	                })
 	            );
 	        }
@@ -150,6 +173,33 @@
 
 	    return BreakpointList;
 	}(_react2.default.Component);
+
+	function activateBreakpoint(breakpoint) {
+	    var code = "";
+	    var debugPropertyGets = breakpoint.debugPropertyGets;
+	    var debugPropertySets = breakpoint.debugPropertySets;
+	    var debugCalls = breakpoint.debugCalls;
+
+	    if (debugPropertyGets) {
+	        debugPropertyGets.forEach(function (property) {
+	            code += "breakpoints.debugPropertyGet(" + property.obj + ", \"" + property.prop + "\");";
+	        });
+	    }
+	    if (debugPropertySets) {
+	        debugPropertySets.forEach(function (property) {
+	            code += "breakpoints.debugPropertySet(" + property.obj + ", \"" + property.prop + "\");";
+	        });
+	    }
+	    if (debugCalls) {
+	        debugCalls.forEach(function (property) {
+	            code += "breakpoints.debugCall(" + property.obj + ", \"" + property.prop + "\");";
+	        });
+	    }
+	    console.log("eval code", code);
+	    chrome.devtools.inspectedWindow.eval(code, function () {
+	        console.log("done eval code", arguments);
+	    });
+	}
 
 	var App = function (_React$Component3) {
 	    _inherits(App, _React$Component3);
