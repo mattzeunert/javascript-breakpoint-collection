@@ -1,2 +1,40 @@
+<style>
+* {
+    box-sizing: border-box;
+}
+.col-parent > div {
+    width: calc(33.333% - 10px);
+    float: left;
+    border-right: 1px solid #eee;
+    padding: 10px;
+}
+.col-parent > div:last-child {
+    margin-right: 15px;
+    border-right: none;
+}
+.unactivated-breakpoint-list-item {
+    border-bottom: 1px solid #eee;
+    padding: 10px;
+    cursor: pointer;
+}
+.unactivated-breakpoint-list-item:hover {
+    background: #fafafa;
+}
+.unactivated-breakpoint-list-item .plus {
+    display: none;
+
+    float: right;
+    font-size: 24px;
+    color: red;
+    width: 20px;
+    height: 20px;
+    text-align: center;
+    margin-top: -3px;
+    line-height: 16px;
+}
+.unactivated-breakpoint-list-item:hover .plus{
+    display: inline-block;
+}
+</style>
 <div id="app-content"></div>
 <script src="bundle.js"></script>

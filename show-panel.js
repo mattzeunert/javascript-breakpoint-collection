@@ -78,12 +78,16 @@ function installBreakpointsObject(){
                 debugPropertyAccess(object, prop, {
                     before: function(accessType){
                         if (accessTypeToDebug === accessType) {
-                            before.apply(this, arguments)
+                            if (before) {
+                                before.apply(this, arguments)
+                            }
                         }
                     },
                     after: function(accessType){
                         if (accessTypeToDebug === accessType) {
-                            after.apply(this, arguments)
+                            if (after) {
+                                after.apply(this, arguments)
+                            }
                         }
                     }
                 })
@@ -93,7 +97,7 @@ function installBreakpointsObject(){
         function debugCall(object, prop, options){
             var before, after;
             if (options === undefined) {
-                before = debuggerFunction();
+                before = debuggerFunction;
             } else if (typeof options === "function") {
                 before = options;
             } else {

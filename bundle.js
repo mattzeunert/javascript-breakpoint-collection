@@ -118,16 +118,16 @@
 	    }]
 	}];
 
-	var BreakpointListItem = function (_React$Component) {
-	    _inherits(BreakpointListItem, _React$Component);
+	var UnactivatedBreakpointListItem = function (_React$Component) {
+	    _inherits(UnactivatedBreakpointListItem, _React$Component);
 
-	    function BreakpointListItem() {
-	        _classCallCheck(this, BreakpointListItem);
+	    function UnactivatedBreakpointListItem() {
+	        _classCallCheck(this, UnactivatedBreakpointListItem);
 
-	        return _possibleConstructorReturn(this, Object.getPrototypeOf(BreakpointListItem).apply(this, arguments));
+	        return _possibleConstructorReturn(this, Object.getPrototypeOf(UnactivatedBreakpointListItem).apply(this, arguments));
 	    }
 
-	    _createClass(BreakpointListItem, [{
+	    _createClass(UnactivatedBreakpointListItem, [{
 	        key: "render",
 	        value: function render() {
 	            var _this2 = this;
@@ -136,32 +136,39 @@
 	                "div",
 	                { onClick: function onClick() {
 	                        return _this2.props.onClick();
-	                    } },
-	                this.props.breakpoint.title
+	                    },
+	                    className: "unactivated-breakpoint-list-item" },
+	                this.props.breakpoint.title,
+	                _react2.default.createElement(
+	                    "div",
+	                    { className: "plus" },
+	                    "+"
+	                )
 	            );
 	        }
 	    }]);
 
-	    return BreakpointListItem;
+	    return UnactivatedBreakpointListItem;
 	}(_react2.default.Component);
 
-	var BreakpointList = function (_React$Component2) {
-	    _inherits(BreakpointList, _React$Component2);
+	var UnactivatedBreakpointList = function (_React$Component2) {
+	    _inherits(UnactivatedBreakpointList, _React$Component2);
 
-	    function BreakpointList() {
-	        _classCallCheck(this, BreakpointList);
+	    function UnactivatedBreakpointList() {
+	        _classCallCheck(this, UnactivatedBreakpointList);
 
-	        return _possibleConstructorReturn(this, Object.getPrototypeOf(BreakpointList).apply(this, arguments));
+	        return _possibleConstructorReturn(this, Object.getPrototypeOf(UnactivatedBreakpointList).apply(this, arguments));
 	    }
 
-	    _createClass(BreakpointList, [{
+	    _createClass(UnactivatedBreakpointList, [{
 	        key: "render",
 	        value: function render() {
 	            return _react2.default.createElement(
 	                "div",
 	                null,
 	                this.props.breakpoints.map(function (bp) {
-	                    return _react2.default.createElement(BreakpointListItem, {
+	                    return _react2.default.createElement(UnactivatedBreakpointListItem, {
+	                        key: bp.title,
 	                        onClick: function onClick() {
 	                            return activateBreakpoint(bp);
 	                        },
@@ -171,8 +178,74 @@
 	        }
 	    }]);
 
-	    return BreakpointList;
+	    return UnactivatedBreakpointList;
 	}(_react2.default.Component);
+
+	var ActivatedBreakpointListItem = function (_React$Component3) {
+	    _inherits(ActivatedBreakpointListItem, _React$Component3);
+
+	    function ActivatedBreakpointListItem() {
+	        _classCallCheck(this, ActivatedBreakpointListItem);
+
+	        return _possibleConstructorReturn(this, Object.getPrototypeOf(ActivatedBreakpointListItem).apply(this, arguments));
+	    }
+
+	    _createClass(ActivatedBreakpointListItem, [{
+	        key: "render",
+	        value: function render() {
+	            return _react2.default.createElement(
+	                "div",
+	                null,
+	                this.props.breakpoint.title
+	            );
+	        }
+	    }]);
+
+	    return ActivatedBreakpointListItem;
+	}(_react2.default.Component);
+
+	var ActivatedBreakpointList = function (_React$Component4) {
+	    _inherits(ActivatedBreakpointList, _React$Component4);
+
+	    function ActivatedBreakpointList() {
+	        _classCallCheck(this, ActivatedBreakpointList);
+
+	        return _possibleConstructorReturn(this, Object.getPrototypeOf(ActivatedBreakpointList).apply(this, arguments));
+	    }
+
+	    _createClass(ActivatedBreakpointList, [{
+	        key: "render",
+	        value: function render() {
+	            if (this.props.breakpoints.length === 0) {
+	                return _react2.default.createElement(
+	                    "div",
+	                    null,
+	                    "Click on a breakpoint on the left to activate it."
+	                );
+	            }
+	            return _react2.default.createElement(
+	                "div",
+	                null,
+	                this.props.breakpoints.map(function (bp) {
+	                    return _react2.default.createElement(ActivatedBreakpointListItem, { key: bp.title, breakpoint: bp });
+	                })
+	            );
+	        }
+	    }]);
+
+	    return ActivatedBreakpointList;
+	}(_react2.default.Component);
+
+	function getActivatedBreakpoints() {
+	    return breakpoints.filter(function (bp) {
+	        return bp.activated;
+	    });
+	}
+	function getUnactivatedBreakpoints() {
+	    return breakpoints.filter(function (bp) {
+	        return !bp.activated;
+	    });
+	}
 
 	function activateBreakpoint(breakpoint) {
 	    var code = "";
@@ -199,10 +272,15 @@
 	    chrome.devtools.inspectedWindow.eval(code, function () {
 	        console.log("done eval code", arguments);
 	    });
+
+	    breakpoint.activated = true;
+	    app.update();
 	}
 
-	var App = function (_React$Component3) {
-	    _inherits(App, _React$Component3);
+	var app = null;
+
+	var App = function (_React$Component5) {
+	    _inherits(App, _React$Component5);
 
 	    function App() {
 	        _classCallCheck(this, App);
@@ -211,13 +289,48 @@
 	    }
 
 	    _createClass(App, [{
+	        key: "componentDidMount",
+	        value: function componentDidMount() {
+	            app = this;
+	        }
+	    }, {
 	        key: "render",
 	        value: function render() {
 	            return _react2.default.createElement(
 	                "div",
-	                null,
-	                _react2.default.createElement(BreakpointList, { breakpoints: breakpoints })
+	                { className: "col-parent" },
+	                _react2.default.createElement(
+	                    "div",
+	                    null,
+	                    "JavaScript Breakpoint Collection"
+	                ),
+	                _react2.default.createElement(
+	                    "div",
+	                    null,
+	                    _react2.default.createElement(
+	                        "h2",
+	                        null,
+	                        "Breakpoints"
+	                    ),
+	                    _react2.default.createElement(UnactivatedBreakpointList, { breakpoints: getUnactivatedBreakpoints() })
+	                ),
+	                _react2.default.createElement(
+	                    "div",
+	                    null,
+	                    _react2.default.createElement(
+	                        "h2",
+	                        null,
+	                        "Activated Breakpoints"
+	                    ),
+	                    _react2.default.createElement(ActivatedBreakpointList, { breakpoints: getActivatedBreakpoints() })
+	                )
 	            );
+	        }
+	    }, {
+	        key: "update",
+	        value: function update() {
+	            console.log("update");
+	            this.setState({ sth: Math.random() });
 	        }
 	    }]);
 
