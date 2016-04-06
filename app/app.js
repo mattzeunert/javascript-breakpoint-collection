@@ -69,14 +69,16 @@ class ActivatedBreakpointListItem extends React.Component {
             <button
                 className="delete" 
                 onClick={() => deactivateBreakpoint(this.props.breakpoint)}>
-                x
+                &times;
             </button>
-            <select
-                value={this.props.breakpoint.details.hookType}
-                onChange={(event) => updateBreakpoint(this.props.breakpoint, event.target.value)}>
-                <option value="debugger">debugger</option>
-                <option value="trace">trace</option>
-            </select>
+            <div style={{marginTop: 4}}>
+                <select
+                    value={this.props.breakpoint.details.hookType}
+                    onChange={(event) => updateBreakpoint(this.props.breakpoint, event.target.value)}>
+                    <option value="debugger">debugger</option>
+                    <option value="trace">trace</option>
+                </select>
+            </div>
         </div>
     }
 }
@@ -174,12 +176,20 @@ function updateBreakpoint(breakpoint, traceOrDebugger){
 
 var app = null;
 
-chrome.devtools.inspectedWindow.eval("breakpoints.__internal.getRegisteredBreakpoints();", function(regBp){
-    console.log("after fetch initial state", arguments)
-    console.log("setting regbp to ", regBp)
-    registeredBreakpoints = regBp;
-    app.update();
-});
+readBreakpointsFromPage();
+
+chrome.devtools.network.onNavigated.addListener(function(){
+    readBreakpointsFromPage();
+})
+
+function readBreakpointsFromPage(){
+    chrome.devtools.inspectedWindow.eval("breakpoints.__internal.getRegisteredBreakpoints();", function(regBp){
+        console.log("after fetch initial state", arguments)
+        console.log("setting regbp to ", regBp)
+        registeredBreakpoints = regBp;
+        app.update();
+    });
+}
 
 export default class App extends React.Component {
     componentDidMount(){

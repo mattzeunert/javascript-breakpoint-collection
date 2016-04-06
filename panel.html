@@ -1,3 +1,5 @@
+
+<meta charset="utf-8" /> 
 <style>
 * {
     box-sizing: border-box;
@@ -41,7 +43,31 @@
 }
 
 .activated-breakpiont-list-item {
-
+    border-bottom: 1px solid #eee;
+    padding: 10px;
+}
+.activated-breakpiont-list-item:first-child {
+    border-top: 1px solid #eee;
+}
+.activated-breakpiont-list-item .delete {
+    float: right;
+    color: #777;
+    font-size: 24px;
+    line-height: 30px;
+    text-align: center;
+    width: 35px;
+    height: 35px;
+    padding: 0;
+    background: none;
+    border: none;
+    border-radius: 550px;
+    cursor: pointer;
+}
+.activated-breakpiont-list-item:active {
+    outline: none;
+}
+.activated-breakpiont-list-item .delete:hover {
+    color: red;
 }
 </style>
 <div id="app-content"></div>

@@ -297,7 +297,7 @@ function installBreakpointsObject(){
                         debugIds.push(debugPropertyGet.apply(this, arguments));
                     }
                     var _debugPropertySet = function(){
-                        debugIds.push(debugPropertyGet.apply(this, arguments));
+                        debugIds.push(debugPropertySet.apply(this, arguments));
                     }
                     var _debugCall = function(){
                         debugIds.push(debugCall.apply(this, arguments));

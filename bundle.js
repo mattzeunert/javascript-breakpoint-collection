@@ -209,24 +209,28 @@
 	                        onClick: function onClick() {
 	                            return deactivateBreakpoint(_this5.props.breakpoint);
 	                        } },
-	                    "x"
+	                    "×"
 	                ),
 	                _react2.default.createElement(
-	                    "select",
-	                    {
-	                        value: this.props.breakpoint.details.hookType,
-	                        onChange: function onChange(event) {
-	                            return updateBreakpoint(_this5.props.breakpoint, event.target.value);
-	                        } },
+	                    "div",
+	                    { style: { marginTop: 4 } },
 	                    _react2.default.createElement(
-	                        "option",
-	                        { value: "debugger" },
-	                        "debugger"
-	                    ),
-	                    _react2.default.createElement(
-	                        "option",
-	                        { value: "trace" },
-	                        "trace"
+	                        "select",
+	                        {
+	                            value: this.props.breakpoint.details.hookType,
+	                            onChange: function onChange(event) {
+	                                return updateBreakpoint(_this5.props.breakpoint, event.target.value);
+	                            } },
+	                        _react2.default.createElement(
+	                            "option",
+	                            { value: "debugger" },
+	                            "debugger"
+	                        ),
+	                        _react2.default.createElement(
+	                            "option",
+	                            { value: "trace" },
+	                            "trace"
+	                        )
 	                    )
 	                )
 	            );
@@ -354,12 +358,20 @@
 
 	var app = null;
 
-	chrome.devtools.inspectedWindow.eval("breakpoints.__internal.getRegisteredBreakpoints();", function (regBp) {
-	    console.log("after fetch initial state", arguments);
-	    console.log("setting regbp to ", regBp);
-	    registeredBreakpoints = regBp;
-	    app.update();
+	readBreakpointsFromPage();
+
+	chrome.devtools.network.onNavigated.addListener(function () {
+	    readBreakpointsFromPage();
 	});
+
+	function readBreakpointsFromPage() {
+	    chrome.devtools.inspectedWindow.eval("breakpoints.__internal.getRegisteredBreakpoints();", function (regBp) {
+	        console.log("after fetch initial state", arguments);
+	        console.log("setting regbp to ", regBp);
+	        registeredBreakpoints = regBp;
+	        app.update();
+	    });
+	}
 
 	var App = function (_React$Component5) {
 	    _inherits(App, _React$Component5);
