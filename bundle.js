@@ -373,6 +373,26 @@
 	    });
 	}
 
+	var backgroundPageConnection = chrome.runtime.connect({
+	    name: "devtools-page"
+	});
+
+	backgroundPageConnection.onMessage.addListener(function (message) {
+	    // Handle responses from the background page, if any
+	    console.log(arguments, "ssss");
+	});
+
+	// Relay the tab ID to the background page
+	// chrome.runtime.sendMessage({
+	//     tabId: chrome.devtools.inspectedWindow.tabId,
+	//     scriptToInject: "content-script.js"
+	// });
+
+	console.log("addmessage");
+	chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+	    console.log("onMessage in app.js", request);
+	});
+
 	var App = function (_React$Component5) {
 	    _inherits(App, _React$Component5);
 
@@ -396,7 +416,25 @@
 	                _react2.default.createElement(
 	                    "div",
 	                    null,
-	                    "JavaScript Breakpoint Collection"
+	                    _react2.default.createElement(
+	                        "div",
+	                        null,
+	                        _react2.default.createElement(
+	                            "u",
+	                            null,
+	                            "JavaScript Breakpoint Collection"
+	                        )
+	                    ),
+	                    _react2.default.createElement(
+	                        "p",
+	                        null,
+	                        "To debug property access and function calls on arbitray objects use the code below."
+	                    ),
+	                    _react2.default.createElement(
+	                        "pre",
+	                        null,
+	                        "breakpoints.debugPropertySet(document, \"cookie\");"
+	                    )
 	                ),
 	                _react2.default.createElement(
 	                    "div",

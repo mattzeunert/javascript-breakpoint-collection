@@ -2,7 +2,18 @@
   "name": "JavaScript Breakpoint Collection",
   "manifest_version": 2,
   "version": "1.0",
-  "permissions": ["http://*/*", "http://*/*", "file://*/*"],
+  "content_scripts": [
+    {
+      "matches": ["http://*/*", "https://*/*", "file://*/*"],
+    
+      "js": ["content-script.js"]
+    }
+  ],
+   "background": {
+    "scripts": ["background.js"]
+  },
+  "permissions": ["http://*/*", "https://*/*", "file://*/*"],
   "minimum_chrome_version": "10.0",
-  "devtools_page": "devtools.html"
+  "devtools_page": "devtools.html",
+  "web_accessible_resources": ["eee.js"]
 }

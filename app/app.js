@@ -191,13 +191,47 @@ function readBreakpointsFromPage(){
     });
 }
 
+var backgroundPageConnection = chrome.runtime.connect({
+    name: "devtools-page"
+});
+
+backgroundPageConnection.onMessage.addListener(function (message) {
+    // Handle responses from the background page, if any
+    console.log(arguments, "ssss")
+});
+
+// Relay the tab ID to the background page
+// chrome.runtime.sendMessage({
+//     tabId: chrome.devtools.inspectedWindow.tabId,
+//     scriptToInject: "content-script.js"
+// });
+
+
+
+console.log("addmessage")
+chrome.runtime.onMessage.addListener(
+  function(request, sender, sendResponse) {
+    console.log("onMessage in app.js", request);
+    
+  });
+
 export default class App extends React.Component {
     componentDidMount(){
         app = this;
     }
     render(){
         return <div className="col-parent">
-            <div>JavaScript Breakpoint Collection</div>
+            <div>
+                <div>
+                    <u>JavaScript Breakpoint Collection</u>
+                </div>
+                <p>
+                    To debug property access and function calls on arbitray objects use the code below.
+                </p>
+                <pre>
+                    breakpoints.debugPropertySet(document, "cookie");
+                </pre>
+            </div>
             <div>
                 <h2>Breakpoints</h2>
                 <UnactivatedBreakpointList breakpoints={breakpoints} />
