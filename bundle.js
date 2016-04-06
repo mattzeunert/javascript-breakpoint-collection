@@ -380,6 +380,7 @@
 	backgroundPageConnection.onMessage.addListener(function (message) {
 	    // Handle responses from the background page, if any
 	    console.log(arguments, "ssss");
+	    readBreakpointsFromPage();
 	});
 
 	// Relay the tab ID to the background page
@@ -387,11 +388,6 @@
 	//     tabId: chrome.devtools.inspectedWindow.tabId,
 	//     scriptToInject: "content-script.js"
 	// });
-
-	console.log("addmessage");
-	chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
-	    console.log("onMessage in app.js", request);
-	});
 
 	var App = function (_React$Component5) {
 	    _inherits(App, _React$Component5);

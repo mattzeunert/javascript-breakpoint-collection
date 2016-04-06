@@ -198,6 +198,7 @@ var backgroundPageConnection = chrome.runtime.connect({
 backgroundPageConnection.onMessage.addListener(function (message) {
     // Handle responses from the background page, if any
     console.log(arguments, "ssss")
+    readBreakpointsFromPage();
 });
 
 // Relay the tab ID to the background page
@@ -208,12 +209,6 @@ backgroundPageConnection.onMessage.addListener(function (message) {
 
 
 
-console.log("addmessage")
-chrome.runtime.onMessage.addListener(
-  function(request, sender, sendResponse) {
-    console.log("onMessage in app.js", request);
-    
-  });
 
 export default class App extends React.Component {
     componentDidMount(){
