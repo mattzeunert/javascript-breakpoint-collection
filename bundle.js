@@ -214,7 +214,7 @@
 	                _react2.default.createElement(
 	                    "select",
 	                    {
-	                        value: this.props.breakpoint.hookType,
+	                        value: this.props.breakpoint.details.hookType,
 	                        onChange: function onChange(event) {
 	                            return updateBreakpoint(_this5.props.breakpoint, event.target.value);
 	                        } },
@@ -312,7 +312,8 @@
 
 	    code += "};";
 	    var details = {
-	        title: breakpoint.title
+	        title: breakpoint.title,
+	        hookType: hookType
 	    };
 	    code += "breakpoints.__internal.registerBreakpoint(fn, " + JSON.stringify(details) + ");";
 	    code += "return breakpoints.__internal.getRegisteredBreakpoints();";
@@ -340,8 +341,12 @@
 
 	function updateBreakpoint(breakpoint, traceOrDebugger) {
 	    console.log("updateBreakpoint", traceOrDebugger);
+	    var baseBpObject = breakpoints.filter(function (bp) {
+	        return bp.title === breakpoint.details.title;
+	    })[0];
+
 	    deactivateBreakpoint(breakpoint, function () {
-	        activateBreakpoint(breakpoint, {
+	        activateBreakpoint(baseBpObject, {
 	            hookType: traceOrDebugger
 	        });
 	    });

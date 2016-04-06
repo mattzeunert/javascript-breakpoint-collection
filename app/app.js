@@ -72,7 +72,7 @@ class ActivatedBreakpointListItem extends React.Component {
                 x
             </button>
             <select
-                value={this.props.breakpoint.hookType}
+                value={this.props.breakpoint.details.hookType}
                 onChange={(event) => updateBreakpoint(this.props.breakpoint, event.target.value)}>
                 <option value="debugger">debugger</option>
                 <option value="trace">trace</option>
@@ -134,7 +134,8 @@ function activateBreakpoint(breakpoint, options){
     
     code += "};"
     var details = {
-        title: breakpoint.title
+        title: breakpoint.title,
+        hookType: hookType
     }
     code += "breakpoints.__internal.registerBreakpoint(fn, " + JSON.stringify(details) + ");";
     code += "return breakpoints.__internal.getRegisteredBreakpoints();"
@@ -160,8 +161,12 @@ function deactivateBreakpoint(breakpoint, callback) {
 
 function updateBreakpoint(breakpoint, traceOrDebugger){
     console.log("updateBreakpoint", traceOrDebugger)
+    var baseBpObject = breakpoints.filter(function(bp){
+        return bp.title === breakpoint.details.title;
+    })[0]
+
     deactivateBreakpoint(breakpoint, function(){
-        activateBreakpoint(breakpoint, {
+        activateBreakpoint(baseBpObject, {
             hookType: traceOrDebugger
         })
     });
