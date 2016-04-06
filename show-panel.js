@@ -311,6 +311,17 @@ function installBreakpointsObject(){
                 },
                 getRegisteredBreakpoints: function(){
                     return registeredBreakpoints;
+                },
+                disableBreakpoint: function(id){
+                    var bp = registeredBreakpoints.filter(function(bp){
+                        return bp.id === id;
+                    })[0];
+                    bp.debugIds.forEach(function(debugId){
+                        resetDebug(debugId);
+                    });
+                    registeredBreakpoints = registeredBreakpoints.filter(function(bp){
+                        return bp.id !== id;
+                    })
                 }
             }
 

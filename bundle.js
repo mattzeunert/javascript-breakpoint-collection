@@ -326,15 +326,11 @@
 	}
 
 	function deactivateBreakpoint(breakpoint, callback) {
-	    var code = "";
-	    breakpoint.debugIds.forEach(function (debugId) {
-	        code += "breakpoints.reset(" + debugId + ");";
-	    });
+	    var code = "breakpoints.__internal.disableBreakpoint(" + breakpoint.id + ");";
+	    code += "breakpoints.__internal.getRegisteredBreakpoints();";
 	    console.log("eval deactivate", code);
-	    chrome.devtools.inspectedWindow.eval(code, function () {
-	        console.log("done eval deactivate code", arguments);
-	        breakpoint.debugIds = undefined;
-	        breakpoint.activated = false;
+	    chrome.devtools.inspectedWindow.eval(code, function (regBp) {
+	        registeredBreakpoints = regBp;
 	        app.update();
 	        if (callback) {
 	            callback();
