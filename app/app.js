@@ -1,5 +1,6 @@
 import React from "react"
 
+var registeredBreakpoints = [];
 var breakpoints = [
     {
         title: "debugCookieReads",
@@ -16,7 +17,7 @@ var breakpoints = [
         }]
     },
     {
-        title: "debuAlertCalls",
+        title: "debugAlertCalls",
         debugCalls: [{
             obj: "window",
             prop: "alert"
@@ -64,7 +65,7 @@ class UnactivatedBreakpointList extends React.Component {
 class ActivatedBreakpointListItem extends React.Component {
     render(){
         return <div className="activated-breakpiont-list-item">
-            {this.props.breakpoint.title}
+            {this.props.breakpoint.details.title}
             <button
                 className="delete" 
                 onClick={() => deactivateBreakpoint(this.props.breakpoint)}>
@@ -95,12 +96,7 @@ class ActivatedBreakpointList extends React.Component {
     }
 }
 
-function getActivatedBreakpoints(){
-    return breakpoints.filter(bp => bp.activated);
-}
-function getUnactivatedBreakpoints(){
-    return breakpoints.filter(bp => !bp.activated);
-}
+
 
 function activateBreakpoint(breakpoint, options){
     if (!options) {
@@ -109,35 +105,49 @@ function activateBreakpoint(breakpoint, options){
         }
     }
     var hookType = options.hookType;
-    var code = "var debugIds = [];";
+
+
+    var calls = [];
     var {debugPropertyGets, debugPropertySets, debugCalls} = breakpoint;
     if (debugPropertyGets) {
         debugPropertyGets.forEach(function(property){
-            code += "debugIds.push(breakpoints.debugPropertyGet(" + property.obj + ", \"" + property.prop + "\", \"" + hookType + "\"));";
+            calls.push(["debugPropertyGet", property.obj, property.prop, hookType])
         })
     }
     if (debugPropertySets) {
         debugPropertySets.forEach(function(property){
-            code += "debugIds.push(breakpoints.debugPropertySet(" + property.obj + ", \"" + property.prop + "\", \"" + hookType + "\"));";
+            calls.push(["debugPropertySet", property.obj, property.prop, hookType])
         })
     }
     if (debugCalls) {
         debugCalls.forEach(function(property){
-            code += "debugIds.push(breakpoints.debugCall(" + property.obj + ", \"" + property.prop + "\", \"" + hookType + "\"));";
+            calls.push(["debugCall", property.obj, property.prop, hookType])
         })
     }
-    code += "debugIds;"
+
+    var code = "(function(){ var fn = function(debugPropertyGet, debugPropertySet, debugCall){";
+
+    calls.forEach(function(call){
+        var [method, objName, propName, hookType] = call;
+        code += method + '(' + objName + ',"' + propName + '", "' + hookType + '");';
+    })
+    
+    code += "};"
+    var details = {
+        title: breakpoint.title
+    }
+    code += "breakpoints.__internal.registerBreakpoint(fn, " + JSON.stringify(details) + ");";
+    code += "return breakpoints.__internal.getRegisteredBreakpoints();"
+    code += "})();"
     console.log("eval code", code)
-    chrome.devtools.inspectedWindow.eval(code, function(debugIds){
+    chrome.devtools.inspectedWindow.eval(code, function(regBp){
         console.log("done eval activate code", arguments)
-        breakpoint.activated = true;
-        breakpoint.debugIds = debugIds;
-        breakpoint.hookType = hookType;
+        registeredBreakpoints = regBp
         app.update();
     });
 }
 
-function deactivateBreakpoint(breakpoint, cb) {
+function deactivateBreakpoint(breakpoint, callback) {
     var code = "";
     breakpoint.debugIds.forEach(function(debugId){
         code += "breakpoints.reset(" + debugId + ");"
@@ -148,7 +158,7 @@ function deactivateBreakpoint(breakpoint, cb) {
         breakpoint.debugIds = undefined
         breakpoint.activated = false;
         app.update();
-        if (cb) {cb()}
+        if (callback) {callback()}
     })   
 }
 
@@ -163,6 +173,13 @@ function updateBreakpoint(breakpoint, traceOrDebugger){
 
 var app = null;
 
+chrome.devtools.inspectedWindow.eval("breakpoints.__internal.getRegisteredBreakpoints();", function(regBp){
+    console.log("after fetch initial state", arguments)
+    console.log("setting regbp to ", regBp)
+    registeredBreakpoints = regBp;
+    app.update();
+});
+
 export default class App extends React.Component {
     componentDidMount(){
         app = this;
@@ -172,11 +189,11 @@ export default class App extends React.Component {
             <div>JavaScript Breakpoint Collection</div>
             <div>
                 <h2>Breakpoints</h2>
-                <UnactivatedBreakpointList breakpoints={getUnactivatedBreakpoints()} />
+                <UnactivatedBreakpointList breakpoints={breakpoints} />
             </div>
             <div>
                 <h2>Activated Breakpoints</h2>
-                <ActivatedBreakpointList breakpoints={getActivatedBreakpoints()} />
+                <ActivatedBreakpointList breakpoints={registeredBreakpoints} />
             </div>
         </div>
 

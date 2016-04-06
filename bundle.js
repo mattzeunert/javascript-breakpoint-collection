@@ -72,6 +72,8 @@
 	    value: true
 	});
 
+	var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
+
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 	var _react = __webpack_require__(2);
@@ -86,6 +88,7 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+	var registeredBreakpoints = [];
 	var breakpoints = [{
 	    title: "debugCookieReads",
 	    debugPropertyGets: [{
@@ -99,7 +102,7 @@
 	        prop: "cookie"
 	    }]
 	}, {
-	    title: "debuAlertCalls",
+	    title: "debugAlertCalls",
 	    debugCalls: [{
 	        obj: "window",
 	        prop: "alert"
@@ -198,7 +201,7 @@
 	            return _react2.default.createElement(
 	                "div",
 	                { className: "activated-breakpiont-list-item" },
-	                this.props.breakpoint.title,
+	                this.props.breakpoint.details.title,
 	                _react2.default.createElement(
 	                    "button",
 	                    {
@@ -265,17 +268,6 @@
 	    return ActivatedBreakpointList;
 	}(_react2.default.Component);
 
-	function getActivatedBreakpoints() {
-	    return breakpoints.filter(function (bp) {
-	        return bp.activated;
-	    });
-	}
-	function getUnactivatedBreakpoints() {
-	    return breakpoints.filter(function (bp) {
-	        return !bp.activated;
-	    });
-	}
-
 	function activateBreakpoint(breakpoint, options) {
 	    if (!options) {
 	        options = {
@@ -283,38 +275,57 @@
 	        };
 	    }
 	    var hookType = options.hookType;
-	    var code = "var debugIds = [];";
+
+	    var calls = [];
 	    var debugPropertyGets = breakpoint.debugPropertyGets;
 	    var debugPropertySets = breakpoint.debugPropertySets;
 	    var debugCalls = breakpoint.debugCalls;
 
 	    if (debugPropertyGets) {
 	        debugPropertyGets.forEach(function (property) {
-	            code += "debugIds.push(breakpoints.debugPropertyGet(" + property.obj + ", \"" + property.prop + "\", \"" + hookType + "\"));";
+	            calls.push(["debugPropertyGet", property.obj, property.prop, hookType]);
 	        });
 	    }
 	    if (debugPropertySets) {
 	        debugPropertySets.forEach(function (property) {
-	            code += "debugIds.push(breakpoints.debugPropertySet(" + property.obj + ", \"" + property.prop + "\", \"" + hookType + "\"));";
+	            calls.push(["debugPropertySet", property.obj, property.prop, hookType]);
 	        });
 	    }
 	    if (debugCalls) {
 	        debugCalls.forEach(function (property) {
-	            code += "debugIds.push(breakpoints.debugCall(" + property.obj + ", \"" + property.prop + "\", \"" + hookType + "\"));";
+	            calls.push(["debugCall", property.obj, property.prop, hookType]);
 	        });
 	    }
-	    code += "debugIds;";
+
+	    var code = "(function(){ var fn = function(debugPropertyGet, debugPropertySet, debugCall){";
+
+	    calls.forEach(function (call) {
+	        var _call = _slicedToArray(call, 4);
+
+	        var method = _call[0];
+	        var objName = _call[1];
+	        var propName = _call[2];
+	        var hookType = _call[3];
+
+	        code += method + '(' + objName + ',"' + propName + '", "' + hookType + '");';
+	    });
+
+	    code += "};";
+	    var details = {
+	        title: breakpoint.title
+	    };
+	    code += "breakpoints.__internal.registerBreakpoint(fn, " + JSON.stringify(details) + ");";
+	    code += "return breakpoints.__internal.getRegisteredBreakpoints();";
+	    code += "})();";
 	    console.log("eval code", code);
-	    chrome.devtools.inspectedWindow.eval(code, function (debugIds) {
+	    chrome.devtools.inspectedWindow.eval(code, function (regBp) {
 	        console.log("done eval activate code", arguments);
-	        breakpoint.activated = true;
-	        breakpoint.debugIds = debugIds;
-	        breakpoint.hookType = hookType;
+	        registeredBreakpoints = regBp;
 	        app.update();
 	    });
 	}
 
-	function deactivateBreakpoint(breakpoint, cb) {
+	function deactivateBreakpoint(breakpoint, callback) {
 	    var code = "";
 	    breakpoint.debugIds.forEach(function (debugId) {
 	        code += "breakpoints.reset(" + debugId + ");";
@@ -325,8 +336,8 @@
 	        breakpoint.debugIds = undefined;
 	        breakpoint.activated = false;
 	        app.update();
-	        if (cb) {
-	            cb();
+	        if (callback) {
+	            callback();
 	        }
 	    });
 	}
@@ -341,6 +352,13 @@
 	}
 
 	var app = null;
+
+	chrome.devtools.inspectedWindow.eval("breakpoints.__internal.getRegisteredBreakpoints();", function (regBp) {
+	    console.log("after fetch initial state", arguments);
+	    console.log("setting regbp to ", regBp);
+	    registeredBreakpoints = regBp;
+	    app.update();
+	});
 
 	var App = function (_React$Component5) {
 	    _inherits(App, _React$Component5);
@@ -375,7 +393,7 @@
 	                        null,
 	                        "Breakpoints"
 	                    ),
-	                    _react2.default.createElement(UnactivatedBreakpointList, { breakpoints: getUnactivatedBreakpoints() })
+	                    _react2.default.createElement(UnactivatedBreakpointList, { breakpoints: breakpoints })
 	                ),
 	                _react2.default.createElement(
 	                    "div",
@@ -385,7 +403,7 @@
 	                        null,
 	                        "Activated Breakpoints"
 	                    ),
-	                    _react2.default.createElement(ActivatedBreakpointList, { breakpoints: getActivatedBreakpoints() })
+	                    _react2.default.createElement(ActivatedBreakpointList, { breakpoints: registeredBreakpoints })
 	                )
 	            );
 	        }

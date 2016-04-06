@@ -56,6 +56,10 @@ function installBreakpointsObject(){
 
     chrome.devtools.inspectedWindow.eval(`
     (function(){
+        if (window.breakpoints !== undefined) {
+            console.log("already injected, or another part of the page uses the window.breakpoints property")
+            return;
+        }
 
         var registry = new Map();
         var objectsAndPropsByDebugId = {}
@@ -271,17 +275,44 @@ function installBreakpointsObject(){
             return debugObj(object, prop, hooks)
         }
 
+        var debugPropertyGet = createPropertyAccessTypeDebugFunction("get");
+        var debugPropertySet = createPropertyAccessTypeDebugFunction("set");
+
+        var registeredBreakpoints = [];
+
         window.breakpoints = {
-            debugPropertyAccess,
-            debugPropertyGet: createPropertyAccessTypeDebugFunction("get"),
-            debugPropertySet: createPropertyAccessTypeDebugFunction("set"),
+            debugPropertyGet,
+            debugPropertySet,
             debugCall,
             reset: function(id){
                 resetDebug(id);
             },
             _registry: registry,
             _debugObj: debugObj,
-            _objectsAndPropsByDebugId: objectsAndPropsByDebugId
+            _objectsAndPropsByDebugId: objectsAndPropsByDebugId,
+            __internal: {
+                registerBreakpoint: function(fn, bpDetails){
+                    var debugIds = [];
+                    var _debugPropertyGet = function(){
+                        debugIds.push(debugPropertyGet.apply(this, arguments));
+                    }
+                    var _debugPropertySet = function(){
+                        debugIds.push(debugPropertyGet.apply(this, arguments));
+                    }
+                    var _debugCall = function(){
+                        debugIds.push(debugCall.apply(this, arguments));
+                    }
+                    fn(_debugPropertyGet, _debugPropertySet, _debugCall);
+                    registeredBreakpoints.push({
+                        id: Math.floor(Math.random() * 1000000000),
+                        debugIds,
+                        details: bpDetails
+                    })
+                },
+                getRegisteredBreakpoints: function(){
+                    return registeredBreakpoints;
+                }
+            }
 
         }
     })();
