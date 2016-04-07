@@ -4,6 +4,9 @@
 
 
 (function(){
+    var log = function(){}
+    
+
     if (window.breakpoints !== undefined) {
         //console.log("already injected, or another part of the page uses the window.breakpoints property")
         return;
@@ -171,7 +174,7 @@
         try {
             var descriptor = Object.getOwnPropertyDescriptor(object, propertyName);
         } catch (err){
-            console.log("are you sure the property ", propertyName, " exists?")
+            log("are you sure the property ", propertyName, " exists?")
             throw err
         }
         if (!object){
@@ -187,7 +190,7 @@
 
     function createPropertyAccessTypeDebugFunction(accessTypeToDebug) {
         return function(object, prop, options){
-            console.log("create with ", options)
+            log("create with ", options)
             var before, after;
             if (options === undefined) {
                 before = debuggerFunction;

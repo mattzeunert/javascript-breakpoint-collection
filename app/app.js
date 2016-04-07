@@ -1,5 +1,7 @@
 import React from "react"
 
+var log = function(){}
+
 var registeredBreakpoints = [];
 var breakpoints = [
     {
@@ -163,9 +165,9 @@ function activateBreakpoint(breakpoint, options){
     code += "breakpoints.__internal.registerBreakpoint(fn, " + JSON.stringify(details) + ");";
     code += "return breakpoints.__internal.getRegisteredBreakpoints();"
     code += "})();"
-    console.log("eval code", code)
+    log("eval code", code)
     chrome.devtools.inspectedWindow.eval(code, function(regBp){
-        console.log("done eval activate code", arguments)
+        log("done eval activate code", arguments)
         registeredBreakpoints = regBp
         app.update();
     });
@@ -174,7 +176,7 @@ function activateBreakpoint(breakpoint, options){
 function deactivateBreakpoint(breakpoint) {
     var code = "breakpoints.__internal.disableBreakpoint(" + breakpoint.id + ");";
     code += "breakpoints.__internal.getRegisteredBreakpoints();"
-    console.log("eval deactivate", code)
+    log("eval deactivate", code)
     chrome.devtools.inspectedWindow.eval(code, function(regBp){
         registeredBreakpoints = regBp;
         app.update();
@@ -183,7 +185,7 @@ function deactivateBreakpoint(breakpoint) {
 
 function updateBreakpoint(breakpoint, traceOrDebugger){
     var id = breakpoint.id;
-    console.log("updateBreakpoint", traceOrDebugger)
+    log("updateBreakpoint", traceOrDebugger)
     var settings = {
         hookType: traceOrDebugger
     }
@@ -207,8 +209,8 @@ chrome.devtools.network.onNavigated.addListener(function(){
 
 function readBreakpointsFromPage(){
     chrome.devtools.inspectedWindow.eval("breakpoints.__internal.getRegisteredBreakpoints();", function(regBp){
-        console.log("after fetch initial state", arguments)
-        console.log("setting regbp to ", regBp)
+        log("after fetch initial state", arguments)
+        log("setting regbp to ", regBp)
         registeredBreakpoints = regBp;
         app.update();
     });
@@ -220,7 +222,7 @@ var backgroundPageConnection = chrome.runtime.connect({
 
 backgroundPageConnection.onMessage.addListener(function (message) {
     // Handle responses from the background page, if any
-    console.log(arguments, "ssss")
+    log(arguments, "ssss")
     readBreakpointsFromPage();
 });
 
@@ -273,7 +275,7 @@ export default class App extends React.Component {
 
     }
     update(){
-        console.log("update")
+        log("update")
         this.setState({sth: Math.random()})
     }
 }

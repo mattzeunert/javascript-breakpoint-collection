@@ -19693,6 +19693,8 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+	var log = function log() {};
+
 	var registeredBreakpoints = [];
 	var breakpoints = [{
 	    title: "debugCookieReads",
@@ -19946,9 +19948,9 @@
 	    code += "breakpoints.__internal.registerBreakpoint(fn, " + JSON.stringify(details) + ");";
 	    code += "return breakpoints.__internal.getRegisteredBreakpoints();";
 	    code += "})();";
-	    console.log("eval code", code);
+	    log("eval code", code);
 	    chrome.devtools.inspectedWindow.eval(code, function (regBp) {
-	        console.log("done eval activate code", arguments);
+	        log("done eval activate code", arguments);
 	        registeredBreakpoints = regBp;
 	        app.update();
 	    });
@@ -19957,7 +19959,7 @@
 	function deactivateBreakpoint(breakpoint) {
 	    var code = "breakpoints.__internal.disableBreakpoint(" + breakpoint.id + ");";
 	    code += "breakpoints.__internal.getRegisteredBreakpoints();";
-	    console.log("eval deactivate", code);
+	    log("eval deactivate", code);
 	    chrome.devtools.inspectedWindow.eval(code, function (regBp) {
 	        registeredBreakpoints = regBp;
 	        app.update();
@@ -19966,7 +19968,7 @@
 
 	function updateBreakpoint(breakpoint, traceOrDebugger) {
 	    var id = breakpoint.id;
-	    console.log("updateBreakpoint", traceOrDebugger);
+	    log("updateBreakpoint", traceOrDebugger);
 	    var settings = {
 	        hookType: traceOrDebugger
 	    };
@@ -19990,8 +19992,8 @@
 
 	function readBreakpointsFromPage() {
 	    chrome.devtools.inspectedWindow.eval("breakpoints.__internal.getRegisteredBreakpoints();", function (regBp) {
-	        console.log("after fetch initial state", arguments);
-	        console.log("setting regbp to ", regBp);
+	        log("after fetch initial state", arguments);
+	        log("setting regbp to ", regBp);
 	        registeredBreakpoints = regBp;
 	        app.update();
 	    });
@@ -20003,7 +20005,7 @@
 
 	backgroundPageConnection.onMessage.addListener(function (message) {
 	    // Handle responses from the background page, if any
-	    console.log(arguments, "ssss");
+	    log(arguments, "ssss");
 	    readBreakpointsFromPage();
 	});
 
@@ -20100,7 +20102,7 @@
 	    }, {
 	        key: "update",
 	        value: function update() {
-	            console.log("update");
+	            log("update");
 	            this.setState({ sth: Math.random() });
 	        }
 	    }]);
