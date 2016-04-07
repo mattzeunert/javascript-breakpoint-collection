@@ -228,6 +228,12 @@ export default class App extends React.Component {
                 <pre>
                     breakpoints.debugPropertySet(document, "cookie");
                 </pre>
+                <pre>
+                    breakpoints.debugPropertyGet(document, "cookie");
+                </pre>
+                <pre>
+                    breakpoints.debugCall(localStorage, "setItem");
+                </pre>
             </div>
             <div>
                 <h2>Breakpoints</h2>

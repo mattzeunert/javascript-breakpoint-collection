@@ -20035,6 +20035,16 @@
 	                        "pre",
 	                        null,
 	                        "breakpoints.debugPropertySet(document, \"cookie\");"
+	                    ),
+	                    _react2.default.createElement(
+	                        "pre",
+	                        null,
+	                        "breakpoints.debugPropertyGet(document, \"cookie\");"
+	                    ),
+	                    _react2.default.createElement(
+	                        "pre",
+	                        null,
+	                        "breakpoints.debugCall(localStorage, \"setItem\");"
 	                    )
 	                ),
 	                _react2.default.createElement(

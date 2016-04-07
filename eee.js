@@ -178,25 +178,7 @@
         return descriptor;
     }
 
-    function debugPropertyAccess(object, prop, options){
-        var before = options.before;
-        var after = options.after;
 
-        return debugObj(object, prop, {
-            propertyGetBefore: function(){
-                before("get")
-            },
-            propertyGetAfter: function(){
-                after("get")
-            },
-            propertySetBefore: function(){
-                before("set")
-            },
-            propertySetAfter: function(){
-                after("set")
-            }
-        });
-    }
 
     function createPropertyAccessTypeDebugFunction(accessTypeToDebug) {
         return function(object, prop, options){
@@ -223,22 +205,23 @@
                 before = options.before;
                 after = options.after;
             }
-            return debugPropertyAccess(object, prop, {
-                before: function(accessType){
-                    if (accessTypeToDebug === accessType) {
-                        if (before) {
-                            before.apply(this, arguments)
-                        }
-                    }
-                },
-                after: function(accessType){
-                    if (accessTypeToDebug === accessType) {
-                        if (after) {
-                            after.apply(this, arguments)
-                        }
+            var hooks = {};
+            if (accessTypeToDebug === "get") {
+                hooks.propertyGetBefore = function(){
+                    if (before){
+                        before.apply(this.arguments);
                     }
                 }
-            })
+            }
+            if (accessTypeToDebug === "set") {
+                hooks.propertySetBefore = function(){
+                    if (before){
+                        before.apply(this.arguments);
+                    }
+                }
+            }
+            return debugObj(object, prop, hooks)
+
         }
     }
 
@@ -294,8 +277,29 @@
                 hook: "debugger"
             });
         },
-        debugPropertySet,
-        debugCall,
+        debugPropertySet: function(obj, prop){
+            var args = arguments;
+            window.breakpoints.__internal.registerBreakpoint(function(
+                debugPropertyGet, debugPropertySet, debugCall
+                ){
+                debugPropertySet.apply(this, args)
+            }, {
+                title: "debugPropertySet (" + prop + ")",
+                hook: "debugger"
+            });
+        },
+        debugPropertyCall: function(obj, prop){
+            var args = arguments;
+            window.breakpoints.__internal.registerBreakpoint(function(
+                debugPropertyGet, debugPropertySet, debugCall
+                ){
+                debugCall.apply(this, args)
+            }, {
+                title: "debugPropertyCall (" + prop + ")",
+                hook: "debugger"
+            });
+
+        },
         reset: function(id){
             resetDebug(id);
         },
