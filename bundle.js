@@ -19724,6 +19724,25 @@
 	        obj: "window.console",
 	        prop: "log"
 	    }]
+	}, {
+	    title: "debugPageScroll",
+	    debugCalls: [{
+	        obj: "window",
+	        prop: "scrollTo"
+	    }, {
+	        obj: "window",
+	        prop: "scrollBy"
+	    }],
+	    debugPropertySets: [{
+	        obj: "document.body",
+	        prop: "scrollTop"
+	    }]
+	}, {
+	    title: "debugLocalStorageReads",
+	    debugCalls: [{
+	        obj: "window.localStorage",
+	        prop: "getItem"
+	    }]
 	}];
 
 	var UnactivatedBreakpointListItem = function (_React$Component) {
@@ -20029,22 +20048,31 @@
 	                    _react2.default.createElement(
 	                        "p",
 	                        null,
+	                        "Click on a breakpoint on the right to add it."
+	                    ),
+	                    _react2.default.createElement(
+	                        "p",
+	                        null,
 	                        "To debug property access and function calls on arbitray objects use the code below."
 	                    ),
 	                    _react2.default.createElement(
-	                        "pre",
-	                        null,
-	                        "breakpoints.debugPropertySet(document, \"cookie\");"
-	                    ),
-	                    _react2.default.createElement(
-	                        "pre",
-	                        null,
-	                        "breakpoints.debugPropertyGet(document, \"cookie\");"
-	                    ),
-	                    _react2.default.createElement(
-	                        "pre",
-	                        null,
-	                        "breakpoints.debugCall(localStorage, \"setItem\");"
+	                        "div",
+	                        { style: { maxWidth: "100%", "overflow": "auto" } },
+	                        _react2.default.createElement(
+	                            "pre",
+	                            null,
+	                            "breakpoints.debugPropertySet(document, \"cookie\");"
+	                        ),
+	                        _react2.default.createElement(
+	                            "pre",
+	                            null,
+	                            "breakpoints.debugPropertyGet(document, \"cookie\");"
+	                        ),
+	                        _react2.default.createElement(
+	                            "pre",
+	                            null,
+	                            "breakpoints.debugPropertyCall(localStorage, \"setItem\");"
+	                        )
 	                    )
 	                ),
 	                _react2.default.createElement(

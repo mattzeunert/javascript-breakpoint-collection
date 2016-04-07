@@ -168,7 +168,12 @@
     }
     
     function getPropertyDescriptor(object, propertyName){
-        var descriptor = Object.getOwnPropertyDescriptor(object, propertyName);
+        try {
+            var descriptor = Object.getOwnPropertyDescriptor(object, propertyName);
+        } catch (err){
+            console.log("are you sure the property ", propertyName, " exists?")
+            throw err
+        }
         if (!object){
             throw new Error("Descriptor " + propertyName + " not found");
         }

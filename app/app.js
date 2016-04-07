@@ -36,6 +36,27 @@ var breakpoints = [
             obj: "window.console",
             prop: "log"
         }]
+    },
+    {
+        title: "debugPageScroll",
+        debugCalls: [{
+            obj: "window",
+            prop: "scrollTo"
+        }, {
+            obj: "window",
+            prop: "scrollBy"
+        }],
+        debugPropertySets: [{
+            obj: "document.body",
+            prop: "scrollTop"
+        }]
+    },
+    {
+        title:  "debugLocalStorageReads",
+        debugCalls: [{
+            obj: "window.localStorage",
+            prop: "getItem"
+        }]
     }
 ]
 
@@ -223,17 +244,22 @@ export default class App extends React.Component {
                     <u>JavaScript Breakpoint Collection</u>
                 </div>
                 <p>
+                    Click on a breakpoint on the right to add it.
+                </p>
+                <p>
                     To debug property access and function calls on arbitray objects use the code below.
                 </p>
-                <pre>
-                    breakpoints.debugPropertySet(document, "cookie");
-                </pre>
-                <pre>
-                    breakpoints.debugPropertyGet(document, "cookie");
-                </pre>
-                <pre>
-                    breakpoints.debugCall(localStorage, "setItem");
-                </pre>
+                <div style={{maxWidth: "100%", "overflow": "auto"}}>
+                    <pre>
+                        breakpoints.debugPropertySet(document, "cookie");
+                    </pre>
+                    <pre>
+                        breakpoints.debugPropertyGet(document, "cookie");
+                    </pre>
+                    <pre>
+                        breakpoints.debugPropertyCall(localStorage, "setItem");
+                    </pre>
+                </div>
             </div>
             <div>
                 <h2>Breakpoints</h2>
