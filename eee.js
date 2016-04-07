@@ -1,19 +1,3 @@
-// current issue:
-- i'm updating all hooks ,even no-op ones (i thinks)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -67,11 +51,19 @@
                         return function(){
                             triggerHook("propertyCallBefore")
                             retVal.apply(this, arguments);
-                            triggerHook("propertyCallAfter")
+                            // disable all after hooks for now since
+                            // they aren't used and bp updates
+                            // overwrite their no-op functions with 
+                            // non no-ops
+                            // triggerHook("propertyCallAfter")
                         }
                     }
 
-                    triggerHook("propertyGetAfter");
+                    // disable all after hooks for now since
+                    // they aren't used and bp updates
+                    // overwrite their no-op functions with 
+                    // non no-ops
+                    // triggerHook("propertyGetAfter");
                     return retVal;
                 },
                 set: function(newValue){
@@ -82,7 +74,11 @@
                     } else {
                         retVal = originalProp.set.apply(this, arguments);
                     }
-                    triggerHook("propertySetAfter")
+                    // disable all after hooks for now since
+                    // they aren't used and bp updates
+                    // overwrite their no-op functions with 
+                    // non no-ops
+                    // triggerHook("propertySetAfter")
                     return retVal;
                 }
             });
