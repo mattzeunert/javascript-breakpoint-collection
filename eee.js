@@ -283,14 +283,14 @@
     var registeredBreakpoints = [];
 
     window.breakpoints = {
-        debugPropertyGet: function(){
+        debugPropertyGet: function(obj, prop){
             var args = arguments;
             window.breakpoints.__internal.registerBreakpoint(function(
                 debugPropertyGet, debugPropertySet, debugCall
                 ){
                 debugPropertyGet.apply(this, args)
             }, {
-                title: "debugPropertyGet",
+                title: "debugPropertyGet (" + prop + ")",
                 hook: "debugger"
             });
         },
