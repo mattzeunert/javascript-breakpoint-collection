@@ -27,7 +27,7 @@ var breakpoints = [
         title: "debugConsoleErrorCalls",
         debugCalls: [{
             obj: "window.console",
-            prop: "log"
+            prop: "error"
         }]
     },
     {
@@ -150,28 +150,30 @@ function activateBreakpoint(breakpoint, options){
     });
 }
 
-function deactivateBreakpoint(breakpoint, callback) {
+function deactivateBreakpoint(breakpoint) {
     var code = "breakpoints.__internal.disableBreakpoint(" + breakpoint.id + ");";
     code += "breakpoints.__internal.getRegisteredBreakpoints();"
     console.log("eval deactivate", code)
     chrome.devtools.inspectedWindow.eval(code, function(regBp){
         registeredBreakpoints = regBp;
         app.update();
-        if (callback) {callback()}
     })   
 }
 
 function updateBreakpoint(breakpoint, traceOrDebugger){
+    var id = breakpoint.id;
     console.log("updateBreakpoint", traceOrDebugger)
-    var baseBpObject = breakpoints.filter(function(bp){
-        return bp.title === breakpoint.details.title;
-    })[0]
-
-    deactivateBreakpoint(breakpoint, function(){
-        activateBreakpoint(baseBpObject, {
-            hookType: traceOrDebugger
-        })
-    });
+    var settings = {
+        hookType: traceOrDebugger
+    }
+    var details = Object.assign({}, breakpoint.details);
+    details.hookType = traceOrDebugger;
+    var code = "breakpoints.__internal.updateBreakpoint('"+ id + "', " + JSON.stringify(settings) + "," + JSON.stringify(details) + ");"
+    code += "breakpoints.__internal.getRegisteredBreakpoints();"
+    chrome.devtools.inspectedWindow.eval(code, function(regBp){
+        registeredBreakpoints = regBp;
+        app.update();
+    })
 }
 
 var app = null;

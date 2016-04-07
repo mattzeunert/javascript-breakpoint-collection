@@ -1,3 +1,24 @@
+// current issue:
+- i'm updating all hooks ,even no-op ones (i thinks)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 (function(){
     if (window.breakpoints !== undefined) {
         //console.log("already injected, or another part of the page uses the window.breakpoints property")
@@ -6,6 +27,15 @@
 
     var registry = new Map();
     var objectsAndPropsByDebugId = {}
+
+        var hookNames = [
+        "propertyGetBefore",
+        "propertyGetAfter",
+        "propertySetBefore",
+        "propertySetAfter",
+        "propertyCallBefore",
+        "propertyCallAfter"
+    ];
 
     function debugObj(obj, prop, options) {
         var debugId = Math.floor(Math.random() * 100000000000).toString()
@@ -58,14 +88,7 @@
             });
         }
 
-        var hookNames = [
-            "propertyGetBefore",
-            "propertyGetAfter",
-            "propertySetBefore",
-            "propertySetAfter",
-            "propertyCallBefore",
-            "propertyCallAfter"
-        ];
+
         hookNames.forEach(function(hookName){
             if (options[hookName] !== undefined) {
                 if (registry.get(obj)[prop].hooks[hookName] === undefined) {
@@ -89,6 +112,45 @@
                 })
             }
         }
+    }
+
+    function updateEachHook(obj, prop, cb){
+        var hooks = registry.get(obj)[prop].hooks;
+        hookNames.forEach(function(hookName){
+            var accessType = "";
+            if (hookName === "propertyGetBefore" || hookName === "propertyGetAfter") {
+                accessType = "get";
+            }
+            if (hookName === "propertySetBefore" || hookName === "propertySetAfter") {
+                accessType = "set";
+            }
+            if (hookName === "propertyCallBefore" || hookName === "propertyCallAfter") {
+                accessType = "call";
+            }
+            
+            var hooksWithName = hooks[hookName];
+            if (hooksWithName !== undefined) {
+                hooks[hookName] = hooksWithName.map(function(hook){
+                    return cb(hook, accessType)
+                })
+            }
+        })
+    }
+
+    function updateDebugIdHook(debugId, hookType){
+        var objAndProp = objectsAndPropsByDebugId[debugId];
+        updateEachHook(objAndProp.obj, objAndProp.prop, function(hook, accessType){
+            if (hook.id === debugId) {
+                return {
+                    id: debugId,
+                    fn: hookType === "debugger" ? debuggerFunction : function(){
+                        console.trace("About to " + accessType + " " + objAndProp.prop + " property on", objAndProp.obj);
+                    }
+                }
+            } else {
+                return hook;
+            }
+        });
     }
 
     function resetDebug(id){
@@ -142,6 +204,7 @@
 
     function createPropertyAccessTypeDebugFunction(accessTypeToDebug) {
         return function(object, prop, options){
+            console.log("create with ", options)
             var before, after;
             if (options === undefined) {
                 before = debuggerFunction;
@@ -270,14 +333,27 @@
             },
             disableBreakpoint: function(id){
                 var bp = registeredBreakpoints.filter(function(bp){
-                    return bp.id === id;
+                    return bp.id == id;
                 })[0];
                 bp.debugIds.forEach(function(debugId){
                     resetDebug(debugId);
                 });
                 registeredBreakpoints = registeredBreakpoints.filter(function(bp){
-                    return bp.id !== id;
+                    return bp.id != id;
                 })
+            },
+            updateBreakpoint: function(id, settings, details){
+                var bp = registeredBreakpoints.filter(function(bp){
+                    return bp.id == id;
+                })[0];
+
+                if (settings.hookType) {
+                    bp.debugIds.forEach(function(debugId){
+                        updateDebugIdHook(debugId, settings.hookType)
+                    });
+                }
+
+                bp.details = details;
             }
         }
 
