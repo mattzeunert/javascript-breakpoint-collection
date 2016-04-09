@@ -163,22 +163,18 @@ function activateBreakpoint(breakpoint, options){
         hookType: hookType
     }
     code += "breakpoints.__internal.registerBreakpoint(fn, " + JSON.stringify(details) + ");";
-    code += "return breakpoints.__internal.getRegisteredBreakpoints();"
     code += "})();"
     log("eval code", code)
-    chrome.devtools.inspectedWindow.eval(code, function(regBp){
+    chrome.devtools.inspectedWindow.eval(code, function(){
         log("done eval activate code", arguments)
-        registeredBreakpoints = regBp
         app.update();
     });
 }
 
 function deactivateBreakpoint(breakpoint) {
-    var code = "breakpoints.__internal.disableBreakpoint(" + breakpoint.id + ");";
-    code += "breakpoints.__internal.getRegisteredBreakpoints();"
+    var code = "breakpoints.__internal.disableBreakpoint(" + breakpoint.id + ");"
     log("eval deactivate", code)
-    chrome.devtools.inspectedWindow.eval(code, function(regBp){
-        registeredBreakpoints = regBp;
+    chrome.devtools.inspectedWindow.eval(code, function(){
         app.update();
     })   
 }
@@ -192,9 +188,7 @@ function updateBreakpoint(breakpoint, traceOrDebugger){
     var details = Object.assign({}, breakpoint.details);
     details.hookType = traceOrDebugger;
     var code = "breakpoints.__internal.updateBreakpoint('"+ id + "', " + JSON.stringify(settings) + "," + JSON.stringify(details) + ");"
-    code += "breakpoints.__internal.getRegisteredBreakpoints();"
     chrome.devtools.inspectedWindow.eval(code, function(regBp){
-        registeredBreakpoints = regBp;
         app.update();
     })
 }
@@ -221,15 +215,6 @@ backgroundPageConnection.onMessage.addListener(function (message) {
     log(arguments, "ssss")
     readBreakpointsFromPage();
 });
-
-// Relay the tab ID to the background page
-// chrome.runtime.sendMessage({
-//     tabId: chrome.devtools.inspectedWindow.tabId,
-//     scriptToInject: "content-script.js"
-// });
-
-
-
 
 export default class App extends React.Component {
     componentDidMount(){

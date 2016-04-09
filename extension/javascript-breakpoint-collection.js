@@ -322,10 +322,12 @@
         reset: function(id){
             resetDebug(id);
         },
-        _registry: registry,
-        _debugObj: debugObj,
-        _objectsAndPropsByDebugId: objectsAndPropsByDebugId,
         __internal: {
+            debug: {
+                _registry: registry,
+                _debugObj: debugObj,
+                _objectsAndPropsByDebugId: objectsAndPropsByDebugId
+            },
             registerBreakpoint: function(fn, bpDetails){
                 var debugIds = [];
                 var _debugPropertyGet = function(){
@@ -359,6 +361,8 @@
                 registeredBreakpoints = registeredBreakpoints.filter(function(bp){
                     return bp.id != id;
                 })
+
+                pushRegisteredBreakpointsToExtension();
             },
             updateBreakpoint: function(id, settings, details){
                 var bp = registeredBreakpoints.filter(function(bp){
@@ -372,6 +376,8 @@
                 }
 
                 bp.details = details;
+
+                pushRegisteredBreakpointsToExtension();
             }
         }
 
