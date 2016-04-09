@@ -326,7 +326,8 @@
             debug: {
                 _registry: registry,
                 _debugObj: debugObj,
-                _objectsAndPropsByDebugId: objectsAndPropsByDebugId
+                _objectsAndPropsByDebugId: objectsAndPropsByDebugId,
+                _registeredBreakpoints: registeredBreakpoints
             },
             registerBreakpoint: function(fn, bpDetails){
                 var debugIds = [];
