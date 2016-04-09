@@ -203,10 +203,6 @@ var app = null;
 
 readBreakpointsFromPage();
 
-chrome.devtools.network.onNavigated.addListener(function(){
-    readBreakpointsFromPage();
-})
-
 function readBreakpointsFromPage(){
     chrome.devtools.inspectedWindow.eval("breakpoints.__internal.getRegisteredBreakpoints();", function(regBp){
         log("after fetch initial state", arguments)

@@ -8,6 +8,5 @@ s.onload = function() {
 (document.head || document.documentElement).appendChild(s);
 
 window.addEventListener("RebroadcastExtensionMessage", function(evt) {
-    
-  chrome.runtime.sendMessage({action: "update"})
+  chrome.runtime.sendMessage(evt)
 }, false);

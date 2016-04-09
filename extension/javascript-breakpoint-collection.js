@@ -273,6 +273,17 @@
 
     var registeredBreakpoints = [];
 
+    function pushRegisteredBreakpointsToExtension() {
+        var event = new CustomEvent("RebroadcastExtensionMessage", {
+            type: "updateRegisteredBreakpoints",
+            registeredBreakpoints: registeredBreakpoints
+        });
+        window.dispatchEvent(event);
+    }
+
+    pushRegisteredBreakpointsToExtension();
+
+
     window.breakpoints = {
         debugPropertyGet: function(obj, prop){
             var args = arguments;
@@ -333,8 +344,7 @@
                     details: bpDetails
                 })
 
-                var event = new CustomEvent("RebroadcastExtensionMessage", {detail: "cookie"});
-                window.dispatchEvent(event);
+                pushRegisteredBreakpointsToExtension();
             },
             getRegisteredBreakpoints: function(){
                 return registeredBreakpoints;
