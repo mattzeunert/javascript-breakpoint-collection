@@ -54,19 +54,11 @@
                         return function(){
                             triggerHook("propertyCallBefore")
                             retVal.apply(this, arguments);
-                            // disable all after hooks for now since
-                            // they aren't used and bp updates
-                            // overwrite their no-op functions with 
-                            // non no-ops
-                            // triggerHook("propertyCallAfter")
+                            triggerHook("propertyCallAfter")
                         }
                     }
 
-                    // disable all after hooks for now since
-                    // they aren't used and bp updates
-                    // overwrite their no-op functions with 
-                    // non no-ops
-                    // triggerHook("propertyGetAfter");
+                    triggerHook("propertyGetAfter");
                     return retVal;
                 },
                 set: function(newValue){
@@ -77,11 +69,7 @@
                     } else {
                         retVal = originalProp.set.apply(this, arguments);
                     }
-                    // disable all after hooks for now since
-                    // they aren't used and bp updates
-                    // overwrite their no-op functions with 
-                    // non no-ops
-                    // triggerHook("propertySetAfter")
+                    triggerHook("propertySetAfter")
                     return retVal;
                 }
             });
@@ -187,52 +175,6 @@
     }
 
 
-
-    function createPropertyAccessTypeDebugFunction(accessTypeToDebug) {
-        return function(object, prop, options){
-            log("create with ", options)
-            var before, after;
-            if (options === undefined) {
-                before = debuggerFunction;
-            }
-            else if (typeof options === "string") {
-                var hookType = options;
-                if (hookType === "trace") {
-                    before = function(){
-                        console.trace("About to " + accessTypeToDebug + " " + prop + " property on", object);
-                    }
-                } else if (hookType==="debugger"){
-                    before = function(){
-                        debugger;
-                    }
-                } else {
-                    throw "Invalid hook type"
-                }
-            }
-            else {
-                before = options.before;
-                after = options.after;
-            }
-            var hooks = {};
-            if (accessTypeToDebug === "get") {
-                hooks.propertyGetBefore = function(){
-                    if (before){
-                        before.apply(this.arguments);
-                    }
-                }
-            }
-            if (accessTypeToDebug === "set") {
-                hooks.propertySetBefore = function(){
-                    if (before){
-                        before.apply(this.arguments);
-                    }
-                }
-            }
-            return debugObj(object, prop, hooks)
-
-        }
-    }
-
     function debugCall(object, prop, options){
         var before, after;
         if (options === undefined) {
@@ -268,8 +210,16 @@
         return debugObj(object, prop, hooks)
     }
 
-    var debugPropertyGet = createPropertyAccessTypeDebugFunction("get");
-    var debugPropertySet = createPropertyAccessTypeDebugFunction("set");
+    var debugPropertyGet = function(object, propertyName, callback){
+        return debugObj(object, propertyName, {
+            propertyGetBefore: callback
+        })
+    }
+    var debugPropertySet = function(object, propertyName, callback) {
+        return debugObj(object, propertyName, {
+            propertySetBefore: callback
+        })
+    }
 
     var registeredBreakpoints = [];
 
@@ -283,25 +233,44 @@
 
     pushRegisteredBreakpointsToExtension();
 
+    function getCallbackFromUserFriendlyCallbackArgument(callback, object, propertyName, accessType){
+        if (typeof callback === "function") {
+            return callback;
+        } else if (typeof callback === "string") {
+            if (callback === "debugger") {
+                return debuggerFunction;
+            } else if (callback === "trace") {
+                return function(){
+                    console.trace("About to " + accessType + " property '" + propertyName + "' on this object: ", object)
+                }
+            } else {
+                throw new Error("Invalid string callback")
+            }
+        } else if(typeof callback=== "undefined") {
+            return debuggerFunction;
+        } else {
+            throw new Error("Invalid callback type")
+        }
+    }
 
     window.breakpoints = {
-        debugPropertyGet: function(obj, prop){
-            var args = arguments;
+        debugPropertyGet: function(obj, prop, callback){
+            callback = getCallbackFromUserFriendlyCallbackArgument(callback, obj, prop, "get");
             window.breakpoints.__internal.registerBreakpoint(function(
                 debugPropertyGet, debugPropertySet, debugCall
                 ){
-                debugPropertyGet.apply(this, args)
+                    debugPropertyGet(obj, prop, callback);
             }, {
                 title: "debugPropertyGet (" + prop + ")",
                 hook: "debugger"
             });
         },
         debugPropertySet: function(obj, prop){
-            var args = arguments;
+            callback = getCallbackFromUserFriendlyCallbackArgument(callback, obj, prop, "set");
             window.breakpoints.__internal.registerBreakpoint(function(
                 debugPropertyGet, debugPropertySet, debugCall
                 ){
-                debugPropertySet.apply(this, args)
+                    debugPropertySet(obj, prop, callback);
             }, {
                 title: "debugPropertySet (" + prop + ")",
                 hook: "debugger"
