@@ -282,7 +282,7 @@
             window.breakpoints.__internal.registerBreakpoint(function(
                 debugPropertyGet, debugPropertySet, debugCall
                 ){
-                debugCall.apply(this, args)
+                    debugCall(obj, prop, callback);
             }, {
                 title: "debugPropertyCall (" + prop + ")",
                 type: callback.callbackType,
