@@ -9,14 +9,16 @@ var breakpoints = [
         debugPropertyGets: [{
             obj: "document",
             prop: "cookie"
-        }]
+        }],
+        traceMessage: "About to read cookie value"
     },
     {
         title: "debugCookieWrites",
         debugPropertySets: [{
             obj: "document",
             prop: "cookie"
-        }]
+        }],
+        traceMessage: "About to update cookie value"
     },
     {
         title: "debugAlertCalls",
@@ -31,14 +33,16 @@ var breakpoints = [
         debugCalls: [{
             obj: "window.console",
             prop: "error"
-        }]
+        }],
+        traceMessage: "About to call console.error"
     },
     {
         title: "debugConsoleLogCalls",
         debugCalls: [{
             obj: "window.console",
             prop: "log"
-        }]
+        }],
+        traceMessage: "About to call console.log"
     },
     {
         title: "debugPageScroll",
@@ -52,14 +56,16 @@ var breakpoints = [
         debugPropertySets: [{
             obj: "document.body",
             prop: "scrollTop"
-        }]
+        }],
+        traceMessage: "About to change body scroll position"
     },
     {
         title:  "debugLocalStorageReads",
         debugCalls: [{
             obj: "window.localStorage",
             prop: "getItem"
-        }]
+        }],
+        traceMessage: "About to read localStorage data"
     }
 ]
 
