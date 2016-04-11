@@ -19702,14 +19702,14 @@
 	        obj: "document",
 	        prop: "cookie"
 	    }],
-	    traceMessage: "About to read cookie value"
+	    traceMessage: "About to read cookie contents"
 	}, {
 	    title: "debugCookieWrites",
 	    debugPropertySets: [{
 	        obj: "document",
 	        prop: "cookie"
 	    }],
-	    traceMessage: "About to update cookie value"
+	    traceMessage: "About to update cookie contents"
 	}, {
 	    title: "debugAlertCalls",
 	    debugCalls: [{
@@ -19831,6 +19831,15 @@
 	        value: function render() {
 	            var _this5 = this;
 
+	            var customOption = null;
+	            if (this.props.breakpoint.details.type === "custom") {
+	                customOption = _react2.default.createElement(
+	                    "option",
+	                    { value: "custom" },
+	                    "custom"
+	                );
+	            }
+
 	            return _react2.default.createElement(
 	                "div",
 	                { className: "activated-breakpiont-list-item" },
@@ -19850,7 +19859,7 @@
 	                    _react2.default.createElement(
 	                        "select",
 	                        {
-	                            value: this.props.breakpoint.details.hookType,
+	                            value: this.props.breakpoint.details.type,
 	                            onChange: function onChange(event) {
 	                                return updateBreakpoint(_this5.props.breakpoint, event.target.value);
 	                            } },
@@ -19863,7 +19872,8 @@
 	                            "option",
 	                            { value: "trace" },
 	                            "trace"
-	                        )
+	                        ),
+	                        customOption
 	                    )
 	                )
 	            );

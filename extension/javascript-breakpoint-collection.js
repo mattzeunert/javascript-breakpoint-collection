@@ -155,6 +155,7 @@
     function debuggerFunction(){
         debugger;
     }
+    debuggerFunction.callbackType = "debugger";
     
     function getPropertyDescriptor(object, propertyName){
         try {
@@ -206,6 +207,7 @@
 
     function getCallbackFromUserFriendlyCallbackArgument(callback, object, propertyName, accessType){
         if (typeof callback === "function") {
+            callback.callbackType = "custom"
             return callback;
         } else if (typeof callback === "string") {
             if (callback === "debugger") {
@@ -223,9 +225,11 @@
     }
 
     function getTraceFunction(object, propertyName, accessType) {
-        return function(){
+        var traceFn = function(){
             console.trace("About to " + accessType + " property '" + propertyName + "' on this object: ", object)
         }
+        traceFn.callbackType = "trace"
+        return traceFn
     }
 
     function getCallbackFromBreakpointDetails(details, object, propertyName) {
@@ -234,7 +238,14 @@
         }
         else if (details.type === "trace") {
             return function(){
-                console.trace(details.traceMessage);
+                var traceMessage = details.traceMessage;
+                if (traceMessage !== undefined) {
+                    console.trace(details.traceMessage);
+                }
+                else {
+                    var traceFn = getTraceFunction(object, propertyName, details.accessType);
+                    traceFn();
+                }
             }
         } else {
             throw new Error("Invalid breakpoint type")
@@ -250,10 +261,11 @@
                     debugPropertyGet(obj, prop, callback);
             }, {
                 title: "debugPropertyGet (" + prop + ")",
-                hook: "debugger"
+                type: callback.callbackType,
+                accessType: "get"
             });
         },
-        debugPropertySet: function(obj, prop){
+        debugPropertySet: function(obj, prop, callback){
             callback = getCallbackFromUserFriendlyCallbackArgument(callback, obj, prop, "set");
             window.breakpoints.__internal.registerBreakpoint(function(
                 debugPropertyGet, debugPropertySet, debugCall
@@ -261,18 +273,20 @@
                     debugPropertySet(obj, prop, callback);
             }, {
                 title: "debugPropertySet (" + prop + ")",
-                hook: "debugger"
+                type: callback.callbackType,
+                accessType: "set"
             });
         },
-        debugPropertyCall: function(obj, prop){
-            var args = arguments;
+        debugPropertyCall: function(obj, prop, callback){
+            callback = getCallbackFromUserFriendlyCallbackArgument(callback, obj, prop, "call");
             window.breakpoints.__internal.registerBreakpoint(function(
                 debugPropertyGet, debugPropertySet, debugCall
                 ){
                 debugCall.apply(this, args)
             }, {
                 title: "debugPropertyCall (" + prop + ")",
-                hook: "debugger"
+                type: callback.callbackType,
+                accessType: "call"
             });
 
         },
@@ -341,9 +355,11 @@
                     return bp.id == id;
                 })[0];
 
-                var callback = getCallbackFromBreakpointDetails(details);
-
                 bp.debugIds.forEach(function(debugId){
+                    var objAndProp = objectsAndPropsByDebugId[debugId];
+                    var object = objAndProp.obj;
+                    var propertyName = objAndProp.prop;
+                    var callback = getCallbackFromBreakpointDetails(details, object, propertyName);
                     updateDebugIdCallback(debugId, callback)
                 });
                 

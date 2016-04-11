@@ -10,7 +10,7 @@ var breakpoints = [
             obj: "document",
             prop: "cookie"
         }],
-        traceMessage: "About to read cookie value"
+        traceMessage: "About to read cookie contents"
     },
     {
         title: "debugCookieWrites",
@@ -18,7 +18,7 @@ var breakpoints = [
             obj: "document",
             prop: "cookie"
         }],
-        traceMessage: "About to update cookie value"
+        traceMessage: "About to update cookie contents"
     },
     {
         title: "debugAlertCalls",
@@ -94,6 +94,11 @@ class UnactivatedBreakpointList extends React.Component {
 
 class ActivatedBreakpointListItem extends React.Component {
     render(){
+        var customOption = null;
+        if (this.props.breakpoint.details.type === "custom") {
+            customOption = <option value="custom">custom</option>
+        }
+
         return <div className="activated-breakpiont-list-item">
             {this.props.breakpoint.details.title}
             <button
@@ -103,10 +108,11 @@ class ActivatedBreakpointListItem extends React.Component {
             </button>
             <div style={{marginTop: 4}}>
                 <select
-                    value={this.props.breakpoint.details.hookType}
+                    value={this.props.breakpoint.details.type}
                     onChange={(event) => updateBreakpoint(this.props.breakpoint, event.target.value)}>
                     <option value="debugger">debugger</option>
                     <option value="trace">trace</option>
+                    {customOption}
                 </select>
             </div>
         </div>
