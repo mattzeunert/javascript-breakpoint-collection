@@ -66,6 +66,14 @@ var breakpoints = [
             prop: "getItem"
         }],
         traceMessage: "About to read localStorage data"
+    },
+    {
+        title:  "debugLocalStorageWrites",
+        debugCalls: [{
+            obj: "window.localStorage",
+            prop: "setItem"
+        }],
+        traceMessage: "About to write localStorage data"
     }
 ]
 
