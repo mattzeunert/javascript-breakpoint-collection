@@ -124,15 +124,13 @@
         })
     }
 
-    function updateDebugIdHook(debugId, hookType){
+    function updateDebugIdCallback(debugId, callback){
         var objAndProp = objectsAndPropsByDebugId[debugId];
         updateEachHook(objAndProp.obj, objAndProp.prop, function(hook, accessType){
             if (hook.id === debugId) {
                 return {
                     id: debugId,
-                    fn: hookType === "debugger" ? debuggerFunction : function(){
-                        console.trace("About to " + accessType + " " + objAndProp.prop + " property on", objAndProp.obj);
-                    }
+                    fn: callback
                 }
             } else {
                 return hook;
@@ -175,39 +173,12 @@
     }
 
 
-    function debugCall(object, prop, options){
-        var before, after;
-        if (options === undefined) {
-            before = debuggerFunction;
-        } else if (typeof options === "string") {
-            var hookType = options;
-            if (hookType === "trace") {
-                before = function(){
-                    console.trace("About to call " + prop + " function on", object);
-                }
-            } else if (hookType==="debugger"){
-                before = function(){
-                    debugger
-                }
-            } else {
-                throw "Invalid hook type"
-            }
-        } else if (typeof options === "function") {
-            before = options;
-        } else {
-            before = options.before;
-            after = options.after;
-        }
+    function debugCall(object, prop, callback){
+        callback = getCallbackFromUserFriendlyCallbackArgument(callback, object, prop, "call")
 
-        var hooks = {};
-        if (before) {
-            hooks.propertyCallBefore = before;
-        }
-        if (after){
-            hooks.propertyCallAfter = after;
-        }
-
-        return debugObj(object, prop, hooks)
+        return debugObj(object, prop, {
+            propertyCallBefore: callback
+        })
     }
 
     var debugPropertyGet = function(object, propertyName, callback){
@@ -240,9 +211,7 @@
             if (callback === "debugger") {
                 return debuggerFunction;
             } else if (callback === "trace") {
-                return function(){
-                    console.trace("About to " + accessType + " property '" + propertyName + "' on this object: ", object)
-                }
+                return getTraceFunction(object, propertyName, accessType);
             } else {
                 throw new Error("Invalid string callback")
             }
@@ -250,6 +219,25 @@
             return debuggerFunction;
         } else {
             throw new Error("Invalid callback type")
+        }
+    }
+
+    function getTraceFunction(object, propertyName, accessType) {
+        return function(){
+            console.trace("About to " + accessType + " property '" + propertyName + "' on this object: ", object)
+        }
+    }
+
+    function getCallbackFromBreakpointDetails(details, object, propertyName) {
+        if (details.type === "debugger") {
+            return debuggerFunction;
+        }
+        else if (details.type === "trace") {
+            return function(){
+                console.trace(details.traceMessage);
+            }
+        } else {
+            throw new Error("Invalid breakpoint type")
         }
     }
 
@@ -298,25 +286,39 @@
                 _objectsAndPropsByDebugId: objectsAndPropsByDebugId,
                 _registeredBreakpoints: registeredBreakpoints
             },
-            registerBreakpoint: function(fn, bpDetails){
+            registerBreakpoint: function(fn, bpDetails, fixedCallback){
                 var debugIds = [];
-                var _debugPropertyGet = function(){
-                    debugIds.push(debugPropertyGet.apply(this, arguments));
+                var _debugPropertyGet = function(object, propertyName, callback){
+                    if (fixedCallback) {
+                        callback = fixedCallback;
+                    }
+                    debugIds.push(debugPropertyGet(object, propertyName, callback));
                 }
-                var _debugPropertySet = function(){
-                    debugIds.push(debugPropertySet.apply(this, arguments));
+                var _debugPropertySet = function(object, propertyName, callback){
+                    if (fixedCallback) {
+                        callback = fixedCallback;
+                    }
+                    debugIds.push(debugPropertySet(object, propertyName, callback));
                 }
-                var _debugCall = function(){
-                    debugIds.push(debugCall.apply(this, arguments));
+                var _debugCall = function(object, propertyName, callback){
+                    if (fixedCallback) {
+                        callback = fixedCallback;
+                    }
+                    debugIds.push(debugCall(object, propertyName, callback));
                 }
                 fn(_debugPropertyGet, _debugPropertySet, _debugCall);
+                var id = Math.floor(Math.random() * 1000000000)
                 registeredBreakpoints.push({
-                    id: Math.floor(Math.random() * 1000000000),
+                    id: id,
                     debugIds,
                     details: bpDetails
-                })
+                });
 
                 pushRegisteredBreakpointsToExtension();
+            },
+            registerBreakpointFromExtension: function(fn, bpDetails){
+                var fixedCallback = getCallbackFromBreakpointDetails(bpDetails);
+                var id = window.breakpoints.__internal.registerBreakpoint(fn, bpDetails, fixedCallback);
             },
             getRegisteredBreakpoints: function(){
                 return registeredBreakpoints;
@@ -334,20 +336,22 @@
 
                 pushRegisteredBreakpointsToExtension();
             },
-            updateBreakpoint: function(id, settings, details){
+            updateBreakpoint: function(id, details){
                 var bp = registeredBreakpoints.filter(function(bp){
                     return bp.id == id;
                 })[0];
 
-                if (settings.hookType) {
-                    bp.debugIds.forEach(function(debugId){
-                        updateDebugIdHook(debugId, settings.hookType)
-                    });
-                }
+                var callback = getCallbackFromBreakpointDetails(details);
 
+                bp.debugIds.forEach(function(debugId){
+                    updateDebugIdCallback(debugId, callback)
+                });
+                
                 bp.details = details;
 
                 pushRegisteredBreakpointsToExtension();
+
+
             }
         }
 

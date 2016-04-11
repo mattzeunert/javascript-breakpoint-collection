@@ -19713,7 +19713,8 @@
 	    debugCalls: [{
 	        obj: "window",
 	        prop: "alert"
-	    }]
+	    }],
+	    traceMessage: "About to show alert box"
 	}, {
 	    title: "debugConsoleErrorCalls",
 	    debugCalls: [{
@@ -19901,10 +19902,9 @@
 	function activateBreakpoint(breakpoint, options) {
 	    if (!options) {
 	        options = {
-	            hookType: "debugger"
+	            type: "debugger"
 	        };
 	    }
-	    var hookType = options.hookType;
 
 	    var calls = [];
 	    var debugPropertyGets = breakpoint.debugPropertyGets;
@@ -19913,39 +19913,39 @@
 
 	    if (debugPropertyGets) {
 	        debugPropertyGets.forEach(function (property) {
-	            calls.push(["debugPropertyGet", property.obj, property.prop, hookType]);
+	            calls.push(["debugPropertyGet", property.obj, property.prop]);
 	        });
 	    }
 	    if (debugPropertySets) {
 	        debugPropertySets.forEach(function (property) {
-	            calls.push(["debugPropertySet", property.obj, property.prop, hookType]);
+	            calls.push(["debugPropertySet", property.obj, property.prop]);
 	        });
 	    }
 	    if (debugCalls) {
 	        debugCalls.forEach(function (property) {
-	            calls.push(["debugCall", property.obj, property.prop, hookType]);
+	            calls.push(["debugCall", property.obj, property.prop]);
 	        });
 	    }
 
 	    var code = "(function(){ var fn = function(debugPropertyGet, debugPropertySet, debugCall){";
 
 	    calls.forEach(function (call) {
-	        var _call = _slicedToArray(call, 4);
+	        var _call = _slicedToArray(call, 3);
 
 	        var method = _call[0];
 	        var objName = _call[1];
 	        var propName = _call[2];
-	        var hookType = _call[3];
 
-	        code += method + '(' + objName + ',"' + propName + '", "' + hookType + '");';
+	        code += method + '(' + objName + ',"' + propName + '");';
 	    });
 
 	    code += "};";
 	    var details = {
 	        title: breakpoint.title,
-	        hookType: hookType
+	        traceMessage: breakpoint.traceMessage,
+	        type: options.type
 	    };
-	    code += "breakpoints.__internal.registerBreakpoint(fn, " + JSON.stringify(details) + ");";
+	    code += "breakpoints.__internal.registerBreakpointFromExtension(fn, " + JSON.stringify(details) + ");";
 	    code += "})();";
 	    log("eval code", code);
 	    chrome.devtools.inspectedWindow.eval(code, function () {
@@ -19964,13 +19964,9 @@
 
 	function updateBreakpoint(breakpoint, traceOrDebugger) {
 	    var id = breakpoint.id;
-	    log("updateBreakpoint", traceOrDebugger);
-	    var settings = {
-	        hookType: traceOrDebugger
-	    };
 	    var details = Object.assign({}, breakpoint.details);
-	    details.hookType = traceOrDebugger;
-	    var code = "breakpoints.__internal.updateBreakpoint('" + id + "', " + JSON.stringify(settings) + "," + JSON.stringify(details) + ");";
+	    details.type = traceOrDebugger;
+	    var code = "breakpoints.__internal.updateBreakpoint('" + id + "', " + JSON.stringify(details) + ");";
 	    chrome.devtools.inspectedWindow.eval(code, function (regBp) {
 	        app.update();
 	    });
