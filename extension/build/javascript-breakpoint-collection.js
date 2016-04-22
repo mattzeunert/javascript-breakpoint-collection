@@ -40,149 +40,29 @@
 /******/ 	return __webpack_require__(0);
 /******/ })
 /************************************************************************/
-/******/ ([
-/* 0 */
-/***/ function(module, exports) {
+/******/ ({
+
+/***/ 0:
+/***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 
+	var _debugObj = __webpack_require__(160);
+
+	var _debugObj2 = _interopRequireDefault(_debugObj);
+
+	var _predefinedBreakpoints = __webpack_require__(161);
+
+	var _predefinedBreakpoints2 = _interopRequireDefault(_predefinedBreakpoints);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 	(function () {
-	    var log = function log() {};
-
 	    if (window.breakpoints !== undefined) {
-	        //console.log("already injected, or another part of the page uses the window.breakpoints property")
+	        if (!window.breakpoints.__internal || !window.breakpoints.__internal.isBreakpointCollectionExtension) {
+	            console.log("Breakpoints extension can't load, global `breakpoints` variable is already defined");
+	        }
 	        return;
-	    }
-
-	    var registry = new Map();
-	    var objectsAndPropsByDebugId = {};
-
-	    var hookNames = ["propertyGetBefore", "propertyGetAfter", "propertySetBefore", "propertySetAfter", "propertyCallBefore", "propertyCallAfter"];
-
-	    function debugObj(obj, prop, options) {
-	        var debugId = Math.floor(Math.random() * 100000000000).toString();
-	        objectsAndPropsByDebugId[debugId] = {
-	            obj: obj,
-	            prop: prop
-	        };
-
-	        if (registry.get(obj) === undefined) {
-	            registry.set(obj, {});
-	        }
-
-	        if (registry.get(obj)[prop] === undefined) {
-	            registry.get(obj)[prop] = { hooks: {} };
-
-	            var originalProp = getPropertyDescriptor(obj, prop);
-	            var isSimpleValue = "value" in originalProp; // rather than getter + setter
-
-	            Object.defineProperty(obj, prop, {
-	                get: function get() {
-	                    var retVal;
-	                    triggerHook("propertyGetBefore");
-	                    if (isSimpleValue) {
-	                        retVal = originalProp.value;
-	                    } else {
-	                        retVal = originalProp.get.apply(this, arguments);
-	                    }
-	                    if (typeof retVal === "function") {
-	                        return function () {
-	                            triggerHook("propertyCallBefore");
-	                            retVal.apply(this, arguments);
-	                            triggerHook("propertyCallAfter");
-	                        };
-	                    }
-
-	                    triggerHook("propertyGetAfter");
-	                    return retVal;
-	                },
-	                set: function set(newValue) {
-	                    var retVal;
-	                    triggerHook("propertySetBefore");
-	                    if (isSimpleValue) {
-	                        retVal = originalProp.value = newValue;
-	                    } else {
-	                        retVal = originalProp.set.apply(this, arguments);
-	                    }
-	                    triggerHook("propertySetAfter");
-	                    return retVal;
-	                }
-	            });
-	        }
-
-	        hookNames.forEach(function (hookName) {
-	            if (options[hookName] !== undefined) {
-	                if (registry.get(obj)[prop].hooks[hookName] === undefined) {
-	                    registry.get(obj)[prop].hooks[hookName] = [];
-	                }
-	                registry.get(obj)[prop].hooks[hookName].push({
-	                    id: debugId,
-	                    fn: options[hookName]
-	                });
-	            }
-	        });
-
-	        return debugId;
-
-	        function triggerHook(hookName) {
-	            var hooks = registry.get(obj)[prop].hooks;
-	            var hooksWithName = hooks[hookName];
-	            if (hooksWithName !== undefined && hooksWithName.length > 0) {
-	                hooksWithName.forEach(function (hook) {
-	                    hook.fn();
-	                });
-	            }
-	        }
-	    }
-
-	    function updateEachHook(obj, prop, cb) {
-	        var hooks = registry.get(obj)[prop].hooks;
-	        hookNames.forEach(function (hookName) {
-	            var accessType = "";
-	            if (hookName === "propertyGetBefore" || hookName === "propertyGetAfter") {
-	                accessType = "get";
-	            }
-	            if (hookName === "propertySetBefore" || hookName === "propertySetAfter") {
-	                accessType = "set";
-	            }
-	            if (hookName === "propertyCallBefore" || hookName === "propertyCallAfter") {
-	                accessType = "call";
-	            }
-
-	            var hooksWithName = hooks[hookName];
-	            if (hooksWithName !== undefined) {
-	                hooks[hookName] = hooksWithName.map(function (hook) {
-	                    return cb(hook, accessType);
-	                });
-	            }
-	        });
-	    }
-
-	    function updateDebugIdCallback(debugId, callback) {
-	        var objAndProp = objectsAndPropsByDebugId[debugId];
-	        updateEachHook(objAndProp.obj, objAndProp.prop, function (hook, accessType) {
-	            if (hook.id === debugId) {
-	                return {
-	                    id: debugId,
-	                    fn: callback
-	                };
-	            } else {
-	                return hook;
-	            }
-	        });
-	    }
-
-	    function resetDebug(id) {
-	        var objAndProp = objectsAndPropsByDebugId[id];
-	        var hooks = registry.get(objAndProp.obj)[objAndProp.prop].hooks;
-	        for (var hookName in hooks) {
-	            var hooksWithName = hooks[hookName];
-	            hooks[hookName] = hooksWithName.filter(function (hook) {
-	                return hook.id != id;
-	            });
-	        }
-
-	        delete objectsAndPropsByDebugId[id];
 	    }
 
 	    function debuggerFunction() {
@@ -190,37 +70,21 @@
 	    }
 	    debuggerFunction.callbackType = "debugger";
 
-	    function getPropertyDescriptor(object, propertyName) {
-	        try {
-	            var descriptor = Object.getOwnPropertyDescriptor(object, propertyName);
-	        } catch (err) {
-	            console.log("are you sure the property ", propertyName, " exists?");
-	            throw err;
-	        }
-	        if (!object) {
-	            throw new Error("Descriptor " + propertyName + " not found");
-	        }
-	        if (!descriptor) {
-	            return getPropertyDescriptor(Object.getPrototypeOf(object), propertyName);
-	        }
-	        return descriptor;
-	    }
-
 	    function debugCall(object, prop, callback) {
 	        callback = getCallbackFromUserFriendlyCallbackArgument(callback, object, prop, "call");
 
-	        return debugObj(object, prop, {
+	        return (0, _debugObj2.default)(object, prop, {
 	            propertyCallBefore: callback
 	        });
 	    }
 
 	    var debugPropertyGet = function debugPropertyGet(object, propertyName, callback) {
-	        return debugObj(object, propertyName, {
+	        return (0, _debugObj2.default)(object, propertyName, {
 	            propertyGetBefore: callback
 	        });
 	    };
 	    var debugPropertySet = function debugPropertySet(object, propertyName, callback) {
-	        return debugObj(object, propertyName, {
+	        return (0, _debugObj2.default)(object, propertyName, {
 	            propertySetBefore: callback
 	        });
 	    };
@@ -282,7 +146,87 @@
 	        }
 	    }
 
-	    window.breakpoints = {
+	    var __internal = {
+	        isBreakpointCollectionExtension: true,
+	        debug: {
+	            _registry: _debugObj.registry,
+	            _debugObj: _debugObj2.default,
+	            _objectsAndPropsByDebugId: _debugObj.objectsAndPropsByDebugId,
+	            _registeredBreakpoints: registeredBreakpoints
+	        },
+	        registerBreakpoint: function registerBreakpoint(fn, bpDetails, fixedCallback) {
+	            var debugIds = [];
+	            var _debugPropertyGet = function _debugPropertyGet(object, propertyName, callback) {
+	                if (fixedCallback) {
+	                    callback = fixedCallback;
+	                }
+	                debugIds.push(debugPropertyGet(object, propertyName, callback));
+	            };
+	            var _debugPropertySet = function _debugPropertySet(object, propertyName, callback) {
+	                if (fixedCallback) {
+	                    callback = fixedCallback;
+	                }
+	                debugIds.push(debugPropertySet(object, propertyName, callback));
+	            };
+	            var _debugCall = function _debugCall(object, propertyName, callback) {
+	                if (fixedCallback) {
+	                    callback = fixedCallback;
+	                }
+	                debugIds.push(debugCall(object, propertyName, callback));
+	            };
+	            fn(_debugPropertyGet, _debugPropertySet, _debugCall);
+	            var id = Math.floor(Math.random() * 1000000000);
+	            registeredBreakpoints.push({
+	                id: id,
+	                debugIds: debugIds,
+	                details: bpDetails
+	            });
+
+	            pushRegisteredBreakpointsToExtension();
+	        },
+	        createSpecificBreakpoint: function createSpecificBreakpoint(breakpointName) {
+	            window.breakpoints[breakpointName]();
+	        },
+	        registerBreakpointFromExtension: function registerBreakpointFromExtension(fn, bpDetails) {
+	            var fixedCallback = getCallbackFromBreakpointDetails(bpDetails);
+	            var id = window.breakpoints.__internal.registerBreakpoint(fn, bpDetails, fixedCallback);
+	        },
+	        getRegisteredBreakpoints: function getRegisteredBreakpoints() {
+	            return registeredBreakpoints;
+	        },
+	        disableBreakpoint: function disableBreakpoint(id) {
+	            var bp = registeredBreakpoints.filter(function (bp) {
+	                return bp.id == id;
+	            })[0];
+	            bp.debugIds.forEach(function (debugId) {
+	                (0, _debugObj.resetDebug)(debugId);
+	            });
+	            registeredBreakpoints = registeredBreakpoints.filter(function (bp) {
+	                return bp.id != id;
+	            });
+
+	            pushRegisteredBreakpointsToExtension();
+	        },
+	        updateBreakpoint: function updateBreakpoint(id, details) {
+	            var bp = registeredBreakpoints.filter(function (bp) {
+	                return bp.id == id;
+	            })[0];
+
+	            bp.debugIds.forEach(function (debugId) {
+	                var objAndProp = _debugObj.objectsAndPropsByDebugId[debugId];
+	                var object = objAndProp.obj;
+	                var propertyName = objAndProp.prop;
+	                var callback = getCallbackFromBreakpointDetails(details, object, propertyName);
+	                (0, _debugObj.updateDebugIdCallback)(debugId, callback);
+	            });
+
+	            bp.details = details;
+
+	            pushRegisteredBreakpointsToExtension();
+	        }
+	    };
+
+	    var breakpoints = {
 	        debugPropertyGet: function debugPropertyGet(obj, prop, callback) {
 	            callback = getCallbackFromUserFriendlyCallbackArgument(callback, obj, prop, "get");
 	            window.breakpoints.__internal.registerBreakpoint(function (debugPropertyGet, debugPropertySet, debugCall) {
@@ -313,168 +257,11 @@
 	                accessType: "call"
 	            });
 	        },
-	        reset: function reset(id) {
-	            resetDebug(id);
-	        },
-	        __internal: {
-	            debug: {
-	                _registry: registry,
-	                _debugObj: debugObj,
-	                _objectsAndPropsByDebugId: objectsAndPropsByDebugId,
-	                _registeredBreakpoints: registeredBreakpoints
-	            },
-	            registerBreakpoint: function registerBreakpoint(fn, bpDetails, fixedCallback) {
-	                var debugIds = [];
-	                var _debugPropertyGet = function _debugPropertyGet(object, propertyName, callback) {
-	                    if (fixedCallback) {
-	                        callback = fixedCallback;
-	                    }
-	                    debugIds.push(debugPropertyGet(object, propertyName, callback));
-	                };
-	                var _debugPropertySet = function _debugPropertySet(object, propertyName, callback) {
-	                    if (fixedCallback) {
-	                        callback = fixedCallback;
-	                    }
-	                    debugIds.push(debugPropertySet(object, propertyName, callback));
-	                };
-	                var _debugCall = function _debugCall(object, propertyName, callback) {
-	                    if (fixedCallback) {
-	                        callback = fixedCallback;
-	                    }
-	                    debugIds.push(debugCall(object, propertyName, callback));
-	                };
-	                fn(_debugPropertyGet, _debugPropertySet, _debugCall);
-	                var id = Math.floor(Math.random() * 1000000000);
-	                registeredBreakpoints.push({
-	                    id: id,
-	                    debugIds: debugIds,
-	                    details: bpDetails
-	                });
-
-	                pushRegisteredBreakpointsToExtension();
-	            },
-	            createSpecificBreakpoint: function createSpecificBreakpoint(breakpointName) {
-	                window.breakpoints[breakpointName]();
-	            },
-	            registerBreakpointFromExtension: function registerBreakpointFromExtension(fn, bpDetails) {
-	                var fixedCallback = getCallbackFromBreakpointDetails(bpDetails);
-	                var id = window.breakpoints.__internal.registerBreakpoint(fn, bpDetails, fixedCallback);
-	            },
-	            getRegisteredBreakpoints: function getRegisteredBreakpoints() {
-	                return registeredBreakpoints;
-	            },
-	            disableBreakpoint: function disableBreakpoint(id) {
-	                var bp = registeredBreakpoints.filter(function (bp) {
-	                    return bp.id == id;
-	                })[0];
-	                bp.debugIds.forEach(function (debugId) {
-	                    resetDebug(debugId);
-	                });
-	                registeredBreakpoints = registeredBreakpoints.filter(function (bp) {
-	                    return bp.id != id;
-	                });
-
-	                pushRegisteredBreakpointsToExtension();
-	            },
-	            updateBreakpoint: function updateBreakpoint(id, details) {
-	                var bp = registeredBreakpoints.filter(function (bp) {
-	                    return bp.id == id;
-	                })[0];
-
-	                bp.debugIds.forEach(function (debugId) {
-	                    var objAndProp = objectsAndPropsByDebugId[debugId];
-	                    var object = objAndProp.obj;
-	                    var propertyName = objAndProp.prop;
-	                    var callback = getCallbackFromBreakpointDetails(details, object, propertyName);
-	                    updateDebugIdCallback(debugId, callback);
-	                });
-
-	                bp.details = details;
-
-	                pushRegisteredBreakpointsToExtension();
-	            }
-	        }
+	        __internal: __internal
 	    };
 
-	    var breakpoints = [{
-	        title: "debugCookieReads",
-	        debugPropertyGets: [{
-	            obj: "document",
-	            prop: "cookie"
-	        }],
-	        traceMessage: "About to read cookie contents"
-	    }, {
-	        title: "debugCookieWrites",
-	        debugPropertySets: [{
-	            obj: "document",
-	            prop: "cookie"
-	        }],
-	        traceMessage: "About to update cookie contents"
-	    }, {
-	        title: "debugAlertCalls",
-	        debugCalls: [{
-	            obj: "window",
-	            prop: "alert"
-	        }],
-	        traceMessage: "About to show alert box"
-	    }, {
-	        title: "debugConsoleErrorCalls",
-	        debugCalls: [{
-	            obj: "window.console",
-	            prop: "error"
-	        }],
-	        traceMessage: "About to call console.error"
-	    }, {
-	        title: "debugConsoleLogCalls",
-	        debugCalls: [{
-	            obj: "window.console",
-	            prop: "log"
-	        }],
-	        traceMessage: "About to call console.log"
-	    }, {
-	        title: "debugScroll",
-	        debugCalls: [{
-	            obj: "window",
-	            prop: "scrollTo"
-	        }, {
-	            obj: "window",
-	            prop: "scrollBy"
-	        }],
-	        debugPropertySets: [{
-	            obj: "document.body",
-	            prop: "scrollTop"
-	        }, {
-	            obj: "document.body",
-	            prop: "scrollLeft"
-	        }, {
-	            obj: "Element.prototype",
-	            prop: "scrollTop"
-	        }, {
-	            obj: "Element.prototype",
-	            prop: "scrollLeft"
-	        }],
-	        traceMessage: "About to change body scroll position"
-	    }, {
-	        title: "debugLocalStorageReads",
-	        debugCalls: [{
-	            obj: "window.localStorage",
-	            prop: "getItem"
-	        }],
-	        traceMessage: "About to read localStorage data"
-	    }, {
-	        title: "debugLocalStorageWrites",
-	        debugCalls: [{
-	            obj: "window.localStorage",
-	            prop: "setItem"
-	        }, {
-	            obj: "window.localStorage",
-	            prop: "clear"
-	        }],
-	        traceMessage: "About to write localStorage data"
-	    }];
-	    breakpoints.forEach(function (breakpoint) {
-
-	        window.breakpoints[breakpoint.title] = function (callback) {
+	    _predefinedBreakpoints2.default.forEach(function (breakpoint) {
+	        breakpoints[breakpoint.title] = function (callback) {
 	            callback = getCallbackFromUserFriendlyCallbackArgument(callback);
 
 	            var details = {
@@ -501,10 +288,262 @@
 	                }
 	            };
 
-	            window.breakpoints.__internal.registerBreakpoint(fn, details);
+	            breakpoints.__internal.registerBreakpoint(fn, details);
 	        };
 	    });
+
+	    window.breakpoints = breakpoints;
 	})();
 
+/***/ },
+
+/***/ 160:
+/***/ function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	exports.default = debugObj;
+	exports.updateDebugIdCallback = updateDebugIdCallback;
+	exports.resetDebug = resetDebug;
+	var registry = new Map();
+	var objectsAndPropsByDebugId = {};
+
+	var hookNames = ["propertyGetBefore", "propertyGetAfter", "propertySetBefore", "propertySetAfter", "propertyCallBefore", "propertyCallAfter"];
+
+	function getPropertyDescriptor(object, propertyName) {
+	    try {
+	        var descriptor = Object.getOwnPropertyDescriptor(object, propertyName);
+	    } catch (err) {
+	        console.log("are you sure the property ", propertyName, " exists?");
+	        throw err;
+	    }
+	    if (!object) {
+	        throw new Error("Descriptor " + propertyName + " not found");
+	    }
+	    if (!descriptor) {
+	        return getPropertyDescriptor(Object.getPrototypeOf(object), propertyName);
+	    }
+	    return descriptor;
+	}
+
+	exports.registry = registry;
+	exports.objectsAndPropsByDebugId = objectsAndPropsByDebugId;
+	function debugObj(obj, prop, options) {
+	    var debugId = Math.floor(Math.random() * 100000000000).toString();
+	    objectsAndPropsByDebugId[debugId] = {
+	        obj: obj,
+	        prop: prop
+	    };
+
+	    if (registry.get(obj) === undefined) {
+	        registry.set(obj, {});
+	    }
+
+	    if (registry.get(obj)[prop] === undefined) {
+	        registry.get(obj)[prop] = { hooks: {} };
+
+	        var originalProp = getPropertyDescriptor(obj, prop);
+	        var isSimpleValue = "value" in originalProp; // rather than getter + setter
+
+	        Object.defineProperty(obj, prop, {
+	            get: function get() {
+	                var retVal;
+	                triggerHook("propertyGetBefore");
+	                if (isSimpleValue) {
+	                    retVal = originalProp.value;
+	                } else {
+	                    retVal = originalProp.get.apply(this, arguments);
+	                }
+	                if (typeof retVal === "function") {
+	                    return function () {
+	                        triggerHook("propertyCallBefore");
+	                        retVal.apply(this, arguments);
+	                        triggerHook("propertyCallAfter");
+	                    };
+	                }
+
+	                triggerHook("propertyGetAfter");
+	                return retVal;
+	            },
+	            set: function set(newValue) {
+	                var retVal;
+	                triggerHook("propertySetBefore");
+	                if (isSimpleValue) {
+	                    retVal = originalProp.value = newValue;
+	                } else {
+	                    retVal = originalProp.set.apply(this, arguments);
+	                }
+	                triggerHook("propertySetAfter");
+	                return retVal;
+	            }
+	        });
+	    }
+
+	    hookNames.forEach(function (hookName) {
+	        if (options[hookName] !== undefined) {
+	            if (registry.get(obj)[prop].hooks[hookName] === undefined) {
+	                registry.get(obj)[prop].hooks[hookName] = [];
+	            }
+	            registry.get(obj)[prop].hooks[hookName].push({
+	                id: debugId,
+	                fn: options[hookName]
+	            });
+	        }
+	    });
+
+	    return debugId;
+
+	    function triggerHook(hookName) {
+	        var hooks = registry.get(obj)[prop].hooks;
+	        var hooksWithName = hooks[hookName];
+	        if (hooksWithName !== undefined && hooksWithName.length > 0) {
+	            hooksWithName.forEach(function (hook) {
+	                hook.fn();
+	            });
+	        }
+	    }
+	}
+
+	function updateEachHook(obj, prop, cb) {
+	    var hooks = registry.get(obj)[prop].hooks;
+	    hookNames.forEach(function (hookName) {
+	        var accessType = "";
+	        if (hookName === "propertyGetBefore" || hookName === "propertyGetAfter") {
+	            accessType = "get";
+	        }
+	        if (hookName === "propertySetBefore" || hookName === "propertySetAfter") {
+	            accessType = "set";
+	        }
+	        if (hookName === "propertyCallBefore" || hookName === "propertyCallAfter") {
+	            accessType = "call";
+	        }
+
+	        var hooksWithName = hooks[hookName];
+	        if (hooksWithName !== undefined) {
+	            hooks[hookName] = hooksWithName.map(function (hook) {
+	                return cb(hook, accessType);
+	            });
+	        }
+	    });
+	}
+
+	function updateDebugIdCallback(debugId, callback) {
+	    var objAndProp = objectsAndPropsByDebugId[debugId];
+	    updateEachHook(objAndProp.obj, objAndProp.prop, function (hook, accessType) {
+	        if (hook.id === debugId) {
+	            return {
+	                id: debugId,
+	                fn: callback
+	            };
+	        } else {
+	            return hook;
+	        }
+	    });
+	}
+
+	function resetDebug(id) {
+	    var objAndProp = objectsAndPropsByDebugId[id];
+	    var hooks = registry.get(objAndProp.obj)[objAndProp.prop].hooks;
+	    for (var hookName in hooks) {
+	        var hooksWithName = hooks[hookName];
+	        hooks[hookName] = hooksWithName.filter(function (hook) {
+	            return hook.id != id;
+	        });
+	    }
+
+	    delete objectsAndPropsByDebugId[id];
+	}
+
+/***/ },
+
+/***/ 161:
+/***/ function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	exports.default = [{
+	    title: "debugCookieReads",
+	    debugPropertyGets: [{
+	        obj: "document",
+	        prop: "cookie"
+	    }],
+	    traceMessage: "About to read cookie contents"
+	}, {
+	    title: "debugCookieWrites",
+	    debugPropertySets: [{
+	        obj: "document",
+	        prop: "cookie"
+	    }],
+	    traceMessage: "About to update cookie contents"
+	}, {
+	    title: "debugAlertCalls",
+	    debugCalls: [{
+	        obj: "window",
+	        prop: "alert"
+	    }],
+	    traceMessage: "About to show alert box"
+	}, {
+	    title: "debugConsoleErrorCalls",
+	    debugCalls: [{
+	        obj: "window.console",
+	        prop: "error"
+	    }],
+	    traceMessage: "About to call console.error"
+	}, {
+	    title: "debugConsoleLogCalls",
+	    debugCalls: [{
+	        obj: "window.console",
+	        prop: "log"
+	    }],
+	    traceMessage: "About to call console.log"
+	}, {
+	    title: "debugScroll",
+	    debugCalls: [{
+	        obj: "window",
+	        prop: "scrollTo"
+	    }, {
+	        obj: "window",
+	        prop: "scrollBy"
+	    }],
+	    debugPropertySets: [{
+	        obj: "document.body",
+	        prop: "scrollTop"
+	    }, {
+	        obj: "document.body",
+	        prop: "scrollLeft"
+	    }, {
+	        obj: "Element.prototype",
+	        prop: "scrollTop"
+	    }, {
+	        obj: "Element.prototype",
+	        prop: "scrollLeft"
+	    }],
+	    traceMessage: "About to change body scroll position"
+	}, {
+	    title: "debugLocalStorageReads",
+	    debugCalls: [{
+	        obj: "window.localStorage",
+	        prop: "getItem"
+	    }],
+	    traceMessage: "About to read localStorage data"
+	}, {
+	    title: "debugLocalStorageWrites",
+	    debugCalls: [{
+	        obj: "window.localStorage",
+	        prop: "setItem"
+	    }, {
+	        obj: "window.localStorage",
+	        prop: "clear"
+	    }],
+	    traceMessage: "About to write localStorage data"
+	}];
+
 /***/ }
-/******/ ]);
+
+/******/ });
