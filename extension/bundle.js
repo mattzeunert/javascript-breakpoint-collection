@@ -19875,7 +19875,7 @@
 	}(_react2.default.Component);
 
 	function activateBreakpoint(breakpoint, options) {
-	    var code = "window.breakpoints." + breakpoint.title + "()";
+	    var code = "window.breakpoints.__internal.createSpecificBreakpoint('" + breakpoint.title + "')";
 	    chrome.devtools.inspectedWindow.eval(code, function () {
 	        // console.log("done eval activate code", arguments)
 	        app.update();

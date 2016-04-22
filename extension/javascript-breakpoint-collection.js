@@ -1,8 +1,5 @@
 
 
-
-
-
 (function(){
     var log = function(){}
     
@@ -330,6 +327,9 @@
 
                 pushRegisteredBreakpointsToExtension();
             },
+            createSpecificBreakpoint: function(breakpointName){
+                window.breakpoints[breakpointName]();
+            },
             registerBreakpointFromExtension: function(fn, bpDetails){
                 var fixedCallback = getCallbackFromBreakpointDetails(bpDetails);
                 var id = window.breakpoints.__internal.registerBreakpoint(fn, bpDetails, fixedCallback);
@@ -456,14 +456,14 @@
     breakpoints.forEach(function(breakpoint){
 
 
-        window.breakpoints[breakpoint.title] = function(){
+        window.breakpoints[breakpoint.title] = function(callback){
+            callback = getCallbackFromUserFriendlyCallbackArgument(callback);
+
             var details = {
                 title: breakpoint.title,
                 traceMessage: breakpoint.traceMessage,
-                type: "debugger"
+                type: callback.callbackType
             }
-
-            var callback =  getCallbackFromBreakpointDetails(details);
 
             var fn = function(debugPropertyGet, debugPropertySet, debugPropertyCall){
                 if (breakpoint.debugPropertyGets) {
