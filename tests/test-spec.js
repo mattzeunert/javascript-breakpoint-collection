@@ -1,4 +1,4 @@
-import "../extension/javascript-breakpoint-collection"
+import "../extension/build/javascript-breakpoint-collection"
 
 describe("Combining multiple breakpoints on the same object", function(){
     it("Can combine setters and getters", function(){

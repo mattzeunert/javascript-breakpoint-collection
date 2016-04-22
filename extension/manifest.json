@@ -16,5 +16,5 @@
   "permissions": ["http://*/*", "https://*/*", "file://*/*"],
   "minimum_chrome_version": "10.0",
   "devtools_page": "devtools.html",
-  "web_accessible_resources": ["javascript-breakpoint-collection.js"]
+  "web_accessible_resources": ["build/javascript-breakpoint-collection.js"]
 }

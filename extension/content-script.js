@@ -1,7 +1,7 @@
 
 
 var s = document.createElement('script');
-s.src = chrome.extension.getURL('javascript-breakpoint-collection.js');
+s.src = chrome.extension.getURL('build/javascript-breakpoint-collection.js');
 s.onload = function() {
     this.parentNode.removeChild(this);
 };

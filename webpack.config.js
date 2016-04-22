@@ -2,8 +2,11 @@ var path = require('path');
 var webpack = require('webpack');
  
 module.exports = {
-  entry: './index.js',
-  output: { path: __dirname + "/extension", filename: 'bundle.js' },
+  entry: {
+    "devtools-panel": './index.js',
+    "javascript-breakpoint-collection": './injected-script.js'
+  },
+  output: { path: __dirname + "/extension/build", filename: '[name].js' },
   module: {
     loaders: [
       {
