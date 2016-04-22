@@ -1,5 +1,38 @@
 import "../extension/javascript-breakpoint-collection"
 
+describe("Combining multiple breakpoints on the same object", function(){
+    it("Can combine setters and getters", function(){
+        var obj = {
+            hi: "there"
+        };
+        var fn = jasmine.createSpy();
+        breakpoints.debugPropertyGet(obj, "hi", fn);
+        breakpoints.debugPropertyGet(obj, "hi", fn);
+        breakpoints.debugPropertySet(obj, "hi", fn);
+
+        var sth = obj.hi;
+        expect(fn.calls.count()).toBe(2);
+
+        obj.hi = "hey";
+        expect(fn.calls.count()).toBe(3);
+    })
+    it("Can debug multiple properties of an object", function(){
+        var obj = {
+            hi: "there", 
+            hello: "world"
+        }
+        var fn = jasmine.createSpy();
+        breakpoints.debugPropertyGet(obj, "hi", fn);
+        breakpoints.debugPropertyGet(obj, "hello", fn);
+
+        var sth = obj.hi;
+        expect(fn.calls.count()).toBe(1);
+
+        sth = obj.hello;
+        expect(fn.calls.count()).toBe(2);
+    })
+});
+
 describe("debugPropertyGet", function(){
     it("Calls a callback before a property is read", function(){
         var obj = {hi: "there"};
