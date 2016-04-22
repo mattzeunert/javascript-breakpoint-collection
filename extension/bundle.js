@@ -19706,7 +19706,7 @@
 	}, {
 	    title: "debugConsoleLogCalls"
 	}, {
-	    title: "debugPageScroll"
+	    title: "debugScroll"
 	}, {
 	    title: "debugLocalStorageReads"
 	}, {

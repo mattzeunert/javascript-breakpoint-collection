@@ -158,7 +158,7 @@
         try {
             var descriptor = Object.getOwnPropertyDescriptor(object, propertyName);
         } catch (err){
-            log("are you sure the property ", propertyName, " exists?")
+            console.log("are you sure the property ", propertyName, " exists?")
             throw err
         }
         if (!object){
@@ -422,7 +422,7 @@
             traceMessage: "About to call console.log"
         },
         {
-            title: "debugPageScroll",
+            title: "debugScroll",
             debugCalls: [{
                 obj: "window",
                 prop: "scrollTo"
@@ -433,6 +433,15 @@
             debugPropertySets: [{
                 obj: "document.body",
                 prop: "scrollTop"
+            }, {
+                obj: "document.body",
+                prop: "scrollLeft"
+            }, {
+                obj: "Element.prototype",
+                prop: "scrollTop"
+            }, {
+                obj: "Element.prototype",
+                prop: "scrollLeft"
             }],
             traceMessage: "About to change body scroll position"
         },

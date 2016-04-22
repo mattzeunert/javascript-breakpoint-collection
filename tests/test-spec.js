@@ -96,3 +96,46 @@ describe("debugConsoleLogCalls", function(){
         expect(fn).toHaveBeenCalled();
     });
 });
+
+describe("debugScroll", function(){
+    it("Hits when window.scrollTo is called", function(){
+        spyOn(window, "scrollTo")
+        var fn = jasmine.createSpy();
+        breakpoints.debugScroll(fn);
+        window.scrollTo(50, 50);
+        expect(fn).toHaveBeenCalled()
+    });
+    it("Hits when window.scrollBy is called", function(){
+        spyOn(window, "scrollBy")
+        var fn = jasmine.createSpy();
+        breakpoints.debugScroll(fn);
+        window.scrollBy(50, 50);
+        expect(fn).toHaveBeenCalled()
+    });
+    it("Hits when scrollTop is set on the body", function(){
+        var fn = jasmine.createSpy();
+        breakpoints.debugScroll(fn);
+        document.body.scrollTop = 50;
+        expect(fn).toHaveBeenCalled();
+    })
+    it("Hits when scrollLeft is set on the body", function(){
+        var fn = jasmine.createSpy();
+        breakpoints.debugScroll(fn);
+        document.body.scrollLeft = 50;
+        expect(fn).toHaveBeenCalled();
+    })
+    it("Hits when scrollTop is set on an element", function(){
+        var div = document.createElement("div");
+        var fn = jasmine.createSpy();
+        breakpoints.debugScroll(fn);
+        div.scrollTop = 40;
+        expect(fn).toHaveBeenCalled();
+    });
+    it("Hits when scrollLeft is set on an element", function(){
+        var div = document.createElement("div");
+        var fn = jasmine.createSpy();
+        breakpoints.debugScroll(fn);
+        div.scrollLeft = 40;
+        expect(fn).toHaveBeenCalled();
+    });
+})
