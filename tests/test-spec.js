@@ -76,3 +76,23 @@ describe("debugAlertCalls", function(){
         expect(fn).toHaveBeenCalled();
     })
 })
+
+describe("debugConsoleErrorCalls", function(){
+    it("Detects when console.error is called", function(){
+        var consoleErrorSpy = spyOn(console, "error");
+        var fn = jasmine.createSpy();
+        breakpoints.debugConsoleErrorCalls(fn);
+        console.error("error")
+        expect(fn).toHaveBeenCalled();
+    });
+});
+
+describe("debugConsoleLogCalls", function(){
+    it("Detects when console.log is called", function(){
+        var consoleErrorSpy = spyOn(console, "log");
+        var fn = jasmine.createSpy();
+        breakpoints.debugConsoleLogCalls(fn);
+        console.log("log")
+        expect(fn).toHaveBeenCalled();
+    });
+});
