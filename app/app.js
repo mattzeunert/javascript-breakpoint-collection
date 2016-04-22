@@ -4,34 +4,9 @@ var log = function(){}
 
 var registeredBreakpoints = [];
 
-var breakpoints = [
-        {
-            title: "debugCookieReads"
-        },
-        {
-            title: "debugCookieWrites"
-        },
-        {
-            title: "debugAlertCalls"
-        },
-        {
-            title: "debugConsoleErrorCalls"
-        },
-        {
-            title: "debugConsoleLogCalls"
-        },
-        {
-            title: "debugScroll"
-        },
-        {
-            title:  "debugLocalStorageReads"
-        },
-        {
-            title:  "debugLocalStorageWrites"
-        }
-    ];
+import predefinedBreakpoints from "../breakpoints/predefinedBreakpoints"
 
-class UnactivatedBreakpointListItem extends React.Component {
+class AvailableBreakpointsListItem extends React.Component {
     render(){
         return <div onClick={()=>this.props.onClick()}
             className="unactivated-breakpoint-list-item">
@@ -41,11 +16,11 @@ class UnactivatedBreakpointListItem extends React.Component {
     }
 }
 
-class UnactivatedBreakpointList extends React.Component {
+class AvailableBreakpointsList extends React.Component {
     render(){
         return <div>
             {this.props.breakpoints.map(
-                (bp) => <UnactivatedBreakpointListItem
+                (bp) => <AvailableBreakpointsListItem
                     key={bp.title}
                     onClick={() => activateBreakpoint(bp)}
                     breakpoint={bp} />
@@ -144,7 +119,6 @@ var backgroundPageConnection = chrome.runtime.connect({
 
 backgroundPageConnection.onMessage.addListener(function (message) {
     // Handle responses from the background page, if any
-    log(arguments, "ssss")
     readBreakpointsFromPage();
 });
 
@@ -181,7 +155,7 @@ export default class App extends React.Component {
             </div>
             <div>
                 <h2>Breakpoints</h2>
-                <UnactivatedBreakpointList breakpoints={breakpoints} />
+                <AvailableBreakpointsList breakpoints={predefinedBreakpoints} />
             </div>
             <div>
                 <h2>Activated Breakpoints</h2>
@@ -191,7 +165,6 @@ export default class App extends React.Component {
 
     }
     update(){
-        log("update")
         this.setState({sth: Math.random()})
     }
 }

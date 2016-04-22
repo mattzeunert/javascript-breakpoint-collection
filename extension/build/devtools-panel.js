@@ -19683,6 +19683,10 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
+	var _predefinedBreakpoints = __webpack_require__(161);
+
+	var _predefinedBreakpoints2 = _interopRequireDefault(_predefinedBreakpoints);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -19695,34 +19699,16 @@
 
 	var registeredBreakpoints = [];
 
-	var breakpoints = [{
-	    title: "debugCookieReads"
-	}, {
-	    title: "debugCookieWrites"
-	}, {
-	    title: "debugAlertCalls"
-	}, {
-	    title: "debugConsoleErrorCalls"
-	}, {
-	    title: "debugConsoleLogCalls"
-	}, {
-	    title: "debugScroll"
-	}, {
-	    title: "debugLocalStorageReads"
-	}, {
-	    title: "debugLocalStorageWrites"
-	}];
+	var AvailableBreakpointsListItem = function (_React$Component) {
+	    _inherits(AvailableBreakpointsListItem, _React$Component);
 
-	var UnactivatedBreakpointListItem = function (_React$Component) {
-	    _inherits(UnactivatedBreakpointListItem, _React$Component);
+	    function AvailableBreakpointsListItem() {
+	        _classCallCheck(this, AvailableBreakpointsListItem);
 
-	    function UnactivatedBreakpointListItem() {
-	        _classCallCheck(this, UnactivatedBreakpointListItem);
-
-	        return _possibleConstructorReturn(this, Object.getPrototypeOf(UnactivatedBreakpointListItem).apply(this, arguments));
+	        return _possibleConstructorReturn(this, Object.getPrototypeOf(AvailableBreakpointsListItem).apply(this, arguments));
 	    }
 
-	    _createClass(UnactivatedBreakpointListItem, [{
+	    _createClass(AvailableBreakpointsListItem, [{
 	        key: "render",
 	        value: function render() {
 	            var _this2 = this;
@@ -19743,26 +19729,26 @@
 	        }
 	    }]);
 
-	    return UnactivatedBreakpointListItem;
+	    return AvailableBreakpointsListItem;
 	}(_react2.default.Component);
 
-	var UnactivatedBreakpointList = function (_React$Component2) {
-	    _inherits(UnactivatedBreakpointList, _React$Component2);
+	var AvailableBreakpointsList = function (_React$Component2) {
+	    _inherits(AvailableBreakpointsList, _React$Component2);
 
-	    function UnactivatedBreakpointList() {
-	        _classCallCheck(this, UnactivatedBreakpointList);
+	    function AvailableBreakpointsList() {
+	        _classCallCheck(this, AvailableBreakpointsList);
 
-	        return _possibleConstructorReturn(this, Object.getPrototypeOf(UnactivatedBreakpointList).apply(this, arguments));
+	        return _possibleConstructorReturn(this, Object.getPrototypeOf(AvailableBreakpointsList).apply(this, arguments));
 	    }
 
-	    _createClass(UnactivatedBreakpointList, [{
+	    _createClass(AvailableBreakpointsList, [{
 	        key: "render",
 	        value: function render() {
 	            return _react2.default.createElement(
 	                "div",
 	                null,
 	                this.props.breakpoints.map(function (bp) {
-	                    return _react2.default.createElement(UnactivatedBreakpointListItem, {
+	                    return _react2.default.createElement(AvailableBreakpointsListItem, {
 	                        key: bp.title,
 	                        onClick: function onClick() {
 	                            return activateBreakpoint(bp);
@@ -19773,7 +19759,7 @@
 	        }
 	    }]);
 
-	    return UnactivatedBreakpointList;
+	    return AvailableBreakpointsList;
 	}(_react2.default.Component);
 
 	var ActivatedBreakpointListItem = function (_React$Component3) {
@@ -19921,7 +19907,6 @@
 
 	backgroundPageConnection.onMessage.addListener(function (message) {
 	    // Handle responses from the background page, if any
-	    log(arguments, "ssss");
 	    readBreakpointsFromPage();
 	});
 
@@ -20002,7 +19987,7 @@
 	                        null,
 	                        "Breakpoints"
 	                    ),
-	                    _react2.default.createElement(UnactivatedBreakpointList, { breakpoints: breakpoints })
+	                    _react2.default.createElement(AvailableBreakpointsList, { breakpoints: _predefinedBreakpoints2.default })
 	                ),
 	                _react2.default.createElement(
 	                    "div",
@@ -20019,7 +20004,6 @@
 	    }, {
 	        key: "update",
 	        value: function update() {
-	            log("update");
 	            this.setState({ sth: Math.random() });
 	        }
 	    }]);
@@ -20028,6 +20012,93 @@
 	}(_react2.default.Component);
 
 	exports.default = App;
+
+/***/ },
+/* 160 */,
+/* 161 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	exports.default = [{
+	    title: "debugCookieReads",
+	    debugPropertyGets: [{
+	        obj: "document",
+	        prop: "cookie"
+	    }],
+	    traceMessage: "About to read cookie contents"
+	}, {
+	    title: "debugCookieWrites",
+	    debugPropertySets: [{
+	        obj: "document",
+	        prop: "cookie"
+	    }],
+	    traceMessage: "About to update cookie contents"
+	}, {
+	    title: "debugAlertCalls",
+	    debugCalls: [{
+	        obj: "window",
+	        prop: "alert"
+	    }],
+	    traceMessage: "About to show alert box"
+	}, {
+	    title: "debugConsoleErrorCalls",
+	    debugCalls: [{
+	        obj: "window.console",
+	        prop: "error"
+	    }],
+	    traceMessage: "About to call console.error"
+	}, {
+	    title: "debugConsoleLogCalls",
+	    debugCalls: [{
+	        obj: "window.console",
+	        prop: "log"
+	    }],
+	    traceMessage: "About to call console.log"
+	}, {
+	    title: "debugScroll",
+	    debugCalls: [{
+	        obj: "window",
+	        prop: "scrollTo"
+	    }, {
+	        obj: "window",
+	        prop: "scrollBy"
+	    }],
+	    debugPropertySets: [{
+	        obj: "document.body",
+	        prop: "scrollTop"
+	    }, {
+	        obj: "document.body",
+	        prop: "scrollLeft"
+	    }, {
+	        obj: "Element.prototype",
+	        prop: "scrollTop"
+	    }, {
+	        obj: "Element.prototype",
+	        prop: "scrollLeft"
+	    }],
+	    traceMessage: "About to change body scroll position"
+	}, {
+	    title: "debugLocalStorageReads",
+	    debugCalls: [{
+	        obj: "window.localStorage",
+	        prop: "getItem"
+	    }],
+	    traceMessage: "About to read localStorage data"
+	}, {
+	    title: "debugLocalStorageWrites",
+	    debugCalls: [{
+	        obj: "window.localStorage",
+	        prop: "setItem"
+	    }, {
+	        obj: "window.localStorage",
+	        prop: "clear"
+	    }],
+	    traceMessage: "About to write localStorage data"
+	}];
 
 /***/ }
 /******/ ]);
