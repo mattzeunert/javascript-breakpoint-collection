@@ -12,7 +12,7 @@ chrome.devtools.network.onNavigated.addListener(installBreakpointsObject)
 installBreakpointsObject();
 
 window.addEventListener("RebroadcastExtensionMessage", function(evt) {
-  //chrome.runtime.sendMessage(evt.detail);
+  chrome.runtime.sendMessage(evt.detail);
   console.log("a thing happened")
   alert("thing")
 }, false);
