@@ -19984,6 +19984,13 @@
 	                            "pre",
 	                            null,
 	                            "breakpoints.debugPropertyCall(localStorage, \"setItem\");"
+	                        ),
+	                        _react2.default.createElement(
+	                            "pre",
+	                            null,
+	                            "breakpoints.debugScroll(function()",
+	                            "{ /* ... */ }",
+	                            ");"
 	                        )
 	                    )
 	                ),

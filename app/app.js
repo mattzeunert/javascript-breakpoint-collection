@@ -174,6 +174,9 @@ export default class App extends React.Component {
                     <pre>
                         breakpoints.debugPropertyCall(localStorage, "setItem");
                     </pre>
+                    <pre>
+                        breakpoints.debugScroll(function(){"{ /* ... */ }"});
+                    </pre>
                 </div>
             </div>
             <div>

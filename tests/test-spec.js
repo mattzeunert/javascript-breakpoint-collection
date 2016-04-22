@@ -139,3 +139,27 @@ describe("debugScroll", function(){
         expect(fn).toHaveBeenCalled();
     });
 })
+
+describe("debugLocalStorageReads", function(){
+    it("Hits when localStorage.getItem is called", function(){
+        var fn = jasmine.createSpy();
+        breakpoints.debugLocalStorageReads(fn);
+        localStorage.getItem("hello");
+        expect(fn).toHaveBeenCalled();
+    })
+})
+
+describe("debugLocalStorageWrites", function(){
+    it("Hits when localStorage.setItem is called", function(){
+        var fn = jasmine.createSpy();
+        breakpoints.debugLocalStorageWrites(fn);
+        localStorage.setItem("hi", "there");
+        expect(fn).toHaveBeenCalled();
+    })
+    it("Hits when localStorage.clear is called", function(){
+        var fn = jasmine.createSpy();
+        breakpoints.debugLocalStorageWrites(fn);
+        localStorage.clear();
+        expect(fn).toHaveBeenCalled();
+    })
+})

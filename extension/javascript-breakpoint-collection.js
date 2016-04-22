@@ -458,6 +458,9 @@
             debugCalls: [{
                 obj: "window.localStorage",
                 prop: "setItem"
+            }, {
+                obj: "window.localStorage",
+                prop: "clear"
             }],
             traceMessage: "About to write localStorage data"
         }
