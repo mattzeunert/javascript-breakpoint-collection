@@ -66,3 +66,13 @@ describe("debugCookieWrites", function(){
         expect(fn).toHaveBeenCalled();
     })
 })
+
+describe("debugAlertCalls", function(){
+    it("Detects when an alert box is shown", function(){
+        var alertSpy = spyOn(window, "alert");
+        var fn = jasmine.createSpy();
+        breakpoints.debugAlertCalls(fn)
+        window.alert("test");
+        expect(fn).toHaveBeenCalled();
+    })
+})
