@@ -42,3 +42,27 @@ describe("debugPropertyCall", function(){
         expect(fn).toHaveBeenCalled();
     })
 })
+
+describe("debugCookieReads", function(){
+    it("Detects when the cookie is being read", function(){
+        var fn = jasmine.createSpy();
+        breakpoints.debugCookieReads(fn);
+        var cookie = document.cookie;
+        expect(fn).toHaveBeenCalled();
+    })
+    it("Doesn't call the callback when the cookie property is being set", function(){
+        var fn = jasmine.createSpy();
+        breakpoints.debugCookieReads(fn);
+        document.cookie = "test";
+        expect(fn).not.toHaveBeenCalled();
+    });
+});
+
+describe("debugCookieWrites", function(){
+    it("Detects when the cookie is being set", function(){
+        var fn = jasmine.createSpy();
+        breakpoints.debugCookieWrites(fn);
+        document.cookie = "hello";
+        expect(fn).toHaveBeenCalled();
+    })
+})
