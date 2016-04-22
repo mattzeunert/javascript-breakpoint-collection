@@ -4,6 +4,33 @@ var log = function(){}
 
 var registeredBreakpoints = [];
 
+var breakpoints = [
+        {
+            title: "debugCookieReads"
+        },
+        {
+            title: "debugCookieWrites"
+        },
+        {
+            title: "debugAlertCalls"
+        },
+        {
+            title: "debugConsoleErrorCalls"
+        },
+        {
+            title: "debugConsoleLogCalls"
+        },
+        {
+            title: "debugPageScroll"
+        },
+        {
+            title:  "debugLocalStorageReads"
+        },
+        {
+            title:  "debugLocalStorageWrites"
+        }
+    ];
+
 class UnactivatedBreakpointListItem extends React.Component {
     render(){
         return <div onClick={()=>this.props.onClick()}
@@ -72,17 +99,9 @@ class ActivatedBreakpointList extends React.Component {
 
 
 function activateBreakpoint(breakpoint, options){
-    if (!options) {
-        options = {
-            type: "debugger"
-        }
-    }
-
-
-    
-    log("eval code", code)
+    var code = "window.breakpoints." + breakpoint.title + "()"
     chrome.devtools.inspectedWindow.eval(code, function(){
-        log("done eval activate code", arguments)
+        // console.log("done eval activate code", arguments)
         app.update();
     });
 }

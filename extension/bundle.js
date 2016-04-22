@@ -19695,6 +19695,24 @@
 
 	var registeredBreakpoints = [];
 
+	var breakpoints = [{
+	    title: "debugCookieReads"
+	}, {
+	    title: "debugCookieWrites"
+	}, {
+	    title: "debugAlertCalls"
+	}, {
+	    title: "debugConsoleErrorCalls"
+	}, {
+	    title: "debugConsoleLogCalls"
+	}, {
+	    title: "debugPageScroll"
+	}, {
+	    title: "debugLocalStorageReads"
+	}, {
+	    title: "debugLocalStorageWrites"
+	}];
+
 	var UnactivatedBreakpointListItem = function (_React$Component) {
 	    _inherits(UnactivatedBreakpointListItem, _React$Component);
 
@@ -19857,15 +19875,9 @@
 	}(_react2.default.Component);
 
 	function activateBreakpoint(breakpoint, options) {
-	    if (!options) {
-	        options = {
-	            type: "debugger"
-	        };
-	    }
-
-	    log("eval code", code);
+	    var code = "window.breakpoints." + breakpoint.title + "()";
 	    chrome.devtools.inspectedWindow.eval(code, function () {
-	        log("done eval activate code", arguments);
+	        // console.log("done eval activate code", arguments)
 	        app.update();
 	    });
 	}

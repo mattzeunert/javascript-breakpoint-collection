@@ -460,7 +460,7 @@
             var details = {
                 title: breakpoint.title,
                 traceMessage: breakpoint.traceMessage,
-                type: "debug"
+                type: "debugger"
             }
 
             var callback =  getCallbackFromBreakpointDetails(details);
