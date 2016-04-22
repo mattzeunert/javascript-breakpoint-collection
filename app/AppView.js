@@ -33,6 +33,11 @@ export default class AppView extends React.Component {
                         breakpoints.debugScroll(function(){"{ /* ... */ }"});
                     </pre>
                 </div>
+                <div>
+                    <a href="https://github.com/mattzeunert/javascript-breakpoint-collection/issues/new" target="_blank">
+                        Report an issue or request a feature
+                    </a>
+                </div>
             </div>
             <div>
                 <h2>Breakpoints</h2>

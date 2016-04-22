@@ -19768,6 +19768,15 @@
 	                            "{ /* ... */ }",
 	                            ");"
 	                        )
+	                    ),
+	                    _react2.default.createElement(
+	                        "div",
+	                        null,
+	                        _react2.default.createElement(
+	                            "a",
+	                            { href: "https://github.com/mattzeunert/javascript-breakpoint-collection/issues/new", target: "_blank" },
+	                            "Report an issue or request a feature"
+	                        )
 	                    )
 	                ),
 	                _react2.default.createElement(
