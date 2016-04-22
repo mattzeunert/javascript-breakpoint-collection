@@ -9,12 +9,9 @@ chrome.runtime.onConnect.addListener(function(devToolsConnection) {
     devToolsConnection.onMessage.addListener(devToolsListener);
     
 
-    chrome.runtime.onMessage.addListener(
-  function(request, sender, sendResponse) {
-    console.log("onMessage", request);
-    devToolsConnection.postMessage(request)
-  });
-
+    chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+        devToolsConnection.postMessage(request)
+    });
 
     devToolsConnection.onDisconnect.addListener(function() {
          devToolsConnection.onMessage.removeListener(devToolsListener);
