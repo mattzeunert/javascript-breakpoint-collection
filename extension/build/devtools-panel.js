@@ -54,7 +54,7 @@
 
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 
-	var _AppView = __webpack_require__(164);
+	var _AppView = __webpack_require__(159);
 
 	var _AppView2 = _interopRequireDefault(_AppView);
 
@@ -19676,171 +19676,6 @@
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
-	exports.appState = undefined;
-	exports.activateBreakpoint = activateBreakpoint;
-	exports.deactivateBreakpoint = deactivateBreakpoint;
-	exports.updateBreakpoint = updateBreakpoint;
-	exports.registerAppView = registerAppView;
-
-	var _predefinedBreakpoints = __webpack_require__(161);
-
-	var _predefinedBreakpoints2 = _interopRequireDefault(_predefinedBreakpoints);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var appState = {
-	    registeredBreakpoints: [],
-	    predefinedBreakpoints: _predefinedBreakpoints2.default
-	};
-
-	function activateBreakpoint(breakpoint, options) {
-	    var code = "window.breakpoints.__internal.createSpecificBreakpoint('" + breakpoint.title + "')";
-	    chrome.devtools.inspectedWindow.eval(code, function () {});
-	}
-
-	function deactivateBreakpoint(breakpoint) {
-	    var code = "breakpoints.__internal.disableBreakpoint(" + breakpoint.id + ");";
-	    chrome.devtools.inspectedWindow.eval(code, function () {});
-	}
-
-	function updateBreakpoint(breakpoint, traceOrDebugger) {
-	    var id = breakpoint.id;
-	    var details = Object.assign({}, breakpoint.details);
-	    details.type = traceOrDebugger;
-	    var code = "breakpoints.__internal.updateBreakpoint('" + id + "', " + JSON.stringify(details) + ");";
-	    chrome.devtools.inspectedWindow.eval(code, function (regBp) {});
-	}
-
-	readBreakpointsFromPage();
-
-	function evalInInspectedWindow(code, callback) {
-	    chrome.devtools.inspectedWindow.eval(code, callback);
-	}
-
-	function readBreakpointsFromPage() {
-	    evalInInspectedWindow("breakpoints.__internal.getRegisteredBreakpoints();", function (regBp) {
-	        appState.registeredBreakpoints = regBp;
-	        updateApp();
-	    });
-	}
-
-	var backgroundPageConnection = chrome.runtime.connect({
-	    name: "devtools-page"
-	});
-
-	backgroundPageConnection.onMessage.addListener(function (message) {
-	    console.log("readBreakpointsFromPage b/c bg page said so");
-	    readBreakpointsFromPage();
-	});
-
-	var appViews = [];
-	function registerAppView(appView) {
-	    appViews.push(appView);
-	}
-	function updateApp() {
-	    appViews.forEach(function (appView) {
-	        appView.update();
-	    });
-	}
-
-	exports.appState = appState;
-
-/***/ },
-/* 160 */,
-/* 161 */
-/***/ function(module, exports) {
-
-	"use strict";
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-	exports.default = [{
-	    title: "debugCookieReads",
-	    debugPropertyGets: [{
-	        obj: "document",
-	        prop: "cookie"
-	    }],
-	    traceMessage: "About to read cookie contents"
-	}, {
-	    title: "debugCookieWrites",
-	    debugPropertySets: [{
-	        obj: "document",
-	        prop: "cookie"
-	    }],
-	    traceMessage: "About to update cookie contents"
-	}, {
-	    title: "debugAlertCalls",
-	    debugCalls: [{
-	        obj: "window",
-	        prop: "alert"
-	    }],
-	    traceMessage: "About to show alert box"
-	}, {
-	    title: "debugConsoleErrorCalls",
-	    debugCalls: [{
-	        obj: "window.console",
-	        prop: "error"
-	    }],
-	    traceMessage: "About to call console.error"
-	}, {
-	    title: "debugConsoleLogCalls",
-	    debugCalls: [{
-	        obj: "window.console",
-	        prop: "log"
-	    }],
-	    traceMessage: "About to call console.log"
-	}, {
-	    title: "debugScroll",
-	    debugCalls: [{
-	        obj: "window",
-	        prop: "scrollTo"
-	    }, {
-	        obj: "window",
-	        prop: "scrollBy"
-	    }],
-	    debugPropertySets: [{
-	        obj: "document.body",
-	        prop: "scrollTop"
-	    }, {
-	        obj: "document.body",
-	        prop: "scrollLeft"
-	    }, {
-	        obj: "Element.prototype",
-	        prop: "scrollTop"
-	    }, {
-	        obj: "Element.prototype",
-	        prop: "scrollLeft"
-	    }],
-	    traceMessage: "About to change body scroll position"
-	}, {
-	    title: "debugLocalStorageReads",
-	    debugCalls: [{
-	        obj: "window.localStorage",
-	        prop: "getItem"
-	    }],
-	    traceMessage: "About to read localStorage data"
-	}, {
-	    title: "debugLocalStorageWrites",
-	    debugCalls: [{
-	        obj: "window.localStorage",
-	        prop: "setItem"
-	    }, {
-	        obj: "window.localStorage",
-	        prop: "clear"
-	    }],
-	    traceMessage: "About to write localStorage data"
-	}];
-
-/***/ },
-/* 162 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -19848,224 +19683,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _app = __webpack_require__(159);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var AvailableBreakpointsListItem = function (_React$Component) {
-	    _inherits(AvailableBreakpointsListItem, _React$Component);
-
-	    function AvailableBreakpointsListItem() {
-	        _classCallCheck(this, AvailableBreakpointsListItem);
-
-	        return _possibleConstructorReturn(this, Object.getPrototypeOf(AvailableBreakpointsListItem).apply(this, arguments));
-	    }
-
-	    _createClass(AvailableBreakpointsListItem, [{
-	        key: "render",
-	        value: function render() {
-	            var _this2 = this;
-
-	            return _react2.default.createElement(
-	                "div",
-	                { onClick: function onClick() {
-	                        return _this2.props.onClick();
-	                    },
-	                    className: "unactivated-breakpoint-list-item" },
-	                this.props.breakpoint.title,
-	                _react2.default.createElement(
-	                    "div",
-	                    { className: "plus" },
-	                    "+"
-	                )
-	            );
-	        }
-	    }]);
-
-	    return AvailableBreakpointsListItem;
-	}(_react2.default.Component);
-
-	var AvailableBreakpointsList = function (_React$Component2) {
-	    _inherits(AvailableBreakpointsList, _React$Component2);
-
-	    function AvailableBreakpointsList() {
-	        _classCallCheck(this, AvailableBreakpointsList);
-
-	        return _possibleConstructorReturn(this, Object.getPrototypeOf(AvailableBreakpointsList).apply(this, arguments));
-	    }
-
-	    _createClass(AvailableBreakpointsList, [{
-	        key: "render",
-	        value: function render() {
-	            return _react2.default.createElement(
-	                "div",
-	                null,
-	                this.props.breakpoints.map(function (bp) {
-	                    return _react2.default.createElement(AvailableBreakpointsListItem, {
-	                        key: bp.title,
-	                        onClick: function onClick() {
-	                            return (0, _app.activateBreakpoint)(bp);
-	                        },
-	                        breakpoint: bp });
-	                })
-	            );
-	        }
-	    }]);
-
-	    return AvailableBreakpointsList;
-	}(_react2.default.Component);
-
-	exports.default = AvailableBreakpointsList;
-
-/***/ },
-/* 163 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _app = __webpack_require__(159);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var ActiveBreakpointsListItem = function (_React$Component) {
-	    _inherits(ActiveBreakpointsListItem, _React$Component);
-
-	    function ActiveBreakpointsListItem() {
-	        _classCallCheck(this, ActiveBreakpointsListItem);
-
-	        return _possibleConstructorReturn(this, Object.getPrototypeOf(ActiveBreakpointsListItem).apply(this, arguments));
-	    }
-
-	    _createClass(ActiveBreakpointsListItem, [{
-	        key: "render",
-	        value: function render() {
-	            var _this2 = this;
-
-	            var customOption = null;
-	            if (this.props.breakpoint.details.type === "custom") {
-	                customOption = _react2.default.createElement(
-	                    "option",
-	                    { value: "custom" },
-	                    "custom"
-	                );
-	            }
-
-	            return _react2.default.createElement(
-	                "div",
-	                { className: "activated-breakpiont-list-item" },
-	                this.props.breakpoint.details.title,
-	                _react2.default.createElement(
-	                    "button",
-	                    {
-	                        className: "delete",
-	                        onClick: function onClick() {
-	                            return (0, _app.deactivateBreakpoint)(_this2.props.breakpoint);
-	                        } },
-	                    "×"
-	                ),
-	                _react2.default.createElement(
-	                    "div",
-	                    { style: { marginTop: 4 } },
-	                    _react2.default.createElement(
-	                        "select",
-	                        {
-	                            value: this.props.breakpoint.details.type,
-	                            onChange: function onChange(event) {
-	                                return (0, _app.updateBreakpoint)(_this2.props.breakpoint, event.target.value);
-	                            } },
-	                        _react2.default.createElement(
-	                            "option",
-	                            { value: "debugger" },
-	                            "debugger"
-	                        ),
-	                        _react2.default.createElement(
-	                            "option",
-	                            { value: "trace" },
-	                            "trace"
-	                        ),
-	                        customOption
-	                    )
-	                )
-	            );
-	        }
-	    }]);
-
-	    return ActiveBreakpointsListItem;
-	}(_react2.default.Component);
-
-	var ActiveBreakpointsList = function (_React$Component2) {
-	    _inherits(ActiveBreakpointsList, _React$Component2);
-
-	    function ActiveBreakpointsList() {
-	        _classCallCheck(this, ActiveBreakpointsList);
-
-	        return _possibleConstructorReturn(this, Object.getPrototypeOf(ActiveBreakpointsList).apply(this, arguments));
-	    }
-
-	    _createClass(ActiveBreakpointsList, [{
-	        key: "render",
-	        value: function render() {
-	            if (this.props.breakpoints.length === 0) {
-	                return _react2.default.createElement(
-	                    "div",
-	                    null,
-	                    "Click on a breakpoint on the left to activate it."
-	                );
-	            }
-	            return _react2.default.createElement(
-	                "div",
-	                null,
-	                this.props.breakpoints.map(function (bp) {
-	                    return _react2.default.createElement(ActiveBreakpointsListItem, { key: bp.title, breakpoint: bp });
-	                })
-	            );
-	        }
-	    }]);
-
-	    return ActiveBreakpointsList;
-	}(_react2.default.Component);
-
-	exports.default = ActiveBreakpointsList;
-
-/***/ },
-/* 164 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _app = __webpack_require__(159);
+	var _app = __webpack_require__(160);
 
 	var _AvailableBreakpointsList = __webpack_require__(162);
 
@@ -20185,6 +19803,387 @@
 	}(_react2.default.Component);
 
 	exports.default = AppView;
+
+/***/ },
+/* 160 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	exports.appState = undefined;
+	exports.activateBreakpoint = activateBreakpoint;
+	exports.deactivateBreakpoint = deactivateBreakpoint;
+	exports.updateBreakpoint = updateBreakpoint;
+	exports.registerAppView = registerAppView;
+
+	var _predefinedBreakpoints = __webpack_require__(161);
+
+	var _predefinedBreakpoints2 = _interopRequireDefault(_predefinedBreakpoints);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var appState = {
+	    registeredBreakpoints: [],
+	    predefinedBreakpoints: _predefinedBreakpoints2.default
+	};
+
+	function activateBreakpoint(breakpoint, options) {
+	    var code = "window.breakpoints.__internal.createSpecificBreakpoint('" + breakpoint.title + "')";
+	    chrome.devtools.inspectedWindow.eval(code, function () {});
+	}
+
+	function deactivateBreakpoint(breakpoint) {
+	    var code = "breakpoints.__internal.disableBreakpoint(" + breakpoint.id + ");";
+	    chrome.devtools.inspectedWindow.eval(code, function () {});
+	}
+
+	function updateBreakpoint(breakpoint, traceOrDebugger) {
+	    var id = breakpoint.id;
+	    var details = Object.assign({}, breakpoint.details);
+	    details.type = traceOrDebugger;
+	    var code = "breakpoints.__internal.updateBreakpoint('" + id + "', " + JSON.stringify(details) + ");";
+	    chrome.devtools.inspectedWindow.eval(code, function (regBp) {});
+	}
+
+	readBreakpointsFromPage();
+
+	function evalInInspectedWindow(code, callback) {
+	    chrome.devtools.inspectedWindow.eval(code, callback);
+	}
+
+	function readBreakpointsFromPage() {
+	    evalInInspectedWindow("breakpoints.__internal.getRegisteredBreakpoints();", function (regBp) {
+	        appState.registeredBreakpoints = regBp;
+	        updateApp();
+	    });
+	}
+
+	var backgroundPageConnection = chrome.runtime.connect({
+	    name: "devtools-page"
+	});
+
+	backgroundPageConnection.onMessage.addListener(function (message) {
+	    console.log("readBreakpointsFromPage b/c bg page said so");
+	    readBreakpointsFromPage();
+	});
+
+	var appViews = [];
+	function registerAppView(appView) {
+	    appViews.push(appView);
+	}
+	function updateApp() {
+	    appViews.forEach(function (appView) {
+	        appView.update();
+	    });
+	}
+
+	exports.appState = appState;
+
+/***/ },
+/* 161 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	exports.default = [{
+	    title: "debugCookieReads",
+	    debugPropertyGets: [{
+	        obj: "document",
+	        prop: "cookie"
+	    }],
+	    traceMessage: "About to read cookie contents"
+	}, {
+	    title: "debugCookieWrites",
+	    debugPropertySets: [{
+	        obj: "document",
+	        prop: "cookie"
+	    }],
+	    traceMessage: "About to update cookie contents"
+	}, {
+	    title: "debugAlertCalls",
+	    debugCalls: [{
+	        obj: "window",
+	        prop: "alert"
+	    }],
+	    traceMessage: "About to show alert box"
+	}, {
+	    title: "debugConsoleErrorCalls",
+	    debugCalls: [{
+	        obj: "window.console",
+	        prop: "error"
+	    }],
+	    traceMessage: "About to call console.error"
+	}, {
+	    title: "debugConsoleLogCalls",
+	    debugCalls: [{
+	        obj: "window.console",
+	        prop: "log"
+	    }],
+	    traceMessage: "About to call console.log"
+	}, {
+	    title: "debugScroll",
+	    debugCalls: [{
+	        obj: "window",
+	        prop: "scrollTo"
+	    }, {
+	        obj: "window",
+	        prop: "scrollBy"
+	    }],
+	    debugPropertySets: [{
+	        obj: "document.body",
+	        prop: "scrollTop"
+	    }, {
+	        obj: "document.body",
+	        prop: "scrollLeft"
+	    }, {
+	        obj: "Element.prototype",
+	        prop: "scrollTop"
+	    }, {
+	        obj: "Element.prototype",
+	        prop: "scrollLeft"
+	    }],
+	    traceMessage: "About to change body scroll position"
+	}, {
+	    title: "debugLocalStorageReads",
+	    debugCalls: [{
+	        obj: "window.localStorage",
+	        prop: "getItem"
+	    }],
+	    traceMessage: "About to read localStorage data"
+	}, {
+	    title: "debugLocalStorageWrites",
+	    debugCalls: [{
+	        obj: "window.localStorage",
+	        prop: "setItem"
+	    }, {
+	        obj: "window.localStorage",
+	        prop: "clear"
+	    }],
+	    traceMessage: "About to write localStorage data"
+	}];
+
+/***/ },
+/* 162 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _app = __webpack_require__(160);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var AvailableBreakpointsListItem = function (_React$Component) {
+	    _inherits(AvailableBreakpointsListItem, _React$Component);
+
+	    function AvailableBreakpointsListItem() {
+	        _classCallCheck(this, AvailableBreakpointsListItem);
+
+	        return _possibleConstructorReturn(this, Object.getPrototypeOf(AvailableBreakpointsListItem).apply(this, arguments));
+	    }
+
+	    _createClass(AvailableBreakpointsListItem, [{
+	        key: "render",
+	        value: function render() {
+	            var _this2 = this;
+
+	            return _react2.default.createElement(
+	                "div",
+	                { onClick: function onClick() {
+	                        return _this2.props.onClick();
+	                    },
+	                    className: "unactivated-breakpoint-list-item" },
+	                this.props.breakpoint.title,
+	                _react2.default.createElement(
+	                    "div",
+	                    { className: "plus" },
+	                    "+"
+	                )
+	            );
+	        }
+	    }]);
+
+	    return AvailableBreakpointsListItem;
+	}(_react2.default.Component);
+
+	var AvailableBreakpointsList = function (_React$Component2) {
+	    _inherits(AvailableBreakpointsList, _React$Component2);
+
+	    function AvailableBreakpointsList() {
+	        _classCallCheck(this, AvailableBreakpointsList);
+
+	        return _possibleConstructorReturn(this, Object.getPrototypeOf(AvailableBreakpointsList).apply(this, arguments));
+	    }
+
+	    _createClass(AvailableBreakpointsList, [{
+	        key: "render",
+	        value: function render() {
+	            return _react2.default.createElement(
+	                "div",
+	                null,
+	                this.props.breakpoints.map(function (bp) {
+	                    return _react2.default.createElement(AvailableBreakpointsListItem, {
+	                        key: bp.title,
+	                        onClick: function onClick() {
+	                            return (0, _app.activateBreakpoint)(bp);
+	                        },
+	                        breakpoint: bp });
+	                })
+	            );
+	        }
+	    }]);
+
+	    return AvailableBreakpointsList;
+	}(_react2.default.Component);
+
+	exports.default = AvailableBreakpointsList;
+
+/***/ },
+/* 163 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _app = __webpack_require__(160);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var ActiveBreakpointsListItem = function (_React$Component) {
+	    _inherits(ActiveBreakpointsListItem, _React$Component);
+
+	    function ActiveBreakpointsListItem() {
+	        _classCallCheck(this, ActiveBreakpointsListItem);
+
+	        return _possibleConstructorReturn(this, Object.getPrototypeOf(ActiveBreakpointsListItem).apply(this, arguments));
+	    }
+
+	    _createClass(ActiveBreakpointsListItem, [{
+	        key: "render",
+	        value: function render() {
+	            var _this2 = this;
+
+	            var customOption = null;
+	            if (this.props.breakpoint.details.type === "custom") {
+	                customOption = _react2.default.createElement(
+	                    "option",
+	                    { value: "custom" },
+	                    "custom"
+	                );
+	            }
+
+	            return _react2.default.createElement(
+	                "div",
+	                { className: "activated-breakpiont-list-item" },
+	                this.props.breakpoint.details.title,
+	                _react2.default.createElement(
+	                    "button",
+	                    {
+	                        className: "delete",
+	                        onClick: function onClick() {
+	                            return (0, _app.deactivateBreakpoint)(_this2.props.breakpoint);
+	                        } },
+	                    "×"
+	                ),
+	                _react2.default.createElement(
+	                    "div",
+	                    { style: { marginTop: 4 } },
+	                    _react2.default.createElement(
+	                        "select",
+	                        {
+	                            value: this.props.breakpoint.details.type,
+	                            onChange: function onChange(event) {
+	                                return (0, _app.updateBreakpoint)(_this2.props.breakpoint, event.target.value);
+	                            } },
+	                        _react2.default.createElement(
+	                            "option",
+	                            { value: "debugger" },
+	                            "debugger"
+	                        ),
+	                        _react2.default.createElement(
+	                            "option",
+	                            { value: "trace" },
+	                            "trace"
+	                        ),
+	                        customOption
+	                    )
+	                )
+	            );
+	        }
+	    }]);
+
+	    return ActiveBreakpointsListItem;
+	}(_react2.default.Component);
+
+	var ActiveBreakpointsList = function (_React$Component2) {
+	    _inherits(ActiveBreakpointsList, _React$Component2);
+
+	    function ActiveBreakpointsList() {
+	        _classCallCheck(this, ActiveBreakpointsList);
+
+	        return _possibleConstructorReturn(this, Object.getPrototypeOf(ActiveBreakpointsList).apply(this, arguments));
+	    }
+
+	    _createClass(ActiveBreakpointsList, [{
+	        key: "render",
+	        value: function render() {
+	            if (this.props.breakpoints.length === 0) {
+	                return _react2.default.createElement(
+	                    "div",
+	                    null,
+	                    "Click on a breakpoint on the left to activate it."
+	                );
+	            }
+	            return _react2.default.createElement(
+	                "div",
+	                null,
+	                this.props.breakpoints.map(function (bp) {
+	                    return _react2.default.createElement(ActiveBreakpointsListItem, { key: bp.title, breakpoint: bp });
+	                })
+	            );
+	        }
+	    }]);
+
+	    return ActiveBreakpointsList;
+	}(_react2.default.Component);
+
+	exports.default = ActiveBreakpointsList;
 
 /***/ }
 /******/ ]);
