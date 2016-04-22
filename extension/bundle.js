@@ -19677,8 +19677,6 @@
 	    value: true
 	});
 
-	var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
-
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 	var _react = __webpack_require__(1);
@@ -19696,70 +19694,6 @@
 	var log = function log() {};
 
 	var registeredBreakpoints = [];
-	var breakpoints = [{
-	    title: "debugCookieReads",
-	    debugPropertyGets: [{
-	        obj: "document",
-	        prop: "cookie"
-	    }],
-	    traceMessage: "About to read cookie contents"
-	}, {
-	    title: "debugCookieWrites",
-	    debugPropertySets: [{
-	        obj: "document",
-	        prop: "cookie"
-	    }],
-	    traceMessage: "About to update cookie contents"
-	}, {
-	    title: "debugAlertCalls",
-	    debugCalls: [{
-	        obj: "window",
-	        prop: "alert"
-	    }],
-	    traceMessage: "About to show alert box"
-	}, {
-	    title: "debugConsoleErrorCalls",
-	    debugCalls: [{
-	        obj: "window.console",
-	        prop: "error"
-	    }],
-	    traceMessage: "About to call console.error"
-	}, {
-	    title: "debugConsoleLogCalls",
-	    debugCalls: [{
-	        obj: "window.console",
-	        prop: "log"
-	    }],
-	    traceMessage: "About to call console.log"
-	}, {
-	    title: "debugPageScroll",
-	    debugCalls: [{
-	        obj: "window",
-	        prop: "scrollTo"
-	    }, {
-	        obj: "window",
-	        prop: "scrollBy"
-	    }],
-	    debugPropertySets: [{
-	        obj: "document.body",
-	        prop: "scrollTop"
-	    }],
-	    traceMessage: "About to change body scroll position"
-	}, {
-	    title: "debugLocalStorageReads",
-	    debugCalls: [{
-	        obj: "window.localStorage",
-	        prop: "getItem"
-	    }],
-	    traceMessage: "About to read localStorage data"
-	}, {
-	    title: "debugLocalStorageWrites",
-	    debugCalls: [{
-	        obj: "window.localStorage",
-	        prop: "setItem"
-	    }],
-	    traceMessage: "About to write localStorage data"
-	}];
 
 	var UnactivatedBreakpointListItem = function (_React$Component) {
 	    _inherits(UnactivatedBreakpointListItem, _React$Component);
@@ -19929,47 +19863,6 @@
 	        };
 	    }
 
-	    var calls = [];
-	    var debugPropertyGets = breakpoint.debugPropertyGets;
-	    var debugPropertySets = breakpoint.debugPropertySets;
-	    var debugCalls = breakpoint.debugCalls;
-
-	    if (debugPropertyGets) {
-	        debugPropertyGets.forEach(function (property) {
-	            calls.push(["debugPropertyGet", property.obj, property.prop]);
-	        });
-	    }
-	    if (debugPropertySets) {
-	        debugPropertySets.forEach(function (property) {
-	            calls.push(["debugPropertySet", property.obj, property.prop]);
-	        });
-	    }
-	    if (debugCalls) {
-	        debugCalls.forEach(function (property) {
-	            calls.push(["debugCall", property.obj, property.prop]);
-	        });
-	    }
-
-	    var code = "(function(){ var fn = function(debugPropertyGet, debugPropertySet, debugCall){";
-
-	    calls.forEach(function (call) {
-	        var _call = _slicedToArray(call, 3);
-
-	        var method = _call[0];
-	        var objName = _call[1];
-	        var propName = _call[2];
-
-	        code += method + '(' + objName + ',"' + propName + '");';
-	    });
-
-	    code += "};";
-	    var details = {
-	        title: breakpoint.title,
-	        traceMessage: breakpoint.traceMessage,
-	        type: options.type
-	    };
-	    code += "breakpoints.__internal.registerBreakpointFromExtension(fn, " + JSON.stringify(details) + ");";
-	    code += "})();";
 	    log("eval code", code);
 	    chrome.devtools.inspectedWindow.eval(code, function () {
 	        log("done eval activate code", arguments);
@@ -19999,10 +19892,12 @@
 
 	readBreakpointsFromPage();
 
+	function evalInInspectedWindow(code, callback) {
+	    chrome.devtools.inspectedWindow.eval(code, callback);
+	}
+
 	function readBreakpointsFromPage() {
-	    chrome.devtools.inspectedWindow.eval("breakpoints.__internal.getRegisteredBreakpoints();", function (regBp) {
-	        log("after fetch initial state", arguments);
-	        log("setting regbp to ", regBp);
+	    evalInInspectedWindow("breakpoints.__internal.getRegisteredBreakpoints();", function (regBp) {
 	        registeredBreakpoints = regBp;
 	        app.update();
 	    });

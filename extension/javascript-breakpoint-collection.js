@@ -370,6 +370,120 @@
 
             }
         }
-
     }
+
+
+
+
+
+
+
+
+
+    var breakpoints = [
+        {
+            title: "debugCookieReads",
+            debugPropertyGets: [{
+                obj: "document",
+                prop: "cookie"
+            }],
+            traceMessage: "About to read cookie contents"
+        },
+        {
+            title: "debugCookieWrites",
+            debugPropertySets: [{
+                obj: "document",
+                prop: "cookie"
+            }],
+            traceMessage: "About to update cookie contents"
+        },
+        {
+            title: "debugAlertCalls",
+            debugCalls: [{
+                obj: "window",
+                prop: "alert"
+            }],
+            traceMessage: "About to show alert box"
+        },
+        {
+            title: "debugConsoleErrorCalls",
+            debugCalls: [{
+                obj: "window.console",
+                prop: "error"
+            }],
+            traceMessage: "About to call console.error"
+        },
+        {
+            title: "debugConsoleLogCalls",
+            debugCalls: [{
+                obj: "window.console",
+                prop: "log"
+            }],
+            traceMessage: "About to call console.log"
+        },
+        {
+            title: "debugPageScroll",
+            debugCalls: [{
+                obj: "window",
+                prop: "scrollTo"
+            }, {
+                obj: "window",
+                prop: "scrollBy"
+            }],
+            debugPropertySets: [{
+                obj: "document.body",
+                prop: "scrollTop"
+            }],
+            traceMessage: "About to change body scroll position"
+        },
+        {
+            title:  "debugLocalStorageReads",
+            debugCalls: [{
+                obj: "window.localStorage",
+                prop: "getItem"
+            }],
+            traceMessage: "About to read localStorage data"
+        },
+        {
+            title:  "debugLocalStorageWrites",
+            debugCalls: [{
+                obj: "window.localStorage",
+                prop: "setItem"
+            }],
+            traceMessage: "About to write localStorage data"
+        }
+    ];
+    breakpoints.forEach(function(breakpoint){
+
+
+        window.breakpoints[breakpoint.title] = function(){
+            var details = {
+                title: breakpoint.title,
+                traceMessage: breakpoint.traceMessage,
+                type: "debug"
+            }
+
+            var callback =  getCallbackFromBreakpointDetails(details);
+
+            var fn = function(debugPropertyGet, debugPropertySet, debugPropertyCall){
+                if (breakpoint.debugPropertyGets) {
+                    breakpoint.debugPropertyGets.forEach(function(property){
+                        debugPropertyGet(eval(property.obj), property.prop, callback)
+                    })
+                }
+                if (breakpoint.debugPropertySets) {
+                    breakpoint.debugPropertySets.forEach(function(property){
+                        debugPropertySet(eval(property.obj), property.prop, callback)
+                    })
+                }
+                if (breakpoint.debugCalls) {
+                    breakpoint.debugCalls.forEach(function(property){
+                        debugPropertyCall(eval(property.obj), property.prop, callback)
+                    })
+                }
+            }
+
+            window.breakpoints.__internal.registerBreakpoint(fn,  details);
+        }
+    });
 })();

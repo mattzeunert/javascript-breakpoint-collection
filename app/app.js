@@ -3,79 +3,6 @@ import React from "react"
 var log = function(){}
 
 var registeredBreakpoints = [];
-var breakpoints = [
-    {
-        title: "debugCookieReads",
-        debugPropertyGets: [{
-            obj: "document",
-            prop: "cookie"
-        }],
-        traceMessage: "About to read cookie contents"
-    },
-    {
-        title: "debugCookieWrites",
-        debugPropertySets: [{
-            obj: "document",
-            prop: "cookie"
-        }],
-        traceMessage: "About to update cookie contents"
-    },
-    {
-        title: "debugAlertCalls",
-        debugCalls: [{
-            obj: "window",
-            prop: "alert"
-        }],
-        traceMessage: "About to show alert box"
-    },
-    {
-        title: "debugConsoleErrorCalls",
-        debugCalls: [{
-            obj: "window.console",
-            prop: "error"
-        }],
-        traceMessage: "About to call console.error"
-    },
-    {
-        title: "debugConsoleLogCalls",
-        debugCalls: [{
-            obj: "window.console",
-            prop: "log"
-        }],
-        traceMessage: "About to call console.log"
-    },
-    {
-        title: "debugPageScroll",
-        debugCalls: [{
-            obj: "window",
-            prop: "scrollTo"
-        }, {
-            obj: "window",
-            prop: "scrollBy"
-        }],
-        debugPropertySets: [{
-            obj: "document.body",
-            prop: "scrollTop"
-        }],
-        traceMessage: "About to change body scroll position"
-    },
-    {
-        title:  "debugLocalStorageReads",
-        debugCalls: [{
-            obj: "window.localStorage",
-            prop: "getItem"
-        }],
-        traceMessage: "About to read localStorage data"
-    },
-    {
-        title:  "debugLocalStorageWrites",
-        debugCalls: [{
-            obj: "window.localStorage",
-            prop: "setItem"
-        }],
-        traceMessage: "About to write localStorage data"
-    }
-]
 
 class UnactivatedBreakpointListItem extends React.Component {
     render(){
@@ -152,39 +79,7 @@ function activateBreakpoint(breakpoint, options){
     }
 
 
-    var calls = [];
-    var {debugPropertyGets, debugPropertySets, debugCalls} = breakpoint;
-    if (debugPropertyGets) {
-        debugPropertyGets.forEach(function(property){
-            calls.push(["debugPropertyGet", property.obj, property.prop])
-        })
-    }
-    if (debugPropertySets) {
-        debugPropertySets.forEach(function(property){
-            calls.push(["debugPropertySet", property.obj, property.prop])
-        })
-    }
-    if (debugCalls) {
-        debugCalls.forEach(function(property){
-            calls.push(["debugCall", property.obj, property.prop])
-        })
-    }
-
-    var code = "(function(){ var fn = function(debugPropertyGet, debugPropertySet, debugCall){";
-
-    calls.forEach(function(call){
-        var [method, objName, propName] = call;
-        code += method + '(' + objName + ',"' + propName + '");';
-    })
     
-    code += "};"
-    var details = {
-        title: breakpoint.title,
-        traceMessage: breakpoint.traceMessage,
-        type: options.type
-    }
-    code += "breakpoints.__internal.registerBreakpointFromExtension(fn, " + JSON.stringify(details) + ");";
-    code += "})();"
     log("eval code", code)
     chrome.devtools.inspectedWindow.eval(code, function(){
         log("done eval activate code", arguments)
@@ -214,10 +109,12 @@ var app = null;
 
 readBreakpointsFromPage();
 
+function evalInInspectedWindow(code, callback){
+    chrome.devtools.inspectedWindow.eval(code, callback);
+}
+
 function readBreakpointsFromPage(){
-    chrome.devtools.inspectedWindow.eval("breakpoints.__internal.getRegisteredBreakpoints();", function(regBp){
-        log("after fetch initial state", arguments)
-        log("setting regbp to ", regBp)
+    evalInInspectedWindow("breakpoints.__internal.getRegisteredBreakpoints();", function(regBp){
         registeredBreakpoints = regBp;
         app.update();
     });
