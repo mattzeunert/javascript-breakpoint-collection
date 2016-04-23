@@ -36,8 +36,8 @@ export default class ActiveBreakpointsList extends React.Component {
             </div>
         }
         return <div>
-            {this.props.breakpoints.map(bp => 
-                <ActiveBreakpointsListItem key={bp.title} breakpoint={bp} />
+            {this.props.breakpoints.map((bp, i) => 
+                <ActiveBreakpointsListItem key={i} breakpoint={bp} />
             )}
         </div>
     }
