@@ -145,6 +145,10 @@ import predefinedBreakpoints from "./breakpoints/predefinedBreakpoints"
             var bp = registeredBreakpoints.filter(function(bp){
                 return bp.id == id;
             })[0];
+            if (bp === undefined) {
+                console.log("Couldn't find breakpoint with id", id)
+                return;
+            }
             bp.debugIds.forEach(function(debugId){
                 resetDebug(debugId);
             });
