@@ -50,7 +50,7 @@ var backgroundPageConnection = chrome.runtime.connect({
 });
 
 backgroundPageConnection.onMessage.addListener(function (message) {
-    console.log("readBreakpointsFromPage b/c bg page said so")
+    // console.log("readBreakpointsFromPage b/c bg page said so")
     readBreakpointsFromPage();
 });
 
