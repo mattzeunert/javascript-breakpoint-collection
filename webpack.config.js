@@ -6,6 +6,7 @@ module.exports = {
     "devtools-panel": './index.js',
     "javascript-breakpoint-collection": './injected-script.js'
   },
+  devtool: "source-map",
   output: { path: __dirname + "/extension/build", filename: '[name].js' },
   module: {
     loaders: [
