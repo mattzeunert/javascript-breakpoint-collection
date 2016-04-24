@@ -29,7 +29,11 @@ export function updateBreakpoint(breakpoint, traceOrDebugger){
     })
 }
 
-
+export function setTypeOfMostRecentBreakpointToDebugger(){
+    evalInInspectedWindow("breakpoints.__internal.setTypeOfMostRecentBreakpointToDebugger()", function(){
+        
+    })
+}
 
 
 readBreakpointsFromPage();

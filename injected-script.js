@@ -188,6 +188,12 @@ import predefinedBreakpoints from "./breakpoints/predefinedBreakpoints"
             bp.details = details;
 
             pushRegisteredBreakpointsToExtension();
+        },
+        setTypeOfMostRecentBreakpointToDebugger: function(){
+            var mostRecentBreakpoint = registeredBreakpoints[registeredBreakpoints.length - 1];
+            var newDetails = mostRecentBreakpoint.details;
+            newDetails.type = "debugger"
+            __internal.updateBreakpoint(mostRecentBreakpoint.id, newDetails)
         }
     }
 
