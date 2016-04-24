@@ -21,4 +21,22 @@ TODO
 
 ## Development
 
-Run `webpack --watch` to build the project. Run the tests with `karma start`.
+Install the dependencies:
+
+    npm install webpack -g
+    npm install
+
+The build the project:
+    
+    webpack --watch
+
+And run the tests:
+    
+    npm run test
+
+### Loading the extension in Chrome
+
+1. Go to [chrome://extensions/](chrome://extensions/)
+2. Enter Developer Mode
+3. Load Unpacked Extension
+4. Select "extension" directory in this repo
