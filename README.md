@@ -7,6 +7,7 @@ Either use the UI or use it from the console:
     breakpoints.debugScroll()
     breakpoints.debugPropertySet(obj, "propertyName", "trace") // trace instead of pausing
     breakpoints.debugCookieWrites(function(){ /* whatever */ })
+    breakpoints.resetLastBreakpoint()
 
 ## Chrome Extension
 
