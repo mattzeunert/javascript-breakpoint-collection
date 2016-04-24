@@ -40,7 +40,7 @@ export default class AppView extends React.Component {
                 </div>
             </div>
             <div>
-                <h2>Breakpoints</h2>
+                <h2>Add Breakpoint</h2>
                 <AvailableBreakpointsList breakpoints={appState.predefinedBreakpoints} />
             </div>
             <div>

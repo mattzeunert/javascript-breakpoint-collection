@@ -1,13 +1,9 @@
 import React from "react"
 import {deactivateBreakpoint, updateBreakpoint} from "./app"
+import BreakpointTypeSelector from "./BreakpointTypeSelector"
 
 class ActiveBreakpointsListItem extends React.Component {
     render(){
-        var customOption = null;
-        if (this.props.breakpoint.details.type === "custom") {
-            customOption = <option value="custom">custom</option>
-        }
-
         return <div className="activated-breakpiont-list-item">
             {this.props.breakpoint.details.title}
             <button
@@ -16,13 +12,9 @@ class ActiveBreakpointsListItem extends React.Component {
                 &times;
             </button>
             <div style={{marginTop: 4}}>
-                <select
+                <BreakpointTypeSelector
                     value={this.props.breakpoint.details.type}
-                    onChange={(event) => updateBreakpoint(this.props.breakpoint, event.target.value)}>
-                    <option value="debugger">debugger</option>
-                    <option value="trace">trace</option>
-                    {customOption}
-                </select>
+                    onChange={(breakpointType) => updateBreakpoint(this.props.breakpoint, breakpointType)} />
             </div>
         </div>
     }
