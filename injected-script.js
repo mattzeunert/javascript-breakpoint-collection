@@ -101,6 +101,13 @@ import predefinedBreakpoints from "./breakpoints/predefinedBreakpoints"
             _objectsAndPropsByDebugId: objectsAndPropsByDebugId,
             _registeredBreakpoints: registeredBreakpoints
         },
+        registerBreakpointAndGetResetBreakpointFunction: function(){
+            var breakpointId = __internal.registerBreakpoint.apply(this, arguments);
+            // Comments in following functions are to show more info when function appears logged in console
+            return function resetBreakpoint(){
+                __internal.disableBreakpoint(breakpointId);
+            }
+        },
         registerBreakpoint: function(fn, bpDetails, fixedCallback){
             var debugIds = [];
             var _debugPropertyGet = function(object, propertyName, callback){
@@ -130,6 +137,8 @@ import predefinedBreakpoints from "./breakpoints/predefinedBreakpoints"
             });
 
             pushRegisteredBreakpointsToExtension();
+
+            return id;
         },
         createSpecificBreakpoint: function(breakpointName){
             window.breakpoints[breakpointName]();
@@ -180,7 +189,7 @@ import predefinedBreakpoints from "./breakpoints/predefinedBreakpoints"
     var breakpoints = {
         debugPropertyGet: function(obj, prop, callback){
             callback = getCallbackFromUserFriendlyCallbackArgument(callback, obj, prop, "get");
-            window.breakpoints.__internal.registerBreakpoint(function(
+            return __internal.registerBreakpointAndGetResetBreakpointFunction(function(
                 debugPropertyGet, debugPropertySet, debugCall
                 ){
                     debugPropertyGet(obj, prop, callback);
@@ -192,7 +201,7 @@ import predefinedBreakpoints from "./breakpoints/predefinedBreakpoints"
         },
         debugPropertySet: function(obj, prop, callback){
             callback = getCallbackFromUserFriendlyCallbackArgument(callback, obj, prop, "set");
-            window.breakpoints.__internal.registerBreakpoint(function(
+            return __internal.registerBreakpointAndGetResetBreakpointFunction(function(
                 debugPropertyGet, debugPropertySet, debugCall
                 ){
                     debugPropertySet(obj, prop, callback);
@@ -204,7 +213,7 @@ import predefinedBreakpoints from "./breakpoints/predefinedBreakpoints"
         },
         debugPropertyCall: function(obj, prop, callback){
             callback = getCallbackFromUserFriendlyCallbackArgument(callback, obj, prop, "call");
-            window.breakpoints.__internal.registerBreakpoint(function(
+            return __internal.registerBreakpointAndGetResetBreakpointFunction(function(
                 debugPropertyGet, debugPropertySet, debugCall
                 ){
                     debugCall(obj, prop, callback);
@@ -245,7 +254,7 @@ import predefinedBreakpoints from "./breakpoints/predefinedBreakpoints"
                 }
             }
 
-            breakpoints.__internal.registerBreakpoint(fn,  details);
+            return __internal.registerBreakpointAndGetResetBreakpointFunction(fn,  details);
         }
     });
 
