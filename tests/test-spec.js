@@ -33,6 +33,24 @@ describe("Combining multiple breakpoints on the same object", function(){
     })
 });
 
+describe("breakpoints.resetAllBreakpoints", function(){
+    it("Disables all breakpoints", function(){
+        var obj = {hi: "there"}
+        var fn1 = jasmine.createSpy();
+        breakpoints.debugPropertySet(obj, "hi", fn1);
+
+        var fn2 = jasmine.createSpy();
+        breakpoints.debugCookieReads(fn2);
+
+        breakpoints.resetAllBreakpoints();
+        var cookie = document.cookie;
+        obj.hi = "hey";
+
+        expect(fn1).not.toHaveBeenCalled();
+        expect(fn2).not.toHaveBeenCalled();
+    });
+});
+
 describe("debugPropertyGet", function(){
     it("Calls a callback before a property is read", function(){
         var obj = {hi: "there"};

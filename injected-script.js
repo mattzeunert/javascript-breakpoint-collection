@@ -150,7 +150,7 @@ import predefinedBreakpoints from "./breakpoints/predefinedBreakpoints"
         getRegisteredBreakpoints: function(){
             return registeredBreakpoints;
         },
-        disableBreakpoint: function(id){
+        disableBreakpoint: function(id, dontPushToExtension){
             var bp = registeredBreakpoints.filter(function(bp){
                 return bp.id == id;
             })[0];
@@ -165,6 +165,14 @@ import predefinedBreakpoints from "./breakpoints/predefinedBreakpoints"
                 return bp.id != id;
             })
 
+            if (!dontPushToExtension) {
+                pushRegisteredBreakpointsToExtension();
+            }
+        },
+        disableAllBreakpoints: function(){
+            registeredBreakpoints.forEach(function(breakpoint){
+                __internal.disableBreakpoint(breakpoint.id, true);
+            });
             pushRegisteredBreakpointsToExtension();
         },
         updateBreakpoint: function(id, details){
@@ -219,6 +227,9 @@ import predefinedBreakpoints from "./breakpoints/predefinedBreakpoints"
         },
         debugPropertyCall: function(obj, prop, callback){
             return publicDebugPropertyAccess(obj, prop, callback, "call")
+        },
+        resetAllBreakpoints: function(){
+            __internal.disableAllBreakpoints()
         },
         __internal
     }
