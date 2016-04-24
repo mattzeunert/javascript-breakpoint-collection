@@ -51,6 +51,30 @@ describe("breakpoints.resetAllBreakpoints", function(){
     });
 });
 
+describe("breakpoints.resetLastBreakpoint", function(){
+    it("Disables the last breakpoint that was added", function(){
+        var fn = jasmine.createSpy();
+        breakpoints.debugCookieReads(fn);
+        breakpoints.resetLastBreakpoint();
+        var cookie = document.cookie;
+        expect(fn).not.toHaveBeenCalled();
+    })
+    it("Disables the breakpoints in reverse order", function(){
+        var fn1 = jasmine.createSpy();
+        breakpoints.debugCookieReads(fn1);
+        var fn2 = jasmine.createSpy();
+        breakpoints.debugCookieWrites(fn2);
+        breakpoints.resetLastBreakpoint();
+        document.cookie = "test";
+        var cookie = document.cookie;
+        expect(fn2).not.toHaveBeenCalled();
+        expect(fn1).toHaveBeenCalled();
+        breakpoints.resetLastBreakpoint();
+        cookie = document.cookie;
+        expect(fn1.calls.count()).toBe(1);
+    })
+})
+
 describe("debugPropertyGet", function(){
     it("Calls a callback before a property is read", function(){
         var obj = {hi: "there"};

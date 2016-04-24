@@ -133,7 +133,8 @@ import predefinedBreakpoints from "./breakpoints/predefinedBreakpoints"
             registeredBreakpoints.push({
                 id: id,
                 debugIds,
-                details: bpDetails
+                details: bpDetails,
+                createdAt: new Date()
             });
 
             pushRegisteredBreakpointsToExtension();
@@ -168,12 +169,6 @@ import predefinedBreakpoints from "./breakpoints/predefinedBreakpoints"
             if (!dontPushToExtension) {
                 pushRegisteredBreakpointsToExtension();
             }
-        },
-        disableAllBreakpoints: function(){
-            registeredBreakpoints.forEach(function(breakpoint){
-                __internal.disableBreakpoint(breakpoint.id, true);
-            });
-            pushRegisteredBreakpointsToExtension();
         },
         updateBreakpoint: function(id, details){
             var bp = registeredBreakpoints.filter(function(bp){
@@ -229,7 +224,18 @@ import predefinedBreakpoints from "./breakpoints/predefinedBreakpoints"
             return publicDebugPropertyAccess(obj, prop, callback, "call")
         },
         resetAllBreakpoints: function(){
-            __internal.disableAllBreakpoints()
+            registeredBreakpoints.forEach(function(breakpoint){
+                __internal.disableBreakpoint(breakpoint.id, true);
+            });
+            pushRegisteredBreakpointsToExtension();
+        },
+        resetLastBreakpoint: function(){
+            if (registeredBreakpoints.length === 0) {
+                console.log("No breakpoints are currently registered")
+                return;
+            }
+            var breakpointToReset = registeredBreakpoints[registeredBreakpoints.length - 1];
+            __internal.disableBreakpoint(breakpointToReset.id);
         },
         __internal
     }
