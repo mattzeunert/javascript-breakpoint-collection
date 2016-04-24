@@ -23,7 +23,7 @@ class ActiveBreakpointsListItem extends React.Component {
 export default class ActiveBreakpointsList extends React.Component {
     render(){
         if (this.props.breakpoints.length === 0) {
-            return <div>
+            return <div style={{marginTop: 10}}>
                 Click on a breakpoint on the left to activate it.
             </div>
         }

@@ -10,42 +10,48 @@ export default class AppView extends React.Component {
     render(){
         return <div className="col-parent">
             <div>
-                <div>
-                    <u>JavaScript Breakpoint Collection</u>
+                <div className="left-column-header">
+                    JavaScript Breakpoint Collection
                 </div>
-                <p>
-                    Click on a breakpoint on the right to add it.
-                </p>
-                <p>
-                    To debug property access and function calls on arbitray objects use the code below.
-                </p>
-                <div style={{maxWidth: "100%", "overflow": "auto"}}>
-                    <pre>
-                        breakpoints.debugPropertySet(document, "cookie");
-                    </pre>
-                    <pre>
-                        breakpoints.debugPropertyGet(document, "cookie");
-                    </pre>
-                    <pre>
-                        breakpoints.debugPropertyCall(localStorage, "setItem");
-                    </pre>
-                    <pre>
-                        breakpoints.debugScroll(function(){"{ /* ... */ }"});
-                    </pre>
-                </div>
-                <div>
-                    <a href="https://github.com/mattzeunert/javascript-breakpoint-collection/issues/new" target="_blank">
-                        Report an issue or request a feature
-                    </a>
+                <div className="col-content">
+                    <p>
+                        Click on a breakpoint on the right to add it.
+                    </p>
+                    <p>
+                        To debug property access and function calls on arbitray objects use the code below in the console.
+                    </p>
+                    <div className="code-section">
+                        <pre>
+                            breakpoints.debugPropertySet(object, "propertyName");
+                        </pre>
+                        <pre>
+                            breakpoints.debugPropertyGet(document, "cookie");
+                        </pre>
+                        <pre>
+                            breakpoints.debugPropertyCall(localStorage, "setItem");
+                        </pre>
+                        <pre>
+                            breakpoints.debugScroll(function(){"{ /* ... */ }"});
+                        </pre>
+                    </div>
+                    <p>
+                        <a href="https://github.com/mattzeunert/javascript-breakpoint-collection/issues/new" target="_blank">
+                            Report an issue or request a feature
+                        </a>
+                    </p>
                 </div>
             </div>
             <div>
                 <h2>Add Breakpoint</h2>
-                <AvailableBreakpointsList breakpoints={appState.predefinedBreakpoints} />
+                <div className="col-content">
+                    <AvailableBreakpointsList breakpoints={appState.predefinedBreakpoints} />
+                </div>
             </div>
             <div>
                 <h2>Activated Breakpoints</h2>
-                <ActiveBreakpointsList breakpoints={appState.registeredBreakpoints} />
+                <div className="col-content">
+                    <ActiveBreakpointsList breakpoints={appState.registeredBreakpoints} />
+                </div>
             </div>
         </div>
     }

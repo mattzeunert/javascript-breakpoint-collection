@@ -4,19 +4,38 @@
 * {
     box-sizing: border-box;
 }
+h2 {
+    padding: 10px;
+    font-weight: normal;
+    padding-top: 7px;
+    padding-bottom: 6px;
+    margin: 0;
+    margin-bottom: 2px;
+    background: #fafafa;
+    border-bottom: 1px solid #eee
+}
+body {
+    margin: 0;
+}
+a {
+    color: #698CFE;
+}
 .col-parent > div {
     width: calc(33.333% - 10px);
     float: left;
     border-right: 1px solid #eee;
-    padding: 10px;
     height: 100%;
+}
+.col-parent > div:first-child {
+    background: #fafafa;
 }
 .col-parent > div:last-child {
     margin-right: 15px;
     border-right: none;
 }
-.unactivated-breakpoint-list-item:first-child {
-    border-top: 1px solid #eee;
+.col-parent .col-content {
+    padding: 10px;
+    padding-top: 0px;
 }
 .unactivated-breakpoint-list-item {
     border-bottom: 1px solid #eee;
@@ -45,9 +64,6 @@
 .activated-breakpiont-list-item {
     border-bottom: 1px solid #eee;
     padding: 10px;
-}
-.activated-breakpiont-list-item:first-child {
-    border-top: 1px solid #eee;
 }
 .activated-breakpiont-list-item .delete {
     float: right;
@@ -84,6 +100,25 @@
     background: red !important;
     border-color: red !important;
     color: white !important;
+}
+
+.left-column-header {
+    background: #698CFE;
+    color: white;
+    padding: 10px;
+    font-weight: bold;
+}
+
+.code-section {
+    max-width: 100%;
+    overflow: auto;
+    padding: 10px;
+    background: #eee;
+}
+.code-section pre {
+    font-family: Arial;
+    padding-bottom: 2px;
+    margin: 0;
 }
 </style>
 <div id="app-content"></div>
