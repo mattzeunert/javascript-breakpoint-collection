@@ -142,7 +142,9 @@ import predefinedBreakpoints from "./breakpoints/predefinedBreakpoints"
             return id;
         },
         createSpecificBreakpoint: function(breakpointName){
-            window.breakpoints[breakpointName]();
+            // would be cleaner if this didn't use the public console API
+            // but instead something on __internal
+            window.breakpoints[breakpointName]("trace");
         },
         registerBreakpointFromExtension: function(fn, bpDetails){
             var fixedCallback = getCallbackFromBreakpointDetails(bpDetails);
