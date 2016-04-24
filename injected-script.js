@@ -15,7 +15,7 @@ import predefinedBreakpoints from "./breakpoints/predefinedBreakpoints"
     debuggerFunction.callbackType = "debugger";
     
 
-    function debugCall(object, prop, callback){
+    function debugPropertyCall(object, prop, callback){
         callback = getCallbackFromUserFriendlyCallbackArgument(callback, object, prop, "call")
 
         return debugObj(object, prop, {
@@ -122,13 +122,13 @@ import predefinedBreakpoints from "./breakpoints/predefinedBreakpoints"
                 }
                 debugIds.push(debugPropertySet(object, propertyName, callback));
             }
-            var _debugCall = function(object, propertyName, callback){
+            var _debugPropertyCall = function(object, propertyName, callback){
                 if (fixedCallback) {
                     callback = fixedCallback;
                 }
-                debugIds.push(debugCall(object, propertyName, callback));
+                debugIds.push(debugPropertyCall(object, propertyName, callback));
             }
-            fn(_debugPropertyGet, _debugPropertySet, _debugCall);
+            fn(_debugPropertyGet, _debugPropertySet, _debugPropertyCall);
             var id = Math.floor(Math.random() * 1000000000)
             registeredBreakpoints.push({
                 id: id,
@@ -186,42 +186,39 @@ import predefinedBreakpoints from "./breakpoints/predefinedBreakpoints"
         }
     }
 
+    function publicDebugPropertyAccess(obj, prop, callback, accessType) {
+        var functionName = {
+            "get": "debugPropertyGet",
+            "set": "debugPropertySet",
+            "call": "debugPropertyCall"
+        }[accessType];
+
+        callback = getCallbackFromUserFriendlyCallbackArgument(callback, obj, prop, "get");
+        return __internal.registerBreakpointAndGetResetBreakpointFunction(function(
+            debugPropertyGet, debugPropertySet, debugPropertyCall
+            ){
+                var debugFunctions = {
+                    debugPropertyGet,
+                    debugPropertySet,
+                    debugPropertyCall
+                }
+                debugFunctions[functionName](obj, prop, callback);
+        }, {
+            title: functionName + " (" + prop + ")",
+            type: callback.callbackType,
+            accessType: accessType
+        });
+    }
+
     var breakpoints = {
         debugPropertyGet: function(obj, prop, callback){
-            callback = getCallbackFromUserFriendlyCallbackArgument(callback, obj, prop, "get");
-            return __internal.registerBreakpointAndGetResetBreakpointFunction(function(
-                debugPropertyGet, debugPropertySet, debugCall
-                ){
-                    debugPropertyGet(obj, prop, callback);
-            }, {
-                title: "debugPropertyGet (" + prop + ")",
-                type: callback.callbackType,
-                accessType: "get"
-            });
+            return publicDebugPropertyAccess(obj, prop, callback, "get")
         },
         debugPropertySet: function(obj, prop, callback){
-            callback = getCallbackFromUserFriendlyCallbackArgument(callback, obj, prop, "set");
-            return __internal.registerBreakpointAndGetResetBreakpointFunction(function(
-                debugPropertyGet, debugPropertySet, debugCall
-                ){
-                    debugPropertySet(obj, prop, callback);
-            }, {
-                title: "debugPropertySet (" + prop + ")",
-                type: callback.callbackType,
-                accessType: "set"
-            });
+            return publicDebugPropertyAccess(obj, prop, callback, "set")
         },
         debugPropertyCall: function(obj, prop, callback){
-            callback = getCallbackFromUserFriendlyCallbackArgument(callback, obj, prop, "call");
-            return __internal.registerBreakpointAndGetResetBreakpointFunction(function(
-                debugPropertyGet, debugPropertySet, debugCall
-                ){
-                    debugCall(obj, prop, callback);
-            }, {
-                title: "debugPropertyCall (" + prop + ")",
-                type: callback.callbackType,
-                accessType: "call"
-            });
+            return publicDebugPropertyAccess(obj, prop, callback, "call")
         },
         __internal
     }
