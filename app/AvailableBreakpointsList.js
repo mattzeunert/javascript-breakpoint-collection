@@ -4,6 +4,7 @@ import {activateBreakpoint, setTypeOfMostRecentBreakpointToDebugger} from "./app
 class AvailableBreakpointsListItem extends React.Component {
     render(){
         var convertToDebuggerTypeButton = null;
+        var title = this.props.breakpoint.title;
         var plusButton = <div className="plus">+</div>;
         if (this.props.recentlyActivated) {
             convertToDebuggerTypeButton = <div style={{
@@ -16,16 +17,17 @@ class AvailableBreakpointsListItem extends React.Component {
                 borderRadius: 4,
                 marginTop: -3
             }}>
-                debugger
+                Click again to change trace to debugger
             </div>
             plusButton = null;
+            title = String.fromCharCode(160); //nbsp
         }
 
         return <div
                 onClick={() => this.props.onClick()}
                 onMouseLeave={() => this.props.onMouseLeave()}
                 className="unactivated-breakpoint-list-item">
-            {this.props.breakpoint.title}
+            {title}
             {convertToDebuggerTypeButton}
             {plusButton}
         </div>

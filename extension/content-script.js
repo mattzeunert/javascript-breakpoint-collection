@@ -10,6 +10,7 @@ window.addEventListener("RebroadcastExtensionMessage", function(evt) {
         chrome.runtime.sendMessage(evt)
     } catch (err) {
         // `Cannot read property 'name' of undefined` can be caused by background page refresh (e.g. alt+r)
-        console.log("Sending info to DevTools tab failed:", err)
+        console.log("Breakpoints: Sending info to DevTools tab failed:", err)
+        console.log("Breakpoints: This can occur after reloading the extension. Close and re-open the current tab to fix it.")
     }
 }, false);
