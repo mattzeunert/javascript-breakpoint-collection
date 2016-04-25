@@ -29,8 +29,12 @@ export function setTypeOfMostRecentBreakpointToDebugger(){
     evalInInspectedWindow("breakpoints.__internal.setTypeOfMostRecentBreakpointToDebugger()")
 }
 
+function checkIfBreakpointsInstalledOnPage(callback) {
+    evalInInspectedWindow("window.breakpoints !== undefined", function(result){
+        callback(result);
+    })
+}
 
-readBreakpointsFromPage();
 
 function evalInInspectedWindow(code, callback){
     chrome.devtools.inspectedWindow.eval(code, function(result, err){
@@ -51,6 +55,29 @@ function readBreakpointsFromPage(){
         updateApp();
     });
 }
+
+function installBreakpointsOnPage(callback){
+    var src = chrome.extension.getURL('build/javascript-breakpoint-collection.js');
+    var code = `
+        var s = document.createElement('script');
+        s.src = '${src}'
+        s.onload = function() {
+            this.parentNode.removeChild(this);
+        };
+        (document.head || document.documentElement).appendChild(s);
+    `;
+    evalInInspectedWindow(code, callback);
+}
+
+checkIfBreakpointsInstalledOnPage(function(isInstalled){
+    if (isInstalled) {
+        readBreakpointsFromPage();
+    } else {
+        installBreakpointsOnPage(function(){
+            readBreakpointsFromPage();
+        })
+    }
+})
 
 var backgroundPageConnection = chrome.runtime.connect({
     name: "devtools-page"
