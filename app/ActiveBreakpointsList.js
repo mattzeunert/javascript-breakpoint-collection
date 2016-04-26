@@ -1,5 +1,5 @@
 import React from "react"
-import {deactivateBreakpoint, updateBreakpoint} from "./app"
+import {deactivateBreakpoint, updateBreakpointType} from "./app"
 import BreakpointTypeSelector from "./BreakpointTypeSelector"
 
 class ActiveBreakpointsListItem extends React.Component {
@@ -14,7 +14,7 @@ class ActiveBreakpointsListItem extends React.Component {
             <div style={{marginTop: 4}}>
                 <BreakpointTypeSelector
                     value={this.props.breakpoint.details.type}
-                    onChange={(breakpointType) => updateBreakpoint(this.props.breakpoint, breakpointType)} />
+                    onChange={(breakpointType) => updateBreakpointType(this.props.breakpoint, breakpointType)} />
             </div>
         </div>
     }

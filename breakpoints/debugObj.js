@@ -26,7 +26,7 @@ function getPropertyDescriptor(object, propertyName){
     return descriptor;
 }
 
-export { registry, objectsAndPropsByDebugId }
+export { registry as debugObjBreakpointRegistry, objectsAndPropsByDebugId }
 
 
 export default function debugObj(obj, prop, hooks) {

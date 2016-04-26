@@ -111,6 +111,8 @@ export default [
             obj: "document",
             prop: "evaluate" // xpath
         }],
-        traceMessage: "About to select DOM elements"
+        getTraceInfo: function(){
+            return ["About to select DOM elements"];
+        }
     }
 ];

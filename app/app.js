@@ -6,23 +6,19 @@ var appState = {
 }
 
 export function activateBreakpoint(breakpoint, options){
-    var code = "window.breakpoints.__internal.createSpecificBreakpoint('" + breakpoint.title + "')"
+    var code = "window.breakpoints." + breakpoint.title + "('trace')"
     evalInInspectedWindow(code);
 }
 
 export function deactivateBreakpoint(breakpoint) {
-    var code = "breakpoints.__internal.disableBreakpoint(" + breakpoint.id + ");"
+    var code = "window.breakpoints.__internal.disableBreakpoint(" + breakpoint.id + ");"
     evalInInspectedWindow(code);
 }
 
-export function updateBreakpoint(breakpoint, traceOrDebugger){
+export function updateBreakpointType(breakpoint, traceOrDebugger){
     var id = breakpoint.id;
-    var details = Object.assign({}, breakpoint.details);
-    details.type = traceOrDebugger;
-    var code = "breakpoints.__internal.updateBreakpoint('"+ id + "', " + JSON.stringify(details) + ");"
-    evalInInspectedWindow(code, function(){
-        
-    })
+    var code = "window.breakpoints.__internal.updateBreakpointType('"+ id + "', '" + traceOrDebugger + "');"
+    evalInInspectedWindow(code)
 }
 
 export function setTypeOfMostRecentBreakpointToDebugger(){
