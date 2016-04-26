@@ -29,7 +29,7 @@ function getPropertyDescriptor(object, propertyName){
 export { registry, objectsAndPropsByDebugId }
 
 
-export default function debugObj(obj, prop, options) {
+export default function debugObj(obj, prop, hooks) {
     var debugId = Math.floor(Math.random() * 100000000000).toString()
     objectsAndPropsByDebugId[debugId] = {
         obj,
@@ -50,6 +50,7 @@ export default function debugObj(obj, prop, options) {
             get: function(){
                 var retVal;
                 triggerHook("propertyGetBefore");
+
                 if (isSimpleValue) {
                     retVal = originalProp.value;
                 } else {
@@ -57,9 +58,14 @@ export default function debugObj(obj, prop, options) {
                 }
                 if (typeof retVal === "function") {
                     return function(){
-                        triggerHook("propertyCallBefore")
+                        var args = Array.prototype.slice.call(arguments);
+                        triggerHook("propertyCallBefore", {
+                            callArguments: args
+                        })
                         retVal.apply(this, arguments);
-                        triggerHook("propertyCallAfter")
+                        triggerHook("propertyCallAfter", {
+                            callArguments: args
+                        })
                     }
                 }
 
@@ -68,13 +74,13 @@ export default function debugObj(obj, prop, options) {
             },
             set: function(newValue){
                 var retVal;
-                triggerHook("propertySetBefore")
+                triggerHook("propertySetBefore", {newPropertyValue: newValue})
                 if (isSimpleValue) {
                     retVal = originalProp.value = newValue;
                 } else {
                     retVal = originalProp.set.apply(this, arguments);
                 }
-                triggerHook("propertySetAfter")
+                triggerHook("propertySetAfter", {newPropertyValue: newValue})
                 return retVal;
             }
         });
@@ -82,25 +88,37 @@ export default function debugObj(obj, prop, options) {
 
 
     hookNames.forEach(function(hookName){
-        if (options[hookName] !== undefined) {
+        if (hooks[hookName] !== undefined) {
             if (registry.get(obj)[prop].hooks[hookName] === undefined) {
                 registry.get(obj)[prop].hooks[hookName] = [];
             }
+            var hook = hooks[hookName];
             registry.get(obj)[prop].hooks[hookName].push({
                 id: debugId,
-                fn: options[hookName]
+                fn: hook.fn,
+                data: hook.data
             })
         }
     });
 
     return debugId;
 
-    function triggerHook(hookName) {
+    function triggerHook(hookName, additionalHookInfo) {
         var hooks = registry.get(obj)[prop].hooks;
         var hooksWithName = hooks[hookName];
+
+        var infoForHook = {
+            object: obj,
+            propertyName: prop,
+            ...additionalHookInfo
+        }
+
         if (hooksWithName !== undefined && hooksWithName.length > 0) {
             hooksWithName.forEach(function(hook){
-                hook.fn();
+                hook.fn({
+                    ...infoForHook,
+                    data: hook.data
+                });
             })
         }
     }

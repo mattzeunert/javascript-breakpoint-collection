@@ -19,18 +19,24 @@ import predefinedBreakpoints from "./breakpoints/predefinedBreakpoints"
         callback = getCallbackFromUserFriendlyCallbackArgument(callback, object, prop, "call")
 
         return debugObj(object, prop, {
-            propertyCallBefore: callback
+            propertyCallBefore: {
+                fn: callback
+            }
         })
     }
 
     var debugPropertyGet = function(object, propertyName, callback){
         return debugObj(object, propertyName, {
-            propertyGetBefore: callback
+            propertyGetBefore: {
+                fn: callback
+            }
         })
     }
     var debugPropertySet = function(object, propertyName, callback) {
         return debugObj(object, propertyName, {
-            propertySetBefore: callback
+            propertySetBefore: {
+                fn: callback
+            }
         })
     }
 
