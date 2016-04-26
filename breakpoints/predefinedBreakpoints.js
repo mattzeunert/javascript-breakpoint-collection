@@ -81,5 +81,36 @@ export default [
             prop: "clear"
         }],
         traceMessage: "About to write localStorage data"
+    }, {
+        title: "debugElementSelection",
+        debugCalls: [{
+            obj: "document",
+            prop: "getElementById"
+        }, {
+            obj: "document",
+            prop: "getElementsByClassName"
+        }, {
+            obj: "document",
+            prop: "getElementsByName"
+        }, {
+            obj: "document",
+            prop: "getElementsByTagName"
+        }, {
+            obj: "document",
+            prop: "getElementsByTagNameNS"
+        }, {
+            obj: "document",
+            prop: "getElementsByClassName"
+        }, {
+            obj: "document",
+            prop: "querySelector"
+        }, {
+            obj: "document",
+            prop: "querySelectorAll"
+        }, {
+            obj: "document",
+            prop: "evaluate" // xpath
+        }],
+        traceMessage: "About to select DOM elements"
     }
 ];

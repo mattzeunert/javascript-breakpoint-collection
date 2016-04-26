@@ -254,3 +254,13 @@ describe("debugLocalStorageWrites", function(){
         expect(fn).toHaveBeenCalled();
     })
 })
+
+describe("debugElementSelection", function(){
+    it("Hits when document.getElementById is called", function(){
+        var fn = jasmine.createSpy();
+        breakpoints.debugElementSelection(fn);
+        document.getElementById("test")
+        expect(fn).toHaveBeenCalled();
+    });
+    //it's all just a list of calls... no point in duplicating them all here
+})
