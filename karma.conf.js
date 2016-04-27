@@ -1,32 +1,45 @@
 var webpack = require('webpack');
 
 module.exports = function (config) {
-  config.set({
+  var configuration = {
     browsers: ['Chrome'],
-    singleRun: false,
-    frameworks: ['jasmine'],
-    files: ['webpack-test.config.js'],
-    preprocessors: {
-      'webpack-test.config.js': ['webpack', 'sourcemap']
-    },
-    reporters: ['dots'],
-    webpack: {
-      module: {
-        loaders: [
-          {
-            test: /\.jsx?$/,
-            exclude: /node_modules/,
-            loader: 'babel-loader'
-          }]
+      singleRun: false,
+      frameworks: ['jasmine'],
+      files: ['webpack-test.config.js'],
+      preprocessors: {
+        'webpack-test.config.js': ['webpack', 'sourcemap']
       },
-      watch: true,
-      resolve: {
-        extensions: ["", ".js", ".jsx", ".js.jsx"]
+      customLaunchers: {
+        Chrome_travis_ci: {
+          base: 'Chrome',
+          flags: ['--no-sandbox']
+        }
       },
-      devtool: 'inline-source-map',
-    },
-    webpackServer: {
-      noInfo: true
+      reporters: ['dots'],
+      webpack: {
+        module: {
+          loaders: [
+            {
+              test: /\.jsx?$/,
+              exclude: /node_modules/,
+              loader: 'babel-loader'
+            }]
+        },
+        watch: true,
+        resolve: {
+          extensions: ["", ".js", ".jsx", ".js.jsx"]
+        },
+        devtool: 'inline-source-map',
+      },
+      webpackServer: {
+        noInfo: true
+      }
     }
-  });
+    if (process.env.TRAVIS) {
+        configuration.browsers = ['Chrome_travis_ci'];
+    }
+
+  config.set(configuration);
 };
+
+
