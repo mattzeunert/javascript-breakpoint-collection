@@ -152,7 +152,7 @@ describe("debugCookieReads", function(){
         breakpoints.debugCookieReads("trace");
         var cookie = document.cookie;
         expect(console.trace).toHaveBeenCalled();
-        expect(console.trace.calls.mostRecent().args[0]).toBe("About to read cookie contents");
+        expect(console.trace.calls.mostRecent().args[0]).toBe("Reading cookie contents");
     });
 });
 

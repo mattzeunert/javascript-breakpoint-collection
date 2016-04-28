@@ -5,7 +5,7 @@ export default [
             obj: "document",
             prop: "cookie"
         }],
-        traceMessage: "About to read cookie contents"
+        traceMessage: "Reading cookie contents"
     },
     {
         title: "debugCookieWrites",
@@ -13,7 +13,7 @@ export default [
             obj: "document",
             prop: "cookie"
         }],
-        traceMessage: "About to update cookie contents"
+        traceMessage: "Updating cookie contents"
     },
     {
         title: "debugAlertCalls",
@@ -21,7 +21,7 @@ export default [
             obj: "window",
             prop: "alert"
         }],
-        traceMessage: "About to show alert box"
+        traceMessage: "Showing alert box"
     },
     {
         title: "debugConsoleErrorCalls",
@@ -29,7 +29,7 @@ export default [
             obj: "window.console",
             prop: "error"
         }],
-        traceMessage: "About to call console.error"
+        traceMessage: "Calling console.error"
     },
     {
         title: "debugConsoleLogCalls",
@@ -37,7 +37,7 @@ export default [
             obj: "window.console",
             prop: "log"
         }],
-        traceMessage: "About to call console.log"
+        traceMessage: "Calling console.log"
     },
     {
         title: "debugScroll",
@@ -61,7 +61,7 @@ export default [
             obj: "Element.prototype",
             prop: "scrollLeft"
         }],
-        traceMessage: "About to change body scroll position"
+        traceMessage: "Changing body scroll position"
     },
     {
         title:  "debugLocalStorageReads",
@@ -69,7 +69,7 @@ export default [
             obj: "window.localStorage",
             prop: "getItem"
         }],
-        traceMessage: "About to read localStorage data"
+        traceMessage: "Reading localStorage data"
     },
     {
         title:  "debugLocalStorageWrites",
@@ -80,7 +80,7 @@ export default [
             obj: "window.localStorage",
             prop: "clear"
         }],
-        traceMessage: "About to write localStorage data"
+        traceMessage: "Writing localStorage data"
     }, {
         title: "debugElementSelection",
         debugCalls: [{
