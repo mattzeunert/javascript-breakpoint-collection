@@ -147,6 +147,13 @@ describe("debugCookieReads", function(){
         var cookie = document.cookie;
         expect(fn).not.toHaveBeenCalled();
     })
+    it("Shows a predefined trace message", function(){
+        var fn = spyOn(console, "trace");
+        breakpoints.debugCookieReads("trace");
+        var cookie = document.cookie;
+        expect(console.trace).toHaveBeenCalled();
+        expect(console.trace.calls.mostRecent().args[0]).toBe("About to read cookie contents");
+    });
 });
 
 describe("debugCookieWrites", function(){
