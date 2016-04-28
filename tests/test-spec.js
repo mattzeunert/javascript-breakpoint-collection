@@ -269,5 +269,14 @@ describe("debugElementSelection", function(){
         document.getElementById("test")
         expect(fn).toHaveBeenCalled();
     });
+    it("Shows the function that was called in the trace message", function(){
+        spyOn(console, "trace");
+        breakpoints.debugElementSelection("trace");
+        document.getElementsByClassName("hello");
+        expect(console.trace).toHaveBeenCalled();
+        expect(console.trace.calls.mostRecent().args[0]).toBe("Selecting DOM elements using getElementsByClassName");
+    })
     //it's all just a list of calls... no point in duplicating them all here
 })
+
+

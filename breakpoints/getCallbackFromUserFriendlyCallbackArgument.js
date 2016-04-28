@@ -28,7 +28,8 @@ function getTraceFunction(predefinedBreakpoint) {
     if (predefinedBreakpoint) {
         if (predefinedBreakpoint.getTraceInfo) {
             traceFn = function(){
-                console.trace.apply(console, predefinedBreakpoint.getTraceInfo);
+                var traceArgs = predefinedBreakpoint.getTraceInfo.apply(null, arguments);
+                console.trace.apply(console, traceArgs);
             }
         }
         else if (predefinedBreakpoint.traceMessage) {
