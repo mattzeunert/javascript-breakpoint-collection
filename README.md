@@ -1,4 +1,4 @@
-# JavaScript Breakpoint Collection
+# JavaScript Breakpoint Collection ![Build status](https://api.travis-ci.org/mattzeunert/javascript-breakpoint-collection.svg?branch=master)
 
 Find out what part of your code is causing a behavior in the browsers. For example you can pause when the window scroll position is updated or when cookie data is written.
 
