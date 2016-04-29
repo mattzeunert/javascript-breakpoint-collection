@@ -18,7 +18,7 @@ describe("Combining multiple breakpoints on the same object", function(){
     })
     it("Can debug multiple properties of an object", function(){
         var obj = {
-            hi: "there", 
+            hi: "there",
             hello: "world"
         }
         var fn = jasmine.createSpy();
@@ -245,6 +245,14 @@ describe("debugLocalStorageReads", function(){
         localStorage.getItem("hello");
         expect(fn).toHaveBeenCalled();
     })
+    it("Shows the data key in the trace message", function(){
+        debugger;
+        spyOn(console, "trace");
+        breakpoints.debugLocalStorageReads("trace");
+        localStorage.getItem("hello");
+        expect(console.trace).toHaveBeenCalled();
+        expect(console.trace.calls.mostRecent().args[0]).toBe("Reading localStorage data for key \"hello\"");
+    })
 })
 
 describe("debugLocalStorageWrites", function(){
@@ -274,9 +282,7 @@ describe("debugElementSelection", function(){
         breakpoints.debugElementSelection("trace");
         document.getElementsByClassName("hello");
         expect(console.trace).toHaveBeenCalled();
-        expect(console.trace.calls.mostRecent().args[0]).toBe("Selecting DOM elements using getElementsByClassName");
+        expect(console.trace.calls.mostRecent().args[0]).toBe("Selecting DOM elements \"hello\" using getElementsByClassName");
     })
     //it's all just a list of calls... no point in duplicating them all here
 })
-
-

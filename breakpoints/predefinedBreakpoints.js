@@ -69,7 +69,9 @@ export default [
             obj: "window.localStorage",
             prop: "getItem"
         }],
-        traceMessage: "Reading localStorage data"
+        getTraceInfo: function(details){
+            return ["Reading localStorage data for key \"" + details.callArguments[0] + "\""];
+        }
     },
     {
         title:  "debugLocalStorageWrites",
@@ -112,7 +114,7 @@ export default [
             prop: "evaluate" // xpath
         }],
         getTraceInfo: function(details){
-            return ["Selecting DOM elements using " + details.propertyName];
+            return ["Selecting DOM elements \"" + details.callArguments[0] + "\" using " + details.propertyName];
         }
     }
 ];
