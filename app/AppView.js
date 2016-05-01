@@ -18,7 +18,7 @@ export default class AppView extends React.Component {
                         Click on a breakpoint on the right to add it.
                     </p>
                     <p>
-                        To debug property access and function calls on arbitray objects use the code below in the console.
+                        To debug property access and function calls on any object, use the code below in the console.
                     </p>
                     <div className="code-section">
                         <pre>
