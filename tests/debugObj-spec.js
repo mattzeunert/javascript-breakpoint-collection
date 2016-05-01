@@ -1,8 +1,8 @@
 import "../extension/build/javascript-breakpoint-collection"
-import debugObj from "../breakpoints/debugObj"
+import debugObj, {updateDebugIdCallback} from "../breakpoints/debugObj"
 
 describe("debugObj", function(){
-    it("When debugging a function it passes the call arguments into the hook function", function(){
+    it("When debugging a function it passes the call arguments and value of `this` into the hook function", function(){
         var obj = {
             sayHi: function(){}
         };
@@ -14,6 +14,7 @@ describe("debugObj", function(){
         })
         obj.sayHi(1,2,3)
         expect(fn.calls.mostRecent().args[0].callArguments).toEqual([1,2,3])
+        expect(fn.calls.mostRecent().args[0].thisArgument).toBe(obj)
 
     });
     it("Lets you provide additional data to be passed into the hook function", function(){
