@@ -178,7 +178,8 @@ export function updateDebugIdCallback(debugId, callback){
         if (hook.id === debugId) {
             return {
                 id: debugId,
-                fn: callback
+                fn: callback,
+                data: hook.data
             }
         } else {
             return hook;
