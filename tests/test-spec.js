@@ -248,14 +248,14 @@ describe("debugScroll", function(){
         expect(console.trace).toHaveBeenCalled();
         expect(console.trace.calls.mostRecent().args[0]).toBe("The scroll position of");
         expect(console.trace.calls.mostRecent().args[1].outerHTML).toBe("<p id=\"myParagraph\"></p>");
-        expect(console.trace.calls.mostRecent().args[2]).toBe("was changed by the \"scrollTop\" property");
+        expect(console.trace.calls.mostRecent().args[2]).toBe("was changed by the \"scrollTop\" call");
     })
     it("Shows the scroll position message", function(){
         spyOn(console, "trace");
         breakpoints.debugScroll("trace");
         window.scrollTo(10, 10);
         expect(console.trace).toHaveBeenCalled();
-        expect(console.trace.calls.mostRecent().args[0]).toBe(The scroll position of \"window\" was changed by \"scrollTo\"");
+        expect(console.trace.calls.mostRecent().args[0]).toBe("The scroll position of \"window\" was changed by the \"scrollTo\" call");
     })
 })
 
