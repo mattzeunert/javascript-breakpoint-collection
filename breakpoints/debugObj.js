@@ -14,8 +14,9 @@ function getPropertyDescriptor(object, propertyName){
     try {
         var descriptor = Object.getOwnPropertyDescriptor(object, propertyName);
     } catch (err){
-        console.log("are you sure the property ", propertyName, " exists?")
-        throw err
+        var newError = Error ("Are you sure the property \"" + propertyName + "\" exists?");
+        newError.originalError = err;
+        throw newError;
     }
     if (!object){
         throw new Error("Descriptor " + propertyName + " not found");
@@ -54,7 +55,7 @@ export default function debugObj(obj, prop, hooks) {
                 if (isSimpleValue) {
                     retVal = originalProp.value;
                 } else {
-                    retVal = originalProp.get.apply(this, arguments);    
+                    retVal = originalProp.get.apply(this, arguments);
                 }
                 if (typeof retVal === "function") {
                     return function(){
@@ -137,7 +138,7 @@ function updateEachHook(obj, prop, cb){
         if (hookName === "propertyCallBefore" || hookName === "propertyCallAfter") {
             accessType = "call";
         }
-        
+
         var hooksWithName = hooks[hookName];
         if (hooksWithName !== undefined) {
             hooks[hookName] = hooksWithName.map(function(hook){

@@ -33,4 +33,11 @@ describe("debugObj", function(){
         obj.sayHi();
         expect(fn.calls.mostRecent().args[0].data.message).toEqual("test");
     })
+
+    it("Throws an exception if the property that should be debugged doesn't exist", function(){
+        var obj = {};
+        expect(function(){
+            debugObj(obj, "hi", {});
+        }).toThrowError("Are you sure the property \"hi\" exists?");
+    })
 });
