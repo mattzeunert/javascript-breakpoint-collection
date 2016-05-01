@@ -25,13 +25,16 @@ export default class AppView extends React.Component {
                             breakpoints.debugPropertySet(object, "propertyName");
                         </pre>
                         <pre>
-                            breakpoints.debugPropertyGet(document, "cookie");
+                            breakpoints.debugPropertyGet(document, "cookie", "trace");
                         </pre>
                         <pre>
                             breakpoints.debugPropertyCall(localStorage, "setItem");
                         </pre>
+                        <br/>
                         <pre>
-                            breakpoints.debugScroll(function(){"{ /* ... */ }"});
+                            breakpoints.debugScroll(function(){"{"}<br/>
+                                &nbsp;&nbsp;&nbsp;&nbsp;console.log('JS changed scroll position', details)<br/>
+                            {"}"});
                         </pre>
                     </div>
                     <p>
@@ -59,4 +62,3 @@ export default class AppView extends React.Component {
         this.setState({sth: Math.random()})
     }
 }
-
