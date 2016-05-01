@@ -61,7 +61,14 @@ export default [
             obj: "Element.prototype",
             prop: "scrollLeft"
         }],
-        traceMessage: "Changing body scroll position"
+        getTraceInfo: function(details){
+            if (details.propertName == "scrollTo"
+                || details.proprtyName == "scrollBy") {
+                return ["The scroll position of \"window\" was changed by " + details.propertyName + " call"];
+            } else {
+                return ["The scroll position of", details.thisArgument, "was changed by \"" + details.propertyName + "\" call"];
+            }
+        }
     },
     {
         title:  "debugLocalStorageReads",
@@ -69,7 +76,9 @@ export default [
             obj: "window.localStorage",
             prop: "getItem"
         }],
-        traceMessage: "Reading localStorage data"
+        getTraceInfo: function(details){
+            return ["Reading localStorage data for key \"" + details.callArguments[0] + "\""];
+        }
     },
     {
         title:  "debugLocalStorageWrites",
@@ -80,7 +89,9 @@ export default [
             obj: "window.localStorage",
             prop: "clear"
         }],
-        traceMessage: "Writing localStorage data"
+        getTraceInfo: function(details){
+            return ["Writing localStorage data for key \"" + details.callArguments[0] + "\""];
+        }
     }, {
         title: "debugElementSelection",
         debugCalls: [{
@@ -112,7 +123,7 @@ export default [
             prop: "evaluate" // xpath
         }],
         getTraceInfo: function(details){
-            return ["Selecting DOM elements using " + details.propertyName];
+            return ["Selecting DOM elements \"" + details.callArguments[0] + "\" using " + details.propertyName];
         }
     }
 ];

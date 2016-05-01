@@ -50,7 +50,10 @@ export default function debugObj(obj, prop, hooks) {
         Object.defineProperty(obj, prop, {
             get: function(){
                 var retVal;
-                triggerHook("propertyGetBefore");
+
+                triggerHook("propertyGetBefore", {
+                    thisArgument: this
+                });
 
                 if (isSimpleValue) {
                     retVal = originalProp.value;
@@ -60,28 +63,45 @@ export default function debugObj(obj, prop, hooks) {
                 if (typeof retVal === "function") {
                     return function(){
                         var args = Array.prototype.slice.call(arguments);
+
                         triggerHook("propertyCallBefore", {
-                            callArguments: args
-                        })
+                            callArguments: args,
+                            thisArgument: this
+                        });
+
                         retVal.apply(this, arguments);
+
                         triggerHook("propertyCallAfter", {
-                            callArguments: args
-                        })
+                            callArguments: args,
+                            thisArgument: this
+                        });
                     }
                 }
 
-                triggerHook("propertyGetAfter");
+                triggerHook("propertyGetAfter", {
+                    thisArgument: this
+                });
                 return retVal;
             },
             set: function(newValue){
                 var retVal;
-                triggerHook("propertySetBefore", {newPropertyValue: newValue})
+
+                triggerHook("propertySetBefore", {
+                    newPropertyValue: newValue,
+                    thisArgument: this
+                });
+
                 if (isSimpleValue) {
                     retVal = originalProp.value = newValue;
                 } else {
                     retVal = originalProp.set.apply(this, arguments);
                 }
-                triggerHook("propertySetAfter", {newPropertyValue: newValue})
+
+                triggerHook("propertySetAfter", {
+                    newPropertyValue: newValue,
+                    thisArgument: this
+                });
+
                 return retVal;
             }
         });
