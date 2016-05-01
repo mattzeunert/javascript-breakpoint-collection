@@ -32,7 +32,7 @@ export default class AppView extends React.Component {
                         </pre>
                         <br/>
                         <pre>
-                            breakpoints.debugScroll(function(){"{"}<br/>
+                            breakpoints.debugScroll(function(debug){"{"}<br/>
                                 &nbsp;&nbsp;&nbsp;&nbsp;console.log('JS changed scroll position', details)<br/>
                             {"}"});
                         </pre>
