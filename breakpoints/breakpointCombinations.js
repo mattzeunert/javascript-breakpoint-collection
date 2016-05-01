@@ -5,10 +5,7 @@ var registeredBreakpoints = [];
 function debugPropertyCall(object, prop, callback){
     return debugObj(object, prop, {
         propertyCallBefore: {
-            fn: callback, 
-            data: {
-                accessType: "set"
-            }
+            fn: callback
         }
     })
 }
@@ -16,20 +13,14 @@ function debugPropertyCall(object, prop, callback){
 var debugPropertyGet = function(object, propertyName, callback){
     return debugObj(object, propertyName, {
         propertyGetBefore: {
-            fn: callback,
-            data: {
-                accessType: "get"
-            }
+            fn: callback
         }
     })
 }
 var debugPropertySet = function(object, propertyName, callback) {
     return debugObj(object, propertyName, {
         propertySetBefore: {
-            fn: callback, 
-            data: {
-                accessType: "set"
-            }
+            fn: callback
         }
     })
 }
@@ -49,13 +40,14 @@ var breakpointCombinations = {
         fn(_debugPropertyGet, _debugPropertySet, _debugPropertyCall);
 
         var id = Math.floor(Math.random() * 1000000000)
-        registeredBreakpoints.push({
+        var bp = {
             id: id,
             debugIds,
             details: bpDetails,
             createdAt: new Date(),
             predefinedBreakpoint
-        });
+        }
+        registeredBreakpoints.push(bp);
 
         return id;
     },
@@ -87,7 +79,7 @@ var breakpointCombinations = {
         bp.debugIds.forEach(function(debugId){
             updateDebugIdCallback(debugId, callback)
         });
-        
+
         bp.details.type = newType;
     },
     resetAll(){
