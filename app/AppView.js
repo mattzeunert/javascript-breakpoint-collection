@@ -18,20 +18,23 @@ export default class AppView extends React.Component {
                         Click on a breakpoint on the right to add it.
                     </p>
                     <p>
-                        To debug property access and function calls on arbitray objects use the code below in the console.
+                        To debug property access and function calls on any object, use the code below in the console.
                     </p>
                     <div className="code-section">
                         <pre>
                             breakpoints.debugPropertySet(object, "propertyName");
                         </pre>
                         <pre>
-                            breakpoints.debugPropertyGet(document, "cookie");
+                            breakpoints.debugPropertyGet(document, "cookie", "trace");
                         </pre>
                         <pre>
                             breakpoints.debugPropertyCall(localStorage, "setItem");
                         </pre>
+                        <br/>
                         <pre>
-                            breakpoints.debugScroll(function(){"{ /* ... */ }"});
+                            breakpoints.debugScroll(function(details){"{"}<br/>
+                                &nbsp;&nbsp;&nbsp;&nbsp;console.log('JS changed scroll position', details)<br/>
+                            {"}"});
                         </pre>
                     </div>
                     <p>
@@ -59,4 +62,3 @@ export default class AppView extends React.Component {
         this.setState({sth: Math.random()})
     }
 }
-
