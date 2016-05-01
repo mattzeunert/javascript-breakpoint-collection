@@ -138,6 +138,7 @@ export default function debugObj(obj, prop, hooks) {
             hooksWithName.forEach(function(hook){
                 hook.fn({
                     ...infoForHook,
+                    accessType: getAccessTypeFromHookName(hookName),
                     data: hook.data
                 });
             })
@@ -145,24 +146,27 @@ export default function debugObj(obj, prop, hooks) {
     }
 }
 
+function getAccessTypeFromHookName(hookName){
+    var accessType = "";
+    if (hookName === "propertyGetBefore" || hookName === "propertyGetAfter") {
+        accessType = "get";
+    }
+    if (hookName === "propertySetBefore" || hookName === "propertySetAfter") {
+        accessType = "set";
+    }
+    if (hookName === "propertyCallBefore" || hookName === "propertyCallAfter") {
+        accessType = "call";
+    }
+    return accessType;
+}
+
 function updateEachHook(obj, prop, cb){
     var hooks = registry.get(obj)[prop].hooks;
     hookNames.forEach(function(hookName){
-        var accessType = "";
-        if (hookName === "propertyGetBefore" || hookName === "propertyGetAfter") {
-            accessType = "get";
-        }
-        if (hookName === "propertySetBefore" || hookName === "propertySetAfter") {
-            accessType = "set";
-        }
-        if (hookName === "propertyCallBefore" || hookName === "propertyCallAfter") {
-            accessType = "call";
-        }
-
         var hooksWithName = hooks[hookName];
         if (hooksWithName !== undefined) {
             hooks[hookName] = hooksWithName.map(function(hook){
-                return cb(hook, accessType)
+                return cb(hook)
             })
         }
     })
@@ -170,7 +174,7 @@ function updateEachHook(obj, prop, cb){
 
 export function updateDebugIdCallback(debugId, callback){
     var objAndProp = objectsAndPropsByDebugId[debugId];
-    updateEachHook(objAndProp.obj, objAndProp.prop, function(hook, accessType){
+    updateEachHook(objAndProp.obj, objAndProp.prop, function(hook){
         if (hook.id === debugId) {
             return {
                 id: debugId,

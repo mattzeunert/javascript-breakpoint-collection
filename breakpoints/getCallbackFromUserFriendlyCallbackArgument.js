@@ -40,7 +40,7 @@ function getTraceFunction(predefinedBreakpoint) {
     }
     else {
         traceFn = function(debugInfo){
-            console.trace("About to " + debugInfo.data.accessType + " property '" + debugInfo.propertyName + "' on this object: ", debugInfo.object)
+            console.trace("About to " + debugInfo.accessType + " property '" + debugInfo.propertyName + "' on this object: ", debugInfo.object)
         }
     }
     

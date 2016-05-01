@@ -1,7 +1,7 @@
-import debugObj, {debugObjBreakpointRegistry, objectsAndPropsByDebugId, updateDebugIdCallback} from "./breakpoints/debugObj"
+import debugObj, {debugObjBreakpointRegistry, objectsAndPropsByDebugId} from "./breakpoints/debugObj"
 import predefinedBreakpoints from "./breakpoints/predefinedBreakpoints"
 import getCallbackFromUserFriendlyCallbackArgument from "./breakpoints/getCallbackFromUserFriendlyCallbackArgument"
-import breakpointCombinations, {registeredBreakpoints} from "./breakpoints/breakpointCombinations"
+import breakpointCombinations from "./breakpoints/breakpointCombinations"
 
 (function(){
     if (window.breakpoints !== undefined) {
@@ -39,8 +39,7 @@ import breakpointCombinations, {registeredBreakpoints} from "./breakpoints/break
         debug: {
             debugObj,
             debugObjBreakpointRegistry,
-            objectsAndPropsByDebugId,
-            registeredBreakpoints
+            objectsAndPropsByDebugId
         },
         registerBreakpointAndGetResetBreakpointFunction: function(){
             var breakpointId = __internal.registerBreakpoint.apply(this, arguments);
@@ -79,8 +78,7 @@ import breakpointCombinations, {registeredBreakpoints} from "./breakpoints/break
                 debugFunctions[functionName](obj, prop, callback);
         }, {
             title: functionName + " (" + prop + ")",
-            type: callback.callbackType,
-            accessType: accessType
+            type: callback.callbackType
         });
     }
 
@@ -108,7 +106,7 @@ import breakpointCombinations, {registeredBreakpoints} from "./breakpoints/break
         },
         __internal
     }
-    
+
     predefinedBreakpoints.forEach(function(breakpoint){
         breakpoints[breakpoint.title] = function(callback){
             callback = getCallbackFromUserFriendlyCallbackArgument(callback, breakpoint);
@@ -136,7 +134,7 @@ import breakpointCombinations, {registeredBreakpoints} from "./breakpoints/break
                 }
             }
 
-            var resetFn = __internal.registerBreakpointAndGetResetBreakpointFunction(fn,  details);
+            var resetFn = __internal.registerBreakpointAndGetResetBreakpointFunction(fn,  details, breakpoint);
             pushRegisteredBreakpointsToExtension();
             return resetFn;
         }
