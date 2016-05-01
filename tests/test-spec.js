@@ -236,6 +236,27 @@ describe("debugScroll", function(){
         div.scrollLeft = 40;
         expect(fn).toHaveBeenCalled();
     });
+    it("Shows the scroll position message", function(){
+        spyOn(console, "trace");
+        breakpoints.debugScroll("trace");
+        var myParagraph = document.createElement("p");
+        myParagraph.id = "myParagraph";
+        var div = document.createElement("div");
+        div.appendChild(myParagraph);
+        document.body.appendChild(div);
+        document.getElementById("myParagraph").scrollTop = 10;
+        expect(console.trace).toHaveBeenCalled();
+        expect(console.trace.calls.mostRecent().args[0]).toBe("The scroll position of");
+        expect(console.trace.calls.mostRecent().args[1].outerHTML).toBe("<p id=\"myParagraph\"></p>");
+        expect(console.trace.calls.mostRecent().args[2]).toBe("was changed by the \"scrollTop\" property");
+    })
+    it("Shows the scroll position message", function(){
+        spyOn(console, "trace");
+        breakpoints.debugScroll("trace");
+        window.scrollTo(10, 10);
+        expect(console.trace).toHaveBeenCalled();
+        expect(console.trace.calls.mostRecent().args[0]).toBe(The scroll position of \"window\" was changed by \"scrollTo\"");
+    })
 })
 
 describe("debugLocalStorageReads", function(){
@@ -246,7 +267,6 @@ describe("debugLocalStorageReads", function(){
         expect(fn).toHaveBeenCalled();
     })
     it("Shows the data key in the trace message", function(){
-        debugger;
         spyOn(console, "trace");
         breakpoints.debugLocalStorageReads("trace");
         localStorage.getItem("hello");
@@ -256,6 +276,13 @@ describe("debugLocalStorageReads", function(){
 })
 
 describe("debugLocalStorageWrites", function(){
+    it("Shows the data key in the trace message", function(){
+        spyOn(console, "trace");
+        breakpoints.debugLocalStorageWrites("trace");
+        localStorage.setItem("hi", "there");
+        expect(console.trace).toHaveBeenCalled();
+        expect(console.trace.calls.mostRecent().args[0]).toBe("Writing localStorage data for key \"hi\"");
+    })
     it("Hits when localStorage.setItem is called", function(){
         var fn = jasmine.createSpy();
         breakpoints.debugLocalStorageWrites(fn);
