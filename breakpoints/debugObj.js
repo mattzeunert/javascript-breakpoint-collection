@@ -78,7 +78,9 @@ export default function debugObj(obj, prop, hooks) {
                     }
                 }
 
-                triggerHook("propertyGetAfter");
+                triggerHook("propertyGetAfter", {
+                    thisArgument: this
+                });
                 return retVal;
             },
             set: function(newValue){
