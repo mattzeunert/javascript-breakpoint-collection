@@ -62,11 +62,11 @@ export default [
             prop: "scrollLeft"
         }],
         getTraceInfo: function(details){
-            if (details.propertName == "scrollTo"
-                || details.proprtyName == "scrollBy") {
-                return ["The scroll position of \"window\" was changed by " + details.propertyName + " call"];
+            if (details.propertyName == "scrollTo"
+                || details.propertyName == "scrollBy") {
+                return ["The scroll position of \"window\" was changed by the \"" + details.propertyName + "\" call"];
             } else {
-                return ["The scroll position of", details.thisArgument, "was changed by \"" + details.propertyName + "\" call"];
+                return ["The scroll position of", details.thisArgument, "was changed by the \"" + details.propertyName + "\" call"];
             }
         }
     },
