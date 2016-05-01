@@ -41,3 +41,21 @@ describe("debugObj", function(){
         }).toThrowError("Are you sure the property \"hi\" exists?");
     })
 });
+
+describe("updateDebugIdCallback", function(){
+    it("Preserves data after updating a callback", function(){
+        var obj = {hello: "world"}
+        var fn = jasmine.createSpy();
+        var id = debugObj(obj, "hello", {
+            propertyGetBefore: {fn: fn, data: "test" }
+        });
+
+        var fn2 = jasmine.createSpy();
+        updateDebugIdCallback(id, fn2)
+
+        obj.hello
+        expect(fn).not.toHaveBeenCalled();
+        expect(fn2).toHaveBeenCalled();
+        expect(fn2.calls.mostRecent().args[0].data).toBe("test");
+    })
+})
