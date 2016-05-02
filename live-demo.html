@@ -1,7 +1,7 @@
-
+<script src="live-demo-copied-code/javascript-breakpoint-collection.js"></script>
 <meta charset="utf-8" />
 <link rel="stylesheet" href="live-demo-copied-code/panel.css"></link>
-<div id="tutorial" style="height: 50%;border-bottom: 1px solid #ddd; padding: 10px;">
+<div id="tutorial" style="height: 50%;border-bottom: 1px solid #ddd; padding: 10px;overflow: auto;">
     <h1>JavaScript Breakpoint Collection Live Demo</h1>
     <a href="https://github.com/mattzeunert/javascript-breakpoint-collection">
         View on Github
@@ -9,6 +9,30 @@
     <a href="https://chrome.google.com/webstore/detail/javascript-breakpoint-col/kgpjjblahlmjlfljfpcneapmeblichbp">
         Get on Chrome Web Store
     </a>
+    <br/>
+    <br/>
+    <b>
+        What part of the code is causing the scroll change in the div below?
+    </b>
+    <ol>
+        <li>Open your developer tools so you can see the console</li>
+        <li>Click on "debugScroll" in the list of breakpoints below</li>
+        <li>You'll see a trace message showing the div whose scroll position was updated</li>
+        <li>Expand the trace message to see the stack trace</li>
+    </ol>
+    <br/>
+    <div>
+        <div id="scrolling-div" style="width: 300px;height: 100px; border: 1px solid #999;padding: 10px;overflow: auto">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus fermentum justo sit amet ullamcorper porta. In viverra mattis diam, non accumsan tellus accumsan a. Interdum et malesuada fames ac ante ipsum primis in faucibus. Duis egestas odio vitae urna fringilla lobortis. Sed ut gravida mauris. Sed laoreet leo id enim ornare imperdiet. Ut venenatis sem sit amet odio posuere finibus. Maecenas elementum est eget libero auctor, eget eleifend libero hendrerit. Integer non risus imperdiet ipsum convallis dapibus. Quisque finibus orci a maximus viverra. Aliquam ante lectus, ornare non purus eget, finibus ultrices ante. Etiam eu elit vulputate, rhoncus elit et, hendrerit ex.
+        </div>
+        <script>
+            setInterval(function(){
+                var el = document.getElementById("scrolling-div");
+                el.scrollTop = Math.random() * 150;
+            }, 1000)
+        </script>
+
+    </div>
 </div>
 <div id="app-content" style="height: 50%;"></div>
 <script src="live-demo-copied-code/devtools-panel.js"></script>
