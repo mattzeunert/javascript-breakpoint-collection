@@ -25,9 +25,8 @@ export default [
             if (details.propertyName == "scrollTo"
                 || details.propertyName == "scrollBy") {
                 return ["The scroll position of \"window\" was changed by the \"" + details.propertyName + "\" call"];
-            } else {
-                return ["The scroll position of", details.thisArgument, "was changed by setting the \"" + details.propertyName + "\" property"];
             }
+            return ["The scroll position of", details.thisArgument, "was changed by setting the \"" + details.propertyName + "\" property"];
         }
     },
     {
@@ -159,6 +158,9 @@ export default [
             prop: "clear"
         }],
         getTraceInfo: function(details){
+            if (details.propertyName == "clear") {
+                return ["Clearing all localStorage data"];
+            }
             return ["Writing localStorage data for key \"" + details.callArguments[0] + "\""];
         }
     }
