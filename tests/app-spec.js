@@ -5,7 +5,7 @@ import ReactDOM from "react-dom"
 import AvailableBreakpointsList from "../app/AvailableBreakpointsList"
 import predefinedBreakpoints from "../breakpoints/predefinedBreakpoints"
 
-fdescribe("Breakpoints UI/App", function(){
+describe("Breakpoints UI/App", function(){
     var component = TestUtils.renderIntoDocument(<AppView/>);
     var node = ReactDOM.findDOMNode(component);
 
@@ -24,5 +24,24 @@ fdescribe("Breakpoints UI/App", function(){
 
         var activatedBreakpoint = node.querySelector("[data-test-marker-activated-bp-title='debugCookieReads']")
         expect(activatedBreakpoint).not.toBe(null)
+    })
+
+    it("Shows a trace message when reading the cookie", function(){
+        spyOn(console, "trace");
+        document.cookie;
+        expect(console.trace).toHaveBeenCalled();
+    })
+
+    it("Removes the breakpoint when clicking on the delete button", function(){
+        var deleteButton = node.querySelector("[data-test-marker-delete-bp]");
+        TestUtils.Simulate.click(deleteButton);
+        spyOn(console, "trace")
+        document.cookie;
+        expect(console.trace).not.toHaveBeenCalled();
+    })
+
+    it("Doesn't show the breakpoint in the list of activated breakpoint after removing the breakpoint", function(){
+        var activatedBreakpointElement = node.querySelector("[data-test-marker-activated-bp-title='debugCookieReads']");
+        expect(activatedBreakpointElement).toBe(null);
     })
 })

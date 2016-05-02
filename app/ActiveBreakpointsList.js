@@ -11,6 +11,7 @@ class ActiveBreakpointsListItem extends React.Component {
             {title}
             <button
                 className="delete"
+                data-test-marker-delete-bp
                 onClick={() => deactivateBreakpoint(this.props.breakpoint)}>
                 &times;
             </button>
