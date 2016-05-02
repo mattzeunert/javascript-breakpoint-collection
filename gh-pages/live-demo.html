@@ -8,35 +8,46 @@
             href="https://chrome.google.com/webstore/detail/javascript-breakpoint-col/kgpjjblahlmjlfljfpcneapmeblichbp">
             <img style="border: 1px solid #bbb;" src="chrome-web-store.png"/>
         </a>
-        <h1 style="display: inline-block">
+        <h1 style="    display: inline-block;
+    font-weight: normal;
+    margin-right: 5px;">
             JavaScript Breakpoint Collection Live Demo
         </h1>
         <a href="https://github.com/mattzeunert/javascript-breakpoint-collection">View on Github</a>
     </div>
 
     <br/>
-    <b>
-        What part of the code is causing the scroll change in the div below?
-    </b>
-    <ol>
-        <li>Open your developer tools so you can see the console</li>
-        <li>Click on "debugScroll" in the list of breakpoints below</li>
-        <li>You'll see a trace message showing the div whose scroll position was updated</li>
-        <li>Expand the trace message to see the stack trace</li>
-    </ol>
-    <br/>
-    <div>
-        <div id="scrolling-div" style="width: 300px;height: 100px; border: 1px solid #999;padding: 10px;overflow: auto">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus fermentum justo sit amet ullamcorper porta. In viverra mattis diam, non accumsan tellus accumsan a. Interdum et malesuada fames ac ante ipsum primis in faucibus. Duis egestas odio vitae urna fringilla lobortis. Sed ut gravida mauris. Sed laoreet leo id enim ornare imperdiet. Ut venenatis sem sit amet odio posuere finibus. Maecenas elementum est eget libero auctor, eget eleifend libero hendrerit. Integer non risus imperdiet ipsum convallis dapibus. Quisque finibus orci a maximus viverra. Aliquam ante lectus, ornare non purus eget, finibus ultrices ante. Etiam eu elit vulputate, rhoncus elit et, hendrerit ex.
+    <div style="line-height: 1.5em">
+        <div style="float: left;width: 50%;">
+            <b>
+                What part of the code is causing the scroll change in the div on the right?
+            </b>
+            <ol>
+                <li>Open your developer tools so you can see the console</li>
+                <li>Click on "debugScroll" in the list of breakpoints below</li>
+                <li>You'll see a trace message showing the div whose scroll position was updated</li>
+                <li>Expand the trace message to see the stack trace</li>
+            </ol>
         </div>
-        <script>
-            setInterval(function(){
-                var el = document.getElementById("scrolling-div");
-                el.scrollTop = Math.random() * 150;
-            }, 1000)
-        </script>
 
+        <div style="float: left; width: 50%">
+            <div id="scrolling-div">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus fermentum justo sit amet ullamcorper porta. In viverra mattis diam, non accumsan tellus accumsan a. Interdum et malesuada fames ac ante ipsum primis in faucibus. Duis egestas odio vitae urna fringilla lobortis. Sed ut gravida mauris. Sed laoreet leo id enim ornare imperdiet. Ut venenatis sem sit amet odio posuere finibus. Maecenas elementum est eget libero auctor, eget eleifend libero hendrerit. Integer non risus imperdiet ipsum convallis dapibus. Quisque finibus orci a maximus viverra. Aliquam ante lectus, ornare non purus eget, finibus ultrices ante. Etiam eu elit vulputate, rhoncus elit et, hendrerit ex.
+            </div>
+            <script>
+                setInterval(function(){
+                    var el = document.getElementById("scrolling-div");
+                    el.scrollTop = Math.random() * 150;
+                }, 1000)
+            </script>
+
+        </div>
     </div>
 </div>
+<style>
+#scrolling-div {
+    width: 300px;height: 100px; border: 1px solid #999;padding: 10px;overflow: auto
+}
+</style>
 <div id="app-content" style="height: 50%;"></div>
 <script src="live-demo-copied-code/devtools-panel.js"></script>

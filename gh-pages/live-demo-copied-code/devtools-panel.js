@@ -19685,11 +19685,11 @@
 	
 	var _app = __webpack_require__(160);
 	
-	var _AvailableBreakpointsList = __webpack_require__(162);
+	var _AvailableBreakpointsList = __webpack_require__(161);
 	
 	var _AvailableBreakpointsList2 = _interopRequireDefault(_AvailableBreakpointsList);
 	
-	var _ActiveBreakpointsList = __webpack_require__(163);
+	var _ActiveBreakpointsList = __webpack_require__(162);
 	
 	var _ActiveBreakpointsList2 = _interopRequireDefault(_ActiveBreakpointsList);
 	
@@ -19860,7 +19860,7 @@
 	exports.setTypeOfMostRecentBreakpointToDebugger = setTypeOfMostRecentBreakpointToDebugger;
 	exports.registerAppView = registerAppView;
 	
-	var _predefinedBreakpoints = __webpack_require__(161);
+	var _predefinedBreakpoints = __webpack_require__(165);
 	
 	var _predefinedBreakpoints2 = _interopRequireDefault(_predefinedBreakpoints);
 	
@@ -19870,6 +19870,8 @@
 	    registeredBreakpoints: [],
 	    predefinedBreakpoints: _predefinedBreakpoints2.default
 	};
+	
+	var appViews = [];
 	
 	function activateBreakpoint(breakpoint, options) {
 	    var code = "window.breakpoints." + breakpoint.title + "('trace')";
@@ -19955,6 +19957,16 @@
 	    });
 	}
 	
+	function registerAppView(appView) {
+	    appViews.push(appView);
+	}
+	
+	function updateApp() {
+	    appViews.forEach(function (appView) {
+	        appView.update();
+	    });
+	}
+	
 	checkIfBreakpointsInstalledOnPage(function (isInstalled) {
 	    if (isInstalled) {
 	        readBreakpointsFromPage();
@@ -19980,177 +19992,10 @@
 	    });
 	}
 	
-	var appViews = [];
-	function registerAppView(appView) {
-	    appViews.push(appView);
-	}
-	function updateApp() {
-	    appViews.forEach(function (appView) {
-	        appView.update();
-	    });
-	}
-	
 	exports.appState = appState;
 
 /***/ },
 /* 161 */
-/***/ function(module, exports) {
-
-	"use strict";
-	
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-	exports.default = [{
-	    title: "debugScroll",
-	    debugCalls: [{
-	        obj: "window",
-	        prop: "scrollTo"
-	    }, {
-	        obj: "window",
-	        prop: "scrollBy"
-	    }],
-	    debugPropertySets: [{
-	        obj: "document.body",
-	        prop: "scrollTop"
-	    }, {
-	        obj: "document.body",
-	        prop: "scrollLeft"
-	    }, {
-	        obj: "Element.prototype",
-	        prop: "scrollTop"
-	    }, {
-	        obj: "Element.prototype",
-	        prop: "scrollLeft"
-	    }],
-	    getTraceInfo: function getTraceInfo(details) {
-	        if (details.propertyName == "scrollTo" || details.propertyName == "scrollBy") {
-	            return ["The scroll position of \"window\" was changed by the \"" + details.propertyName + "\" call"];
-	        } else {
-	            return ["The scroll position of", details.thisArgument, "was changed by the \"" + details.propertyName + "\" call"];
-	        }
-	    }
-	}, {
-	    title: "debugCookieReads",
-	    debugPropertyGets: [{
-	        obj: "document",
-	        prop: "cookie"
-	    }],
-	    traceMessage: "Reading cookie contents"
-	}, {
-	    title: "debugCookieWrites",
-	    debugPropertySets: [{
-	        obj: "document",
-	        prop: "cookie"
-	    }],
-	    traceMessage: "Updating cookie contents"
-	}, {
-	    title: "debugAlertCalls",
-	    debugCalls: [{
-	        obj: "window",
-	        prop: "alert"
-	    }],
-	    traceMessage: "Showing alert box"
-	}, {
-	    title: "debugElementSelection",
-	    debugCalls: [{
-	        obj: "document",
-	        prop: "getElementById"
-	    }, {
-	        obj: "document",
-	        prop: "getElementsByClassName"
-	    }, {
-	        obj: "document",
-	        prop: "getElementsByName"
-	    }, {
-	        obj: "document",
-	        prop: "getElementsByTagName"
-	    }, {
-	        obj: "document",
-	        prop: "getElementsByTagNameNS"
-	    }, {
-	        obj: "document",
-	        prop: "getElementsByClassName"
-	    }, {
-	        obj: "document",
-	        prop: "querySelector"
-	    }, {
-	        obj: "document",
-	        prop: "querySelectorAll"
-	    }, {
-	        obj: "document",
-	        prop: "evaluate" // xpath
-	    }],
-	    getTraceInfo: function getTraceInfo(details) {
-	        return ["Selecting DOM elements \"" + details.callArguments[0] + "\" using " + details.propertyName];
-	    }
-	}, {
-	    title: "debugConsoleErrorCalls",
-	    debugCalls: [{
-	        obj: "window.console",
-	        prop: "error"
-	    }],
-	    traceMessage: "Calling console.error"
-	}, {
-	    title: "debugConsoleLogCalls",
-	    debugCalls: [{
-	        obj: "window.console",
-	        prop: "log"
-	    }],
-	    traceMessage: "Calling console.log"
-	}, {
-	    title: "debugConsoleTraceCalls",
-	    debugCalls: [{
-	        obj: "window.console",
-	        prop: "trace"
-	    }],
-	    traceMessage: "Calling console.trace"
-	}, {
-	    title: "debugMathRandom",
-	    debugCalls: [{
-	        obj: "window.Math",
-	        prop: "random"
-	    }],
-	    getTraceInfo: function getTraceInfo() {
-	        return ["Calling Math.random"];
-	    }
-	}, {
-	    title: "debugTimerCreation",
-	    debugCalls: [{
-	        obj: "window",
-	        prop: "setTimeout"
-	    }, {
-	        obj: "window",
-	        prop: "setInterval"
-	    }],
-	    getTraceInfo: function getTraceInfo(details) {
-	        return ["Creating timer using " + details.propertyName];
-	    }
-	}, {
-	    title: "debugLocalStorageReads",
-	    debugCalls: [{
-	        obj: "window.localStorage",
-	        prop: "getItem"
-	    }],
-	    getTraceInfo: function getTraceInfo(details) {
-	        return ["Reading localStorage data for key \"" + details.callArguments[0] + "\""];
-	    }
-	}, {
-	    title: "debugLocalStorageWrites",
-	    debugCalls: [{
-	        obj: "window.localStorage",
-	        prop: "setItem"
-	    }, {
-	        obj: "window.localStorage",
-	        prop: "clear"
-	    }],
-	    getTraceInfo: function getTraceInfo(details) {
-	        return ["Writing localStorage data for key \"" + details.callArguments[0] + "\""];
-	    }
-	}];
-
-/***/ },
-/* 162 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -20298,7 +20143,7 @@
 	exports.default = AvailableBreakpointsList;
 
 /***/ },
-/* 163 */
+/* 162 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -20315,7 +20160,7 @@
 	
 	var _app = __webpack_require__(160);
 	
-	var _BreakpointTypeSelector = __webpack_require__(164);
+	var _BreakpointTypeSelector = __webpack_require__(163);
 	
 	var _BreakpointTypeSelector2 = _interopRequireDefault(_BreakpointTypeSelector);
 	
@@ -20409,7 +20254,7 @@
 	exports.default = ActiveBreakpointsList;
 
 /***/ },
-/* 164 */
+/* 163 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -20490,6 +20335,164 @@
 	}(_react2.default.Component);
 	
 	exports.default = BreakpointTypeSelector;
+
+/***/ },
+/* 164 */,
+/* 165 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	exports.default = [{
+	    title: "debugScroll",
+	    debugCalls: [{
+	        obj: "window",
+	        prop: "scrollTo"
+	    }, {
+	        obj: "window",
+	        prop: "scrollBy"
+	    }],
+	    debugPropertySets: [{
+	        obj: "document.body",
+	        prop: "scrollTop"
+	    }, {
+	        obj: "document.body",
+	        prop: "scrollLeft"
+	    }, {
+	        obj: "Element.prototype",
+	        prop: "scrollTop"
+	    }, {
+	        obj: "Element.prototype",
+	        prop: "scrollLeft"
+	    }],
+	    getTraceInfo: function getTraceInfo(details) {
+	        if (details.propertyName == "scrollTo" || details.propertyName == "scrollBy") {
+	            return ["The scroll position of \"window\" was changed by the \"" + details.propertyName + "\" call"];
+	        } else {
+	            return ["The scroll position of", details.thisArgument, "was changed by setting the \"" + details.propertyName + "\" property"];
+	        }
+	    }
+	}, {
+	    title: "debugCookieReads",
+	    debugPropertyGets: [{
+	        obj: "document",
+	        prop: "cookie"
+	    }],
+	    traceMessage: "Reading cookie contents"
+	}, {
+	    title: "debugCookieWrites",
+	    debugPropertySets: [{
+	        obj: "document",
+	        prop: "cookie"
+	    }],
+	    traceMessage: "Updating cookie contents"
+	}, {
+	    title: "debugAlertCalls",
+	    debugCalls: [{
+	        obj: "window",
+	        prop: "alert"
+	    }],
+	    traceMessage: "Showing alert box"
+	}, {
+	    title: "debugElementSelection",
+	    debugCalls: [{
+	        obj: "document",
+	        prop: "getElementById"
+	    }, {
+	        obj: "document",
+	        prop: "getElementsByClassName"
+	    }, {
+	        obj: "document",
+	        prop: "getElementsByName"
+	    }, {
+	        obj: "document",
+	        prop: "getElementsByTagName"
+	    }, {
+	        obj: "document",
+	        prop: "getElementsByTagNameNS"
+	    }, {
+	        obj: "document",
+	        prop: "getElementsByClassName"
+	    }, {
+	        obj: "document",
+	        prop: "querySelector"
+	    }, {
+	        obj: "document",
+	        prop: "querySelectorAll"
+	    }, {
+	        obj: "document",
+	        prop: "evaluate" // xpath
+	    }],
+	    getTraceInfo: function getTraceInfo(details) {
+	        return ["Selecting DOM elements \"" + details.callArguments[0] + "\" using " + details.propertyName];
+	    }
+	}, {
+	    title: "debugConsoleErrorCalls",
+	    debugCalls: [{
+	        obj: "window.console",
+	        prop: "error"
+	    }],
+	    traceMessage: "Calling console.error"
+	}, {
+	    title: "debugConsoleLogCalls",
+	    debugCalls: [{
+	        obj: "window.console",
+	        prop: "log"
+	    }],
+	    traceMessage: "Calling console.log"
+	}, {
+	    title: "debugConsoleTraceCalls",
+	    debugCalls: [{
+	        obj: "window.console",
+	        prop: "trace"
+	    }],
+	    traceMessage: "Calling console.trace"
+	}, {
+	    title: "debugMathRandom",
+	    debugCalls: [{
+	        obj: "window.Math",
+	        prop: "random"
+	    }],
+	    getTraceInfo: function getTraceInfo() {
+	        return ["Calling Math.random"];
+	    }
+	}, {
+	    title: "debugTimerCreation",
+	    debugCalls: [{
+	        obj: "window",
+	        prop: "setTimeout"
+	    }, {
+	        obj: "window",
+	        prop: "setInterval"
+	    }],
+	    getTraceInfo: function getTraceInfo(details) {
+	        return ["Creating timer using " + details.propertyName];
+	    }
+	}, {
+	    title: "debugLocalStorageReads",
+	    debugCalls: [{
+	        obj: "window.localStorage",
+	        prop: "getItem"
+	    }],
+	    getTraceInfo: function getTraceInfo(details) {
+	        return ["Reading localStorage data for key \"" + details.callArguments[0] + "\""];
+	    }
+	}, {
+	    title: "debugLocalStorageWrites",
+	    debugCalls: [{
+	        obj: "window.localStorage",
+	        prop: "setItem"
+	    }, {
+	        obj: "window.localStorage",
+	        prop: "clear"
+	    }],
+	    getTraceInfo: function getTraceInfo(details) {
+	        return ["Writing localStorage data for key \"" + details.callArguments[0] + "\""];
+	    }
+	}];
 
 /***/ }
 /******/ ]);
