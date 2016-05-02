@@ -41,15 +41,6 @@ import breakpointCombinations from "./breakpoints/breakpointCombinations"
             debugObjBreakpointRegistry,
             objectsAndPropsByDebugId
         },
-        registerBreakpointAndGetResetBreakpointFunction: function(){
-            var breakpointId = __internal.registerBreakpoint.apply(this, arguments);
-            var disable = function(){
-                __internal.disableBreakpoint(breakpointId);
-            }
-            // this function appears in the output after using
-            // `breakpoints` in the consle, so make it pretty
-            return function resetBreakpoint(){ disable() }
-        },
         getRegisteredBreakpoints: function(){
             return breakpointCombinations.getRegisteredBreakpoints();
         },
@@ -67,7 +58,7 @@ import breakpointCombinations from "./breakpoints/breakpointCombinations"
         }[accessType];
 
         callback = getCallbackFromUserFriendlyCallbackArgument(callback);
-        return __internal.registerBreakpointAndGetResetBreakpointFunction(function(
+        return __internal.registerBreakpoint(function(
             debugPropertyGet, debugPropertySet, debugPropertyCall
             ){
                 var debugFunctions = {
@@ -134,7 +125,7 @@ import breakpointCombinations from "./breakpoints/breakpointCombinations"
                 }
             }
 
-            var resetFn = __internal.registerBreakpointAndGetResetBreakpointFunction(fn,  details, breakpoint);
+            var resetFn = __internal.registerBreakpoint(fn,  details, breakpoint);
             pushRegisteredBreakpointsToExtension();
             return resetFn;
         }

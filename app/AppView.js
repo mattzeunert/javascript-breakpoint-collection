@@ -51,7 +51,7 @@ export default class AppView extends React.Component {
                 </div>
             </div>
             <div>
-                <h2>Activated Breakpoints</h2>
+                <h2>Active Breakpoints</h2>
                 <div className="col-content">
                     <ActiveBreakpointsList breakpoints={appState.registeredBreakpoints} />
                 </div>
