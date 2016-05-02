@@ -52,3 +52,7 @@ Run `node generate-bookmarklet.js`.
 ### Update website
 
 `git subtree push  --prefix gh-pages origin gh-pages`
+
+### Upload to Chrome Web Store
+
+Run `./make-dist-directory.sh` then zip up the dist folder.
