@@ -42,24 +42,12 @@
                     el.scrollTop = Math.random() * 150;
                 }, 1000)
             </script>
-
-            <div style="margin-top: 20px;" id="other">
-                Click on these buttons to experiment with some other breakpoints types:<br/>
-                <button onclick="localStorage.setItem('test', Math.random())">Set a localStorage value</button><br>
-                <button onClick="setTimeout(function(){alert('Hello')}, 1000)">
-                    Show alert box one second from now
-                </button>
-                <br/>
-            </div>
         </div>
     </div>
 </div>
 <style>
 #scrolling-div {
     width: 300px;height: 100px; border: 1px solid #999;padding: 10px;overflow: auto
-}
-#other button {
-    margin-bottom: 5px;
 }
 </style>
 <div id="app-content" style="height: 50%;"></div>
