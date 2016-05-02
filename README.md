@@ -27,11 +27,11 @@ Install the dependencies:
     npm install
 
 The build the project:
-    
+
     webpack --watch
 
 And run the tests:
-    
+
     npm run test
 
 ### Loading the extension in Chrome
@@ -44,3 +44,7 @@ And run the tests:
 ### Generating the bookmarklet
 
 Run `node generate-bookmarklet.js`.
+
+### Update website
+
+`git subtree push  --prefix gh-pages origin gh-pages`
