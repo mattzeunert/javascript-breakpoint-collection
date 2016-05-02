@@ -179,6 +179,18 @@ describe("debugConsoleLogCalls", function(){
     });
 });
 
+describe("debugConsoleTraceCalls", function(){
+    it("Detects when console.trace is called", function(){
+        var consoleBackup = window.console;
+        window.console = {trace: jasmine.createSpy()};
+        var fn = jasmine.createSpy();
+        breakpoints.debugConsoleTraceCalls(fn);
+        console.trace("test");
+        expect(fn).toHaveBeenCalled();
+        window.console = consoleBackup;
+    })
+});
+
 describe("debugMathRandom", function(){
     it("Hits when Math.random is called and shows a trace message", function(){
         spyOn(console, "trace");

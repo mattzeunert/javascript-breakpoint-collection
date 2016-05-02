@@ -104,6 +104,14 @@ export default [
         traceMessage: "Calling console.log"
     },
     {
+        title: "debugConsoleTraceCalls",
+        debugCalls: [{
+            obj: "window.console",
+            prop: "trace"
+        }],
+        traceMessage: "Calling console.trace"
+    },
+    {
         title: "debugMathRandom",
         debugCalls: [
             {
