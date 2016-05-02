@@ -185,6 +185,7 @@ describe("debugMathRandom", function(){
         breakpoints.debugMathRandom("trace");
         Math.random();
         expect(console.trace).toHaveBeenCalled();
+        expect(console.trace.calls.count()).toBe(1);
     })
 })
 

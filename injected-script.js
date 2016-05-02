@@ -1,4 +1,4 @@
-import debugObj, {debugObjBreakpointRegistry, objectsAndPropsByDebugId} from "./breakpoints/debugObj"
+import debugObj, {debugObjBreakpointRegistry, objectsAndPropsByDebugId, disableBreakpointsDuringAllFunctionCalls} from "./breakpoints/debugObj"
 import predefinedBreakpoints from "./breakpoints/predefinedBreakpoints"
 import getCallbackFromUserFriendlyCallbackArgument from "./breakpoints/getCallbackFromUserFriendlyCallbackArgument"
 import breakpointCombinations from "./breakpoints/breakpointCombinations"
@@ -47,6 +47,8 @@ import breakpointCombinations from "./breakpoints/breakpointCombinations"
             pushRegisteredBreakpointsToExtension();
         }
     }
+
+    disableBreakpointsDuringAllFunctionCalls(__internal)
 
     function publicDebugPropertyAccess(obj, prop, callback, accessType) {
         var functionName = {
@@ -129,6 +131,7 @@ import breakpointCombinations from "./breakpoints/breakpointCombinations"
         }
     });
 
+    disableBreakpointsDuringAllFunctionCalls(breakpoints);
     window.breakpoints = breakpoints;
 
     pushRegisteredBreakpointsToExtension();

@@ -1,4 +1,4 @@
-import debugObj, {resetDebug, updateDebugIdCallback} from "./debugObj"
+import debugObj, {resetDebug, updateDebugIdCallback, disableBreakpointsDuringAllFunctionCalls} from "./debugObj"
 import getCallbackFromUserFriendlyCallbackArgument from "./getCallbackFromUserFriendlyCallbackArgument"
 var registeredBreakpoints = [];
 
@@ -99,5 +99,7 @@ var breakpointCombinations = {
         breakpointCombinations.updateType(mostRecentBreakpoint.id, "debugger")
     }
 }
+
+disableBreakpointsDuringAllFunctionCalls(breakpointCombinations);
 
 export default breakpointCombinations;
