@@ -2,6 +2,8 @@
 
 Find out what part of your code is causing a behavior in the browsers. For example you can pause when the window scroll position is updated or when cookie data is written.
 
+[Live Demo](http://www.mattzeunert.com/javascript-breakpoint-collection/live-demo.html)
+
 Either use the UI or add breakpoints from the console:
 
     breakpoints.debugScroll()
