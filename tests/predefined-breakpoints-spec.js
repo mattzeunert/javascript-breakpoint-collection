@@ -179,6 +179,15 @@ describe("debugConsoleLogCalls", function(){
     });
 });
 
+describe("debugMathRandom", function(){
+    it("Hits when Math.random is called and shows a trace message", function(){
+        spyOn(console, "trace");
+        breakpoints.debugMathRandom("trace");
+        Math.random();
+        expect(console.trace).toHaveBeenCalled();
+    })
+})
+
 describe("debugScroll", function(){
     it("Hits when window.scrollTo is called", function(){
         spyOn(window, "scrollTo")

@@ -104,6 +104,18 @@ export default [
         traceMessage: "Calling console.log"
     },
     {
+        title: "debugMathRandom",
+        debugCalls: [
+            {
+                obj: "window.Math",
+                prop: "random"
+            }
+        ],
+        getTraceInfo: function(){
+            return ["Calling Math.random"]
+        }
+    },
+    {
         title:  "debugLocalStorageReads",
         debugCalls: [{
             obj: "window.localStorage",
