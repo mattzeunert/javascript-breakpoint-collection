@@ -38,7 +38,7 @@ passing in "trace" as a third argument:
 
     breakpoints.debugPropertySet(obj, "test", "trace")
 
-![Trace message in console](https://cloud.githubusercontent.com/assets/1303660/14968517/15ef4f58-10b5-11e6-8346-e684255b6c54.png)
+![Trace message in console](https://cloud.githubusercontent.com/assets/1303660/14970397/6faeeafc-10c0-11e6-8fcd-8f24b78225ff.png)
 
 Or, for pre-defined breakpoints, passing in "trace" as the first parameter:
 
