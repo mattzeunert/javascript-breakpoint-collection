@@ -89,6 +89,11 @@ export default function debugObj(obj, prop, hooks) {
                 } else {
                     retVal = originalProp.get.apply(this, arguments);
                 }
+
+                triggerHook("propertyGetAfter", {
+                    thisArgument: this
+                });
+
                 if (typeof retVal === "function") {
                     return function(){
                         var args = Array.prototype.slice.call(arguments);
@@ -98,18 +103,17 @@ export default function debugObj(obj, prop, hooks) {
                             thisArgument: this
                         });
 
-                        retVal.apply(this, arguments);
+                        var fnRetVal = retVal.apply(this, arguments);
 
                         triggerHook("propertyCallAfter", {
                             callArguments: args,
                             thisArgument: this
                         });
+
+                        return fnRetVal;
                     }
                 }
 
-                triggerHook("propertyGetAfter", {
-                    thisArgument: this
-                });
                 return retVal;
             },
             set: function(newValue){
