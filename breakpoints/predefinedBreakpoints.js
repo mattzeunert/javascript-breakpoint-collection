@@ -26,7 +26,7 @@ export default [
                 || details.propertyName == "scrollBy") {
                 return ["The scroll position of \"window\" was changed by the \"" + details.propertyName + "\" call"];
             } else {
-                return ["The scroll position of", details.thisArgument, "was changed by the \"" + details.propertyName + "\" call"];
+                return ["The scroll position of", details.thisArgument, "was changed by setting the \"" + details.propertyName + "\" property"];
             }
         }
     },

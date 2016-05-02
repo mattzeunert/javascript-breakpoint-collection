@@ -5,6 +5,8 @@ var appState = {
     predefinedBreakpoints
 }
 
+var appViews = [];
+
 export function activateBreakpoint(breakpoint, options){
     var code = "window.breakpoints." + breakpoint.title + "('trace')"
     evalInInspectedWindow(code);
@@ -97,6 +99,16 @@ function installBreakpointsOnPage(callback){
     });
 }
 
+export function registerAppView(appView){
+    appViews.push(appView)
+}
+
+function updateApp(){
+    appViews.forEach(function(appView){
+        appView.update()
+    })
+}
+
 checkIfBreakpointsInstalledOnPage(function(isInstalled){
     if (isInstalled) {
         readBreakpointsFromPage();
@@ -120,17 +132,6 @@ if (isRunningInDevToolsPanel()) {
     window.addEventListener("RebroadcastExtensionMessage", function(){
         readBreakpointsFromPage();
     });
-}
-
-
-var appViews = [];
-export function registerAppView(appView){
-    appViews.push(appView)
-}
-function updateApp(){
-    appViews.forEach(function(appView){
-        appView.update()
-    })
 }
 
 export {appState}

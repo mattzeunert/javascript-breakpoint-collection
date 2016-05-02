@@ -1,0 +1,131 @@
+* {
+    box-sizing: border-box;
+}
+h2 {
+    padding: 10px;
+    font-weight: normal;
+    padding-top: 7px;
+    padding-bottom: 6px;
+    margin: 0;
+    background: #fafafa;
+    border-bottom: 1px solid #eee
+}
+body {
+    margin: 0;
+    font-family: 'Helvetica Neue', 'Lucida Grande', sans-serif;
+    font-size: 75%;
+}
+a {
+    color: #698CFE;
+}
+.col-parent > div {
+    width: 33.3333%;
+    float: left;
+    border-right: 1px solid #eee;
+    height: 100%;
+}
+.col-parent > div:first-child {
+    background: #fafafa;
+}
+.col-parent > div:last-child {
+    border-right: none;
+}
+.col-parent .col-content {
+    padding: 10px;
+    padding-top: 0px;
+    height: calc(100% - 36px);
+    overflow: auto;
+}
+.unactivated-breakpoint-list-item {
+    border-bottom: 1px solid #eee;
+    padding: 10px;
+    cursor: pointer;
+}
+.unactivated-breakpoint-list-item:hover {
+    background: #fafafa;
+}
+.unactivated-breakpoint-list-item .plus {
+    display: none;
+
+    float: right;
+    font-size: 24px;
+    color: red;
+    width: 20px;
+    height: 20px;
+    text-align: center;
+    margin-top: -3px;
+    line-height: 16px;
+}
+.unactivated-breakpoint-list-item:hover .plus{
+    display: inline-block;
+}
+
+.activated-breakpiont-list-item {
+    border-bottom: 1px solid #eee;
+    padding: 10px;
+}
+.activated-breakpiont-list-item .delete {
+    float: right;
+    color: #777;
+    font-size: 24px;
+    line-height: 30px;
+    text-align: center;
+    width: 35px;
+    height: 35px;
+    padding: 0;
+    background: none;
+    border: none;
+    border-radius: 550px;
+    cursor: pointer;
+}
+.activated-breakpiont-list-item:active {
+    outline: none;
+}
+.activated-breakpiont-list-item .delete:hover {
+    color: red;
+}
+
+.breakpoint-type-selector__option {
+    display: inline-block;
+    margin-right: 4px;
+    padding: 4px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    border: 1px solid #ccc;
+    cursor: pointer;
+    border-radius: 4px;
+}
+.breakpoint-type-selector__option:hover {
+    background: red !important;
+    border-color: red !important;
+    color: white !important;
+}
+
+.left-column-header {
+    background: #698CFE;
+    color: white;
+    padding: 10px;
+    font-weight: bold;
+    border-bottom: 1px solid #eee;
+}
+
+.code-section {
+    max-width: 100%;
+    overflow: auto;
+    padding: 10px;
+    background: #eee;
+}
+.code-section pre {
+    font-family: Arial;
+    padding-bottom: 2px;
+    margin: 0;
+}
+
+.available-breakpoints-search-input {
+    float: right;
+    margin-top: 8px;
+    margin-right: 10px;
+    background: #eee;
+    border: none;
+    padding: 3px;
+}

@@ -276,7 +276,7 @@ describe("debugScroll", function(){
         expect(console.trace).toHaveBeenCalled();
         expect(console.trace.calls.mostRecent().args[0]).toBe("The scroll position of");
         expect(console.trace.calls.mostRecent().args[1].outerHTML).toBe("<p id=\"myParagraph\"></p>");
-        expect(console.trace.calls.mostRecent().args[2]).toBe("was changed by the \"scrollTop\" call");
+        expect(console.trace.calls.mostRecent().args[2]).toBe("was changed by setting the \"scrollTop\" property");
     })
     it("Shows the scroll position message", function(){
         spyOn(console, "trace");
