@@ -44,7 +44,7 @@ export default class AvailableBreakpointsList extends React.Component {
     }
     render(){
         return <div>
-            {this.props.breakpoints.map(
+            {this.getBreakpointsToShow().map(
                 (bp) => {
                     var recentlyActivated = bp===this.state.recentlyActivatedBreakpoint;
                     return <AvailableBreakpointsListItem
@@ -68,5 +68,10 @@ export default class AvailableBreakpointsList extends React.Component {
                 }
             )}
         </div>
+    }
+    getBreakpointsToShow(){
+        return this.props.breakpoints.filter((breakpoint) => {
+            return breakpoint.title.toLowerCase().indexOf(this.props.search.toLowerCase()) > -1;
+        });
     }
 }
