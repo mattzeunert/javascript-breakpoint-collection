@@ -179,6 +179,50 @@ describe("debugConsoleLogCalls", function(){
     });
 });
 
+describe("debugConsoleTraceCalls", function(){
+    it("Detects when console.trace is called", function(){
+        var consoleBackup = window.console;
+        window.console = {trace: function(){}};
+        var fn = jasmine.createSpy();
+        breakpoints.debugConsoleTraceCalls(fn);
+        console.trace("test");
+        expect(fn).toHaveBeenCalled();
+        window.console = consoleBackup;
+    })
+    it("Works when showing trace messages when breakpoint is hit", function(){
+        var consoleBackup = window.console;
+        window.console = {trace: function(){}};
+        spyOn(console, "trace")
+        // The spy is replaced by the debugConsoleTraceCalls call,
+        // so keep a reference to it
+        var spy = window.console.trace;
+        breakpoints.debugConsoleTraceCalls("trace");
+        console.trace("test");
+        expect(spy).toHaveBeenCalled();
+        window.console = consoleBackup;
+    })
+});
+
+describe("debugMathRandom", function(){
+    it("Hits when Math.random is called and shows a trace message", function(){
+        spyOn(console, "trace");
+        breakpoints.debugMathRandom("trace");
+        Math.random();
+        expect(console.trace).toHaveBeenCalled();
+        expect(console.trace.calls.count()).toBe(1);
+    })
+})
+
+describe("debugTimerCreation", function(){
+    it("Shows a trace message when setTimeout is called", function(){
+        spyOn(console, "trace");
+        breakpoints.debugTimerCreation("trace");
+        setTimeout(function(){}, 0);
+        expect(console.trace).toHaveBeenCalled();
+        expect(console.trace.calls.mostRecent().args[0]).toBe("Creating timer using setTimeout")
+    });
+})
+
 describe("debugScroll", function(){
     it("Hits when window.scrollTo is called", function(){
         spyOn(window, "scrollTo")

@@ -104,6 +104,42 @@ export default [
         traceMessage: "Calling console.log"
     },
     {
+        title: "debugConsoleTraceCalls",
+        debugCalls: [{
+            obj: "window.console",
+            prop: "trace"
+        }],
+        traceMessage: "Calling console.trace"
+    },
+    {
+        title: "debugMathRandom",
+        debugCalls: [
+            {
+                obj: "window.Math",
+                prop: "random"
+            }
+        ],
+        getTraceInfo: function(){
+            return ["Calling Math.random"]
+        }
+    },
+    {
+        title: "debugTimerCreation",
+        debugCalls: [
+            {
+                obj: "window",
+                prop: "setTimeout"
+            },
+            {
+                obj: "window",
+                prop: "setInterval"
+            }
+        ],
+        getTraceInfo: function(details){
+            return ["Creating timer using " + details.propertyName]
+        }
+    },
+    {
         title:  "debugLocalStorageReads",
         debugCalls: [{
             obj: "window.localStorage",

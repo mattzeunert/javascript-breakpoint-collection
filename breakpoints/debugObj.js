@@ -29,6 +29,35 @@ function getPropertyDescriptor(object, propertyName){
 
 export { registry as debugObjBreakpointRegistry, objectsAndPropsByDebugId }
 
+// counter instead of boolean to allow nested calls of runWithBreakpointsDisabled
+var timesBreakpointsWereDisabled = 0;
+export function runWithBreakpointsDisabled(fn){
+    timesBreakpointsWereDisabled++;
+    var retVal = fn();
+    timesBreakpointsWereDisabled--;
+    return retVal;
+}
+
+export function disableBreakpointsDuringAllFunctionCalls(object){
+    for (var functionName in object){
+        let fn = object[functionName];
+        if (typeof fn !== "function") {
+            continue;
+        }
+
+        object[functionName] = function(){
+            var thisArg = this;
+            var args = arguments;
+            return runWithBreakpointsDisabled(function(){
+                return fn.apply(thisArg, args);
+            })
+        }
+    }
+}
+
+function areBreakpointsDisabled(){
+    return timesBreakpointsWereDisabled > 0;
+}
 
 export default function debugObj(obj, prop, hooks) {
     var debugId = Math.floor(Math.random() * 100000000000).toString()
@@ -125,6 +154,9 @@ export default function debugObj(obj, prop, hooks) {
     return debugId;
 
     function triggerHook(hookName, additionalHookInfo) {
+        if (areBreakpointsDisabled()) {
+            return;
+        }
         var hooks = registry.get(obj)[prop].hooks;
         var hooksWithName = hooks[hookName];
 

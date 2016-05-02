@@ -1,3 +1,5 @@
+import {runWithBreakpointsDisabled} from "./debugObj"
+
 function debuggerFunction(details){
     debugger;
 }
@@ -29,21 +31,27 @@ function getTraceFunction(predefinedBreakpoint) {
         if (predefinedBreakpoint.getTraceInfo) {
             traceFn = function(){
                 var traceArgs = predefinedBreakpoint.getTraceInfo.apply(null, arguments);
-                console.trace.apply(console, traceArgs);
+                runWithBreakpointsDisabled(function(){
+                    console.trace.apply(console, traceArgs);
+                })
             }
         }
         else if (predefinedBreakpoint.traceMessage) {
             traceFn = function(){
-                console.trace(predefinedBreakpoint.traceMessage)
+                runWithBreakpointsDisabled(function(){
+                    console.trace(predefinedBreakpoint.traceMessage)
+                })
             }
         }
     }
     else {
         traceFn = function(debugInfo){
-            console.trace("About to " + debugInfo.accessType + " property '" + debugInfo.propertyName + "' on this object: ", debugInfo.object)
+            runWithBreakpointsDisabled(function(){
+                console.trace("About to " + debugInfo.accessType + " property '" + debugInfo.propertyName + "' on this object: ", debugInfo.object)
+            })
         }
     }
-    
+
     traceFn.callbackType = "trace"
     return traceFn
 }

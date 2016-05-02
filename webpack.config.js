@@ -1,9 +1,9 @@
 var path = require('path');
 var webpack = require('webpack');
- 
+
 module.exports = {
   entry: {
-    "devtools-panel": './index.js',
+    "devtools-panel": './devtools-panel.js',
     "javascript-breakpoint-collection": './injected-script.js'
   },
   devtool: "source-map",
@@ -14,9 +14,9 @@ module.exports = {
         test: /.jsx?$/,
         loader: 'babel-loader',
         exclude: /node_modules/,
-        
+
         presets: ['es2015', 'react']
-        
+
       }
     ]
   },
