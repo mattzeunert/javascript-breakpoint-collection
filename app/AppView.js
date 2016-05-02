@@ -42,6 +42,10 @@ export default class AppView extends React.Component {
                                 &nbsp;&nbsp;&nbsp;&nbsp;console.log('JS changed scroll position', details)<br/>
                             {"}"});
                         </pre>
+                        <br/>
+                        <a href="https://github.com/mattzeunert/javascript-breakpoint-collection/blob/master/console-api.md" target="_blank">
+                            Learn more
+                        </a>
                     </div>
                     <p>
                         <a href="https://github.com/mattzeunert/javascript-breakpoint-collection/issues/new" target="_blank">

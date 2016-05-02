@@ -11,6 +11,8 @@ Either use the UI or add breakpoints from the console:
     breakpoints.debugCookieWrites(function(){ /* whatever */ })
     breakpoints.resetLastBreakpoint()
 
+Learn more about the [Console API](https://github.com/mattzeunert/javascript-breakpoint-collection/blob/master/console-api.md).
+
 ## Chrome Extension
 
 [Install from Chrome Web Store](https://chrome.google.com/webstore/detail/javascript-breakpoint-col/kgpjjblahlmjlfljfpcneapmeblichbp)
