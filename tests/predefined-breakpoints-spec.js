@@ -188,6 +188,16 @@ describe("debugMathRandom", function(){
     })
 })
 
+describe("debugTimerCreation", function(){
+    it("Shows a trace message when setTimeout is called", function(){
+        spyOn(console, "trace");
+        breakpoints.debugTimerCreation("trace");
+        setTimeout(function(){}, 0);
+        expect(console.trace).toHaveBeenCalled();
+        expect(console.trace.calls.mostRecent().args[0]).toBe("Creating timer using setTimeout")
+    });
+})
+
 describe("debugScroll", function(){
     it("Hits when window.scrollTo is called", function(){
         spyOn(window, "scrollTo")

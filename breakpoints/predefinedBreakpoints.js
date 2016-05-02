@@ -116,6 +116,22 @@ export default [
         }
     },
     {
+        title: "debugTimerCreation",
+        debugCalls: [
+            {
+                obj: "window",
+                prop: "setTimeout"
+            },
+            {
+                obj: "window",
+                prop: "setInterval"
+            }
+        ],
+        getTraceInfo: function(details){
+            return ["Creating timer using " + details.propertyName]
+        }
+    },
+    {
         title:  "debugLocalStorageReads",
         debugCalls: [{
             obj: "window.localStorage",
