@@ -1,45 +1,5 @@
 export default [
     {
-        title: "debugCookieReads",
-        debugPropertyGets: [{
-            obj: "document",
-            prop: "cookie"
-        }],
-        traceMessage: "Reading cookie contents"
-    },
-    {
-        title: "debugCookieWrites",
-        debugPropertySets: [{
-            obj: "document",
-            prop: "cookie"
-        }],
-        traceMessage: "Updating cookie contents"
-    },
-    {
-        title: "debugAlertCalls",
-        debugCalls: [{
-            obj: "window",
-            prop: "alert"
-        }],
-        traceMessage: "Showing alert box"
-    },
-    {
-        title: "debugConsoleErrorCalls",
-        debugCalls: [{
-            obj: "window.console",
-            prop: "error"
-        }],
-        traceMessage: "Calling console.error"
-    },
-    {
-        title: "debugConsoleLogCalls",
-        debugCalls: [{
-            obj: "window.console",
-            prop: "log"
-        }],
-        traceMessage: "Calling console.log"
-    },
-    {
         title: "debugScroll",
         debugCalls: [{
             obj: "window",
@@ -71,27 +31,28 @@ export default [
         }
     },
     {
-        title:  "debugLocalStorageReads",
-        debugCalls: [{
-            obj: "window.localStorage",
-            prop: "getItem"
+        title: "debugCookieReads",
+        debugPropertyGets: [{
+            obj: "document",
+            prop: "cookie"
         }],
-        getTraceInfo: function(details){
-            return ["Reading localStorage data for key \"" + details.callArguments[0] + "\""];
-        }
+        traceMessage: "Reading cookie contents"
     },
     {
-        title:  "debugLocalStorageWrites",
-        debugCalls: [{
-            obj: "window.localStorage",
-            prop: "setItem"
-        }, {
-            obj: "window.localStorage",
-            prop: "clear"
+        title: "debugCookieWrites",
+        debugPropertySets: [{
+            obj: "document",
+            prop: "cookie"
         }],
-        getTraceInfo: function(details){
-            return ["Writing localStorage data for key \"" + details.callArguments[0] + "\""];
-        }
+        traceMessage: "Updating cookie contents"
+    },
+    {
+        title: "debugAlertCalls",
+        debugCalls: [{
+            obj: "window",
+            prop: "alert"
+        }],
+        traceMessage: "Showing alert box"
     }, {
         title: "debugElementSelection",
         debugCalls: [{
@@ -124,6 +85,45 @@ export default [
         }],
         getTraceInfo: function(details){
             return ["Selecting DOM elements \"" + details.callArguments[0] + "\" using " + details.propertyName];
+        }
+    },
+    {
+        title: "debugConsoleErrorCalls",
+        debugCalls: [{
+            obj: "window.console",
+            prop: "error"
+        }],
+        traceMessage: "Calling console.error"
+    },
+    {
+        title: "debugConsoleLogCalls",
+        debugCalls: [{
+            obj: "window.console",
+            prop: "log"
+        }],
+        traceMessage: "Calling console.log"
+    },
+    {
+        title:  "debugLocalStorageReads",
+        debugCalls: [{
+            obj: "window.localStorage",
+            prop: "getItem"
+        }],
+        getTraceInfo: function(details){
+            return ["Reading localStorage data for key \"" + details.callArguments[0] + "\""];
+        }
+    },
+    {
+        title:  "debugLocalStorageWrites",
+        debugCalls: [{
+            obj: "window.localStorage",
+            prop: "setItem"
+        }, {
+            obj: "window.localStorage",
+            prop: "clear"
+        }],
+        getTraceInfo: function(details){
+            return ["Writing localStorage data for key \"" + details.callArguments[0] + "\""];
         }
     }
 ];

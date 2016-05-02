@@ -36,6 +36,8 @@ a {
 .col-parent .col-content {
     padding: 10px;
     padding-top: 0px;
+    height: calc(100% - 36px);
+    overflow: auto;
 }
 .unactivated-breakpoint-list-item {
     border-bottom: 1px solid #eee;
@@ -120,6 +122,15 @@ a {
     font-family: Arial;
     padding-bottom: 2px;
     margin: 0;
+}
+
+.available-breakpoints-search-input {
+    float: right;
+    margin-top: 8px;
+    margin-right: 10px;
+    background: #eee;
+    border: none;
+    padding: 3px;
 }
 </style>
 <div id="app-content"></div>

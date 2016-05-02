@@ -4,6 +4,12 @@ import AvailableBreakpointsList from "./AvailableBreakpointsList"
 import ActiveBreakpointsList from "./ActiveBreakpointsList"
 
 export default class AppView extends React.Component {
+    constructor(props){
+        super(props);
+        this.state = {
+            availableBreakpointsListSearchString: ""
+        }
+    }
     componentDidMount(){
         registerAppView(this);
     }
@@ -45,9 +51,18 @@ export default class AppView extends React.Component {
                 </div>
             </div>
             <div>
+                <input
+                    type="search"
+                    placeholder="Search..."
+                    className="available-breakpoints-search-input"
+                    onChange={(e) => this.setState({
+                        availableBreakpointsListSearchString: e.target.value
+                    })} />
                 <h2>Add Breakpoint</h2>
                 <div className="col-content">
-                    <AvailableBreakpointsList breakpoints={appState.predefinedBreakpoints} />
+                    <AvailableBreakpointsList
+                        search={this.state.availableBreakpointsListSearchString}
+                        breakpoints={appState.predefinedBreakpoints} />
                 </div>
             </div>
             <div>
