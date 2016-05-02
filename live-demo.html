@@ -18,7 +18,7 @@
 
     <br/>
     <div style="line-height: 1.5em">
-        <div style="float: left;width: 50%;">
+        <div style="float: left;width: 60%;">
             <b>
                 What part of the code is causing the scroll change in the div on the right?
             </b>
@@ -28,9 +28,11 @@
                 <li>You'll see a trace message showing the div whose scroll position was updated</li>
                 <li>Expand the trace message to see the stack trace</li>
             </ol>
+
+            <img src="expanded-trace-message.png" style="max-width: 100%;padding: 10px; border: 1px solid #ddd">
         </div>
 
-        <div style="float: left; width: 50%">
+        <div style="float: left; width: 40%">
             <div id="scrolling-div">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus fermentum justo sit amet ullamcorper porta. In viverra mattis diam, non accumsan tellus accumsan a. Interdum et malesuada fames ac ante ipsum primis in faucibus. Duis egestas odio vitae urna fringilla lobortis. Sed ut gravida mauris. Sed laoreet leo id enim ornare imperdiet. Ut venenatis sem sit amet odio posuere finibus. Maecenas elementum est eget libero auctor, eget eleifend libero hendrerit. Integer non risus imperdiet ipsum convallis dapibus. Quisque finibus orci a maximus viverra. Aliquam ante lectus, ornare non purus eget, finibus ultrices ante. Etiam eu elit vulputate, rhoncus elit et, hendrerit ex.
             </div>
@@ -41,12 +43,23 @@
                 }, 1000)
             </script>
 
+            <div style="margin-top: 20px;" id="other">
+                Click on these buttons to experiment with some other breakpoints types:<br/>
+                <button onclick="localStorage.setItem('test', Math.random())">Set a localStorage value</button><br>
+                <button onClick="setTimeout(function(){alert('Hello')}, 1000)">
+                    Show alert box one second from now
+                </button>
+                <br/>
+            </div>
         </div>
     </div>
 </div>
 <style>
 #scrolling-div {
     width: 300px;height: 100px; border: 1px solid #999;padding: 10px;overflow: auto
+}
+#other button {
+    margin-bottom: 5px;
 }
 </style>
 <div id="app-content" style="height: 50%;"></div>
