@@ -74,7 +74,7 @@ function installBreakpointsOnPage(callback){
     if (isRunningInDevToolsPanel()){
         src = chrome.extension.getURL('build/javascript-breakpoint-collection.js');
     } else {
-        src = "build/javascript-breakpoint-collection.js"
+        src = "extension/build/javascript-breakpoint-collection.js"
     }
     var code = `
         var s = document.createElement('script');

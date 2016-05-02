@@ -323,6 +323,13 @@ describe("debugLocalStorageWrites", function(){
         localStorage.clear();
         expect(fn).toHaveBeenCalled();
     })
+    it("Shows the localStorage.clear trace message", function(){
+        spyOn(console, "trace");
+        breakpoints.debugLocalStorageWrites("trace");
+        localStorage.clear();
+        expect(console.trace).toHaveBeenCalled();
+        expect(console.trace.calls.mostRecent().args[0]).toBe("Clearing all localStorage data");
+    })
 })
 
 describe("debugElementSelection", function(){
