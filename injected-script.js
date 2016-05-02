@@ -19,8 +19,6 @@ import breakpointCombinations from "./breakpoints/breakpointCombinations"
         window.dispatchEvent(event);
     }
 
-    pushRegisteredBreakpointsToExtension();
-
     var __internal = {
         updateBreakpointType: function(id, newType){
             breakpointCombinations.updateType(id, newType)
@@ -141,4 +139,6 @@ import breakpointCombinations from "./breakpoints/breakpointCombinations"
     });
 
     window.breakpoints = breakpoints;
+
+    pushRegisteredBreakpointsToExtension();
 })();

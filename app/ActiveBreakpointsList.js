@@ -4,10 +4,14 @@ import BreakpointTypeSelector from "./BreakpointTypeSelector"
 
 class ActiveBreakpointsListItem extends React.Component {
     render(){
-        return <div className="activated-breakpiont-list-item">
-            {this.props.breakpoint.details.title}
+        var title = this.props.breakpoint.details.title;
+        return <div
+            className="activated-breakpiont-list-item"
+            data-test-marker-activated-bp-title={title}>
+            {title}
             <button
-                className="delete" 
+                className="delete"
+                data-test-marker-delete-bp
                 onClick={() => deactivateBreakpoint(this.props.breakpoint)}>
                 &times;
             </button>
@@ -28,7 +32,7 @@ export default class ActiveBreakpointsList extends React.Component {
             </div>
         }
         return <div>
-            {this.props.breakpoints.map((bp, i) => 
+            {this.props.breakpoints.map((bp, i) =>
                 <ActiveBreakpointsListItem key={i} breakpoint={bp} />
             )}
         </div>

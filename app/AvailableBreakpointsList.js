@@ -26,7 +26,8 @@ class AvailableBreakpointsListItem extends React.Component {
         return <div
                 onClick={() => this.props.onClick()}
                 onMouseLeave={() => this.props.onMouseLeave()}
-                className="unactivated-breakpoint-list-item">
+                className="unactivated-breakpoint-list-item"
+                data-test-marker-available-bp-title={title}>
             {title}
             {convertToDebuggerTypeButton}
             {plusButton}

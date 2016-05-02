@@ -31,18 +31,33 @@ function checkIfBreakpointsInstalledOnPage(callback) {
     })
 }
 
+function isRunningInDevToolsPanel(){
+    return chrome && chrome.devtools && chrome.devtools.inspectedWindow;
+}
 
 function evalInInspectedWindow(code, callback){
-    chrome.devtools.inspectedWindow.eval(code, function(result, err){
+    if (isRunningInDevToolsPanel()) {
+        chrome.devtools.inspectedWindow.eval(code, afterEval);
+    } else {
+        try {
+            var returnValue = eval(code);
+            afterEval(returnValue)
+        } catch (err) {
+            afterEval(null, {value: err, isException: true});
+        }
+    }
+
+    function afterEval(result, err){
         if (err && err.isException) {
             console.log("Exception occured in eval'd code", err.value)
+            console.log("Code that was run: ", code)
         }
         else {
             if (callback) {
                 callback(result);
             }
         }
-    });
+    }
 }
 
 function readBreakpointsFromPage(){
@@ -53,7 +68,12 @@ function readBreakpointsFromPage(){
 }
 
 function installBreakpointsOnPage(callback){
-    var src = chrome.extension.getURL('build/javascript-breakpoint-collection.js');
+    var src;
+    if (isRunningInDevToolsPanel()){
+        src = chrome.extension.getURL('build/javascript-breakpoint-collection.js');
+    } else {
+        src = "build/javascript-breakpoint-collection.js"
+    }
     var code = `
         var s = document.createElement('script');
         s.src = '${src}'
@@ -62,7 +82,19 @@ function installBreakpointsOnPage(callback){
         };
         (document.head || document.documentElement).appendChild(s);
     `;
-    evalInInspectedWindow(code, callback);
+    evalInInspectedWindow(code, function(){
+        function callCallbackIfHasBeenInstalled(){
+            checkIfBreakpointsInstalledOnPage(function(isInstalled){
+                if (isInstalled) {
+                    callback()
+                } else {
+                    setTimeout(function(){
+                        callCallbackIfHasBeenInstalled();
+                    }, 50)
+                }
+            })
+        }
+    });
 }
 
 checkIfBreakpointsInstalledOnPage(function(isInstalled){
@@ -75,15 +107,20 @@ checkIfBreakpointsInstalledOnPage(function(isInstalled){
     }
 })
 
-var backgroundPageConnection = chrome.runtime.connect({
-    name: "devtools-page"
-});
+if (isRunningInDevToolsPanel()) {
+    var backgroundPageConnection = chrome.runtime.connect({
+        name: "devtools-page"
+    });
 
-backgroundPageConnection.onMessage.addListener(function (message) {
-    // console.log("readBreakpointsFromPage b/c bg page said so")
-    readBreakpointsFromPage();
-});
-
+    backgroundPageConnection.onMessage.addListener(function (message) {
+        // console.log("readBreakpointsFromPage b/c bg page said so")
+        readBreakpointsFromPage();
+    });
+} else {
+    window.addEventListener("RebroadcastExtensionMessage", function(){
+        readBreakpointsFromPage();
+    });
+}
 
 
 var appViews = [];
