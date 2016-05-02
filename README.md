@@ -55,4 +55,4 @@ Run `node generate-bookmarklet.js`.
 
 ### Upload to Chrome Web Store
 
-Run `./make-dist-directory.sh` then zip up the dist folder.
+Run `./make-dist-directory.sh` and then upload dist.zip.
