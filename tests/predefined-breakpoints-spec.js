@@ -182,11 +182,23 @@ describe("debugConsoleLogCalls", function(){
 describe("debugConsoleTraceCalls", function(){
     it("Detects when console.trace is called", function(){
         var consoleBackup = window.console;
-        window.console = {trace: jasmine.createSpy()};
+        window.console = {trace: function(){}};
         var fn = jasmine.createSpy();
         breakpoints.debugConsoleTraceCalls(fn);
         console.trace("test");
         expect(fn).toHaveBeenCalled();
+        window.console = consoleBackup;
+    })
+    it("Works when showing trace messages when breakpoint is hit", function(){
+        var consoleBackup = window.console;
+        window.console = {trace: function(){}};
+        spyOn(console, "trace")
+        // The spy is replaced by the debugConsoleTraceCalls call,
+        // so keep a reference to it
+        var spy = window.console.trace;
+        breakpoints.debugConsoleTraceCalls("trace");
+        console.trace("test");
+        expect(spy).toHaveBeenCalled();
         window.console = consoleBackup;
     })
 });
