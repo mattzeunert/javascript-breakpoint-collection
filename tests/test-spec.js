@@ -92,15 +92,6 @@ describe("debugPropertyGet", function(){
         expect(trace).toHaveBeenCalled();
         expect(trace.calls.mostRecent().args[0]).toEqual("About to get property 'hi' on this object: ");
     });
-
-    it("Returns a function that allows the user to de-register the breakpoint", function(){
-        var obj = {hi: "there"}
-        var fn = jasmine.createSpy();
-        var disableBreakpoint = breakpoints.debugPropertyGet(obj, "hi", fn);
-        disableBreakpoint();
-        var hi = obj.hi;
-        expect(fn).not.toHaveBeenCalled();
-    })
 })
 
 describe("debugPropertySet", function(){
@@ -140,13 +131,6 @@ describe("debugCookieReads", function(){
         document.cookie = "test";
         expect(fn).not.toHaveBeenCalled();
     });
-    it("Returns a function to disable the breakpoint", function(){
-        var fn = jasmine.createSpy();
-        var disableBreakpoint = breakpoints.debugCookieReads();
-        disableBreakpoint();
-        var cookie = document.cookie;
-        expect(fn).not.toHaveBeenCalled();
-    })
     it("Shows a predefined trace message", function(){
         var fn = spyOn(console, "trace");
         breakpoints.debugCookieReads("trace");
