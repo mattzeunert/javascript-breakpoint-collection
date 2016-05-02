@@ -1,12 +1,12 @@
 {
   "name": "JavaScript Breakpoint Collection",
   "manifest_version": 2,
-  "version": "1.4",
-  "description": "Provides UI to break on page scroll, cookie access, localStorage access, alert calls and object property access in general.",
+  "version": "1.5",
+  "description": "Find code that is responsible for page behavior.",
   "content_scripts": [
     {
       "matches": ["http://*/*", "https://*/*", "file://*/*"],
-    
+
       "js": ["content-script.js"]
     }
   ],
