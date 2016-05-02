@@ -31,18 +31,25 @@ function checkIfBreakpointsInstalledOnPage(callback) {
     })
 }
 
+function isRunningInDevToolsPanel(){
+    return chrome && chrome.devtools && chrome.devtools.inspectedWindow;
+}
 
 function evalInInspectedWindow(code, callback){
-    chrome.devtools.inspectedWindow.eval(code, function(result, err){
-        if (err && err.isException) {
-            console.log("Exception occured in eval'd code", err.value)
-        }
-        else {
-            if (callback) {
-                callback(result);
+    if (isRunningInDevToolsPanel()) {
+        chrome.devtools.inspectedWindow.eval(code, function(result, err){
+            if (err && err.isException) {
+                console.log("Exception occured in eval'd code", err.value)
             }
-        }
-    });
+            else {
+                if (callback) {
+                    callback(result);
+                }
+            }
+        });
+    } else {
+        console.log("not in devtools window")
+    }
 }
 
 function readBreakpointsFromPage(){
@@ -75,15 +82,16 @@ checkIfBreakpointsInstalledOnPage(function(isInstalled){
     }
 })
 
-var backgroundPageConnection = chrome.runtime.connect({
-    name: "devtools-page"
-});
+if (isRunningInDevToolsPanel()) {
+    var backgroundPageConnection = chrome.runtime.connect({
+        name: "devtools-page"
+    });
 
-backgroundPageConnection.onMessage.addListener(function (message) {
-    // console.log("readBreakpointsFromPage b/c bg page said so")
-    readBreakpointsFromPage();
-});
-
+    backgroundPageConnection.onMessage.addListener(function (message) {
+        // console.log("readBreakpointsFromPage b/c bg page said so")
+        readBreakpointsFromPage();
+    });
+}
 
 
 var appViews = [];
