@@ -6,6 +6,9 @@ module.exports = function (config) {
       singleRun: false,
       frameworks: ['jasmine'],
       files: ['webpack-test.config.js'],
+      proxies: {
+        '/extension/': '/base/extension/'
+      },
       preprocessors: {
         'webpack-test.config.js': ['webpack', 'sourcemap']
       },
@@ -41,5 +44,3 @@ module.exports = function (config) {
 
   config.set(configuration);
 };
-
-
