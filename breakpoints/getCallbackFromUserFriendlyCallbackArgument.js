@@ -1,9 +1,12 @@
 import {runWithBreakpointsDisabled} from "./debugObj"
 
-function debuggerFunction(details){
-    debugger;
+function getDebuggerFunction() {
+    var debuggerFunc = function() {
+        debugger;
+    }
+    debuggerFunc.callbackType = "debugger";
+    return debuggerFunc;
 }
-debuggerFunction.type = "debugger"
 
 export default function getCallbackFromUserFriendlyCallbackArgument(callback, predefinedBreakpoint){
     if (typeof callback === "function") {
@@ -11,7 +14,7 @@ export default function getCallbackFromUserFriendlyCallbackArgument(callback, pr
         return callback;
     } else if (typeof callback === "string") {
         if (callback === "debugger") {
-            return debuggerFunction
+            return getDebuggerFunction();
 
         } else if (callback === "trace") {
             return getTraceFunction(predefinedBreakpoint);
@@ -19,7 +22,7 @@ export default function getCallbackFromUserFriendlyCallbackArgument(callback, pr
             throw new Error("Invalid string callback")
         }
     } else if(typeof callback=== "undefined") {
-        return debuggerFunction;
+        return getDebuggerFunction();
     } else {
         throw new Error("Invalid callback type: " + typeof callback)
     }
