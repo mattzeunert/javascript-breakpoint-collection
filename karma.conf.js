@@ -7,7 +7,7 @@ module.exports = function (config) {
       frameworks: ['jasmine'],
       files: ['webpack-test.config.js'],
       proxies: {
-        '/extension/': '/base/extension/'
+        '/extension/': '/base/built/extension/'
       },
       preprocessors: {
         'webpack-test.config.js': ['webpack', 'sourcemap']
