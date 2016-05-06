@@ -5,9 +5,11 @@ module.exports = function (config) {
     browsers: ['Chrome'],
       singleRun: false,
       frameworks: ['jasmine'],
-      files: ['webpack-test.config.js'],
+      files: ['webpack-test.config.js',
+        { pattern: 'extension/build/javascript-breakpoint-collection.js', included: true, watched: true }
+      ],
       proxies: {
-        '/extension/': '/base/built/extension/'
+        '/extension/': '/base/extension/'
       },
       preprocessors: {
         'webpack-test.config.js': ['webpack', 'sourcemap']
