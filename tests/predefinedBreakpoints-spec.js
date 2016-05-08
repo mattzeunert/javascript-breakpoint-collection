@@ -274,16 +274,19 @@ describe("debugScroll", function(){
         document.body.appendChild(div);
         document.getElementById("myParagraph").scrollTop = 10;
         expect(console.trace).toHaveBeenCalled();
-        expect(console.trace.calls.mostRecent().args[0]).toBe("The scroll position of");
-        expect(console.trace.calls.mostRecent().args[1].outerHTML).toBe("<p id=\"myParagraph\"></p>");
-        expect(console.trace.calls.mostRecent().args[2]).toBe("was changed by setting the \"scrollTop\" property");
+        var mostRecentCallArgs = console.trace.calls.mostRecent().args;
+        expect(mostRecentCallArgs[0]).toBe("The scroll position of");
+        expect(mostRecentCallArgs[1].outerHTML).toBe("<p id=\"myParagraph\"></p>");
+        expect(mostRecentCallArgs[2]).toBe("was changed by setting the scrollTop property to 10");
     })
     it("Shows the scroll position message", function(){
         spyOn(console, "trace");
         breakpoints.debugScroll("trace");
         window.scrollTo(10, 10);
         expect(console.trace).toHaveBeenCalled();
-        expect(console.trace.calls.mostRecent().args[0]).toBe("The scroll position of \"window\" was changed by the \"scrollTo\" call");
+        var mostRecentCallArgs = console.trace.calls.mostRecent().args;
+        expect(mostRecentCallArgs[0]).toBe("The scroll position of the window was changed by a window.scrollTo call with");
+        expect(mostRecentCallArgs[1]).toEqual([10, 10]);
     })
 })
 
