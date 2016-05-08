@@ -23,6 +23,16 @@ Learn more about the [Console API](https://github.com/mattzeunert/javascript-bre
 
 <a href="http://www.mattzeunert.com/javascript-breakpoint-collection/bookmarklet.html">Get the bookmarklet</a>
 
+## NPM
+
+Download the module from NPM:
+
+    npm install javascript-breakpoint-collection
+
+Then load the module:
+
+    var breakpoints = require("javascript-breakpoint-collection")
+
 ## Development
 
 Install the dependencies:
@@ -56,3 +66,9 @@ Run `node generate-bookmarklet.js`.
 ### Upload to Chrome Web Store
 
 Run `./make-dist-directory.sh` and then upload dist.zip.
+
+## Other releases to update
+
+- bookmarklet
+- NPM module
+- live demo
