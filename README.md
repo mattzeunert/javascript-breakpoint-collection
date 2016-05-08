@@ -40,7 +40,7 @@ Install the dependencies:
     npm install webpack -g
     npm install
 
-The build the project:
+To build the project:
 
     webpack --watch
 
