@@ -7,7 +7,11 @@ module.exports = {
     "javascript-breakpoint-collection": './injected-script.js'
   },
   devtool: "source-map",
-  output: { path: __dirname + "/extension/build", filename: '[name].js' },
+  output: {
+      path: __dirname + "/extension/build",
+      filename: '[name].js',
+      libraryTarget: "umd"
+  },
   module: {
     loaders: [
       {

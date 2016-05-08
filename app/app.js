@@ -85,6 +85,8 @@ function installBreakpointsOnPage(callback){
         (document.head || document.documentElement).appendChild(s);
     `;
     evalInInspectedWindow(code, function(){
+        callCallbackIfHasBeenInstalled();
+
         function callCallbackIfHasBeenInstalled(){
             checkIfBreakpointsInstalledOnPage(function(isInstalled){
                 if (isInstalled) {

@@ -1,8 +1,8 @@
 {
   "name": "javascript-breakpoint-collection",
-  "version": "1.0.0",
+  "version": "1.6.2",
   "description": "",
-  "main": "show-panel.js",
+  "main": "extension/build/javascript-breakpoint-collection.js",
   "scripts": {
     "test": "karma start",
     "build": "webpack",
@@ -13,14 +13,12 @@
     "url": "git+https://github.com/mattzeunert/javascript-breakpoint-collection.git"
   },
   "author": "Matt Zeunert",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/mattzeunert/javascript-breakpoint-collection/issues"
   },
   "homepage": "https://github.com/mattzeunert/javascript-breakpoint-collection#readme",
   "dependencies": {
-    "react": "^0.14.8",
-    "react-dom": "^0.14.8"
   },
   "devDependencies": {
     "babel-core": "^6.7.4",
@@ -36,6 +34,8 @@
     "karma-webpack": "^1.7.0",
     "react-addons-test-utils": "^0.14.8",
     "uglify-js": "^2.6.2",
-    "webpack": "^1.12.14"
+    "webpack": "^1.12.14",
+    "react": "^0.14.8",
+    "react-dom": "^0.14.8"
   }
 }
