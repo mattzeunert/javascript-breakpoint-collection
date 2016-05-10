@@ -56,7 +56,7 @@ function publicDebugPropertyAccess(obj, prop, callback, accessType) {
     }[accessType];
 
     callback = getCallbackFromUserFriendlyCallbackArgument(callback);
-    return __internal.registerBreakpoint(function(
+    __internal.registerBreakpoint(function(
         debugPropertyGet, debugPropertySet, debugPropertyCall
         ){
             var debugFunctions = {
