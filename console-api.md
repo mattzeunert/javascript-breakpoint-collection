@@ -67,3 +67,8 @@ is being called with
 You can either use `breakpoints.resetLastBreakpoint()` to reset the most recently
 created breakpoint, or use `breakpoints.resetAllBreakpoints()` to reset all breakpoints
 added using JS Breakpoint Collection.
+
+## Links
+
+[Bookmarklet](http://www.mattzeunert.com/javascript-breakpoint-collection/bookmarklet.html)  
+[Chrome Extension](https://chrome.google.com/webstore/detail/javascript-breakpoint-col/kgpjjblahlmjlfljfpcneapmeblichbp)
