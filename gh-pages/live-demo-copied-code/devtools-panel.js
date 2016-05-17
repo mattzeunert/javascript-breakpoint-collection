@@ -19916,7 +19916,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 	
 	function isRunningInDevToolsPanel() {
-	    return chrome && chrome.devtools && chrome.devtools.inspectedWindow;
+	    return typeof chrome !== "undefined" && chrome.devtools && chrome.devtools.inspectedWindow;
 	}
 	
 	function evalInInspectedWindow(code, callback) {
