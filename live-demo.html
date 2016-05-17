@@ -29,12 +29,14 @@
                     </b>
                     <ol>
                         <li>Open Chrome's DevTools so you can see the console</li>
-                        <li>Click on <code>debugScroll</code> in the list of breakpoints below</li>
+                        <li>Click on <code style="color:purple">debugScroll</code> in the list of breakpoints below</li>
                         <li>A trace message will appear every time the scroll position is updated</li>
-                        <li>Expand the trace message to see the stack trace</li>
+                        <li>Expand the trace message to see the stack trace
+                            (<img src="expand-stack-trace-button.png" style="vertical-align: bottom"/>)
+                        </li>
                     </ol>
 
-                    <img src="expanded-trace-message.png" style="max-width: 100%;padding: 10px; border: 1px solid #ddd">
+                    <!-- <img src="expanded-stack-trace.png" style="max-width: 100%;padding: 10px; border: 1px solid #ddd"> -->
                 </div>
 
                 <div style="float: left; width: 40%">
@@ -48,7 +50,7 @@
                         }
                         function everySecond(){
 
-                            setBoxScrollTop(Math.random() * 150)
+                            setBoxScrollTop(Math.round(Math.random() * 150))
                         }
                         function onBodyLoad(){
                             setInterval(function(){
