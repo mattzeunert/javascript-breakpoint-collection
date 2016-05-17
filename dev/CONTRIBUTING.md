@@ -20,9 +20,9 @@ And run the tests:
 3. Load Unpacked Extension
 4. Select "extension" directory in this repo
 
-### Generating the bookmarklet
+### Updating the bookmarklet
 
-Run `node ./dev/generate-bookmarklet.js`.
+Run `node ./dev/update-bookmarklet.js`.
 
 ### Update website
 
