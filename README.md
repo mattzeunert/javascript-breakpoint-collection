@@ -19,6 +19,8 @@ Learn more about the [Console API](https://github.com/mattzeunert/javascript-bre
 
 ![Breakpoint Extension Screenshot](https://cloud.githubusercontent.com/assets/1303660/14769837/c9bf8438-0a59-11e6-8a16-5cff6886adbc.png)
 
+![Breakpoint Extension Trace Message Example](https://cloud.githubusercontent.com/assets/1303660/15340896/ba2182ba-1c83-11e6-88ab-73cc59daf956.png)
+
 ## Bookmarklet
 
 <a href="http://www.mattzeunert.com/javascript-breakpoint-collection/bookmarklet.html">Get the bookmarklet</a>
