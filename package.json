@@ -1,6 +1,6 @@
 {
   "name": "javascript-breakpoint-collection",
-  "version": "1.6.2",
+  "version": "1.7.0",
   "description": "",
   "main": "extension/build/javascript-breakpoint-collection.js",
   "scripts": {

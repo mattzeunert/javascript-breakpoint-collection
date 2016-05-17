@@ -1,6 +1,6 @@
 # JavaScript Breakpoint Collection [![Build status](https://api.travis-ci.org/mattzeunert/javascript-breakpoint-collection.svg?branch=master)](https://travis-ci.org/mattzeunert/javascript-breakpoint-collection)
 
-Find out what part of your code is causing a behavior in the browsers. For example you can pause when the window scroll position is updated or when cookie data is written.
+Find out what part of your code is causing a behavior in the browser. For example, you can pause when the window scroll position is updated or when cookie data is written.
 
 [Live Demo](http://www.mattzeunert.com/javascript-breakpoint-collection/live-demo.html)
 
