@@ -123,9 +123,8 @@ predefinedBreakpoints.forEach(function(breakpoint){
             }
         }
 
-        var resetFn = __internal.registerBreakpoint(fn,  details, breakpoint);
+        __internal.registerBreakpoint(fn,  details, breakpoint);
         pushRegisteredBreakpointsToExtension();
-        return resetFn;
     }
 });
 
