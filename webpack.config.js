@@ -1,7 +1,7 @@
 var path = require('path');
 var webpack = require('webpack');
 
-module.exports = {
+module.exports = [{
   entry: {
     "devtools-panel": './devtools-panel.js',
     "javascript-breakpoint-collection": './injected-script.js'
@@ -10,7 +10,7 @@ module.exports = {
   output: {
       path: __dirname + "/extension/build",
       filename: '[name].js',
-      libraryTarget: "umd"
+      libraryTarget: "var"
   },
   module: {
     loaders: [
@@ -18,10 +18,8 @@ module.exports = {
         test: /.jsx?$/,
         loader: 'babel-loader',
         exclude: /node_modules/,
-
         presets: ['es2015', 'react']
-
       }
     ]
   },
-};
+}];
