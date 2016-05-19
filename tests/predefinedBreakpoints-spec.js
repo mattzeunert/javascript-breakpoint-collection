@@ -108,15 +108,21 @@ describe("debugPropertySet", function(){
         breakpoints.debugPropertySet(obj, "hi", "trace");
         obj.hi = "Bob";
         expect(trace).toHaveBeenCalled();
-        expect(trace.calls.mostRecent().args[0]).toEqual("About to set property 'hi' to 'Bob' (string) on this object: ");
+        expect(trace.calls.mostRecent().args[0]).toEqual("About to set property 'hi' to %o ");
+        expect(trace.calls.mostRecent().args[1]).toEqual("Bob");
+        expect(trace.calls.mostRecent().args[2]).toEqual(" on this object: ");
+        expect(trace.calls.mostRecent().args[3]).toEqual(obj);
     });
     it("Can show a trace message when a long string property is written", function(){
         var obj = {hi: "there"};
         var trace = spyOn(console, "trace")
         breakpoints.debugPropertySet(obj, "hi", "trace");
-        obj.hi = "Apu Nahasapeemapetilon";
+        obj.hi = "Hubert Blaine Wolfeschlegelsteinhausenbergerdorff";
         expect(trace).toHaveBeenCalled();
-        expect(trace.calls.mostRecent().args[0]).toEqual("About to set property 'hi' to 'Apu Nahasa...' (string) on this object: ");
+        expect(trace.calls.mostRecent().args[0]).toEqual("About to set property 'hi' to %o ");
+        expect(trace.calls.mostRecent().args[1]).toEqual("Hubert Blaine Wolfeschleg...");
+        expect(trace.calls.mostRecent().args[2]).toEqual(" on this object: ");
+        expect(trace.calls.mostRecent().args[3]).toEqual(obj);
     });
     it("Can show a trace message when a numeric property is written", function(){
         var obj = {myNum: 0};
@@ -124,15 +130,21 @@ describe("debugPropertySet", function(){
         breakpoints.debugPropertySet(obj, "myNum", "trace");
         obj.myNum = 12345;
         expect(trace).toHaveBeenCalled();
-        expect(trace.calls.mostRecent().args[0]).toEqual("About to set property 'myNum' to 12345 (number) on this object: ");
+        expect(trace.calls.mostRecent().args[0]).toEqual("About to set property 'myNum' to %o ");
+        expect(trace.calls.mostRecent().args[1]).toEqual(12345);
+        expect(trace.calls.mostRecent().args[2]).toEqual(" on this object: ");
+        expect(trace.calls.mostRecent().args[3]).toEqual(obj);
     });
     it("Can show a trace message when a long numeric property is written", function(){
         var obj = {myNum: 0};
         var trace = spyOn(console, "trace")
         breakpoints.debugPropertySet(obj, "myNum", "trace");
-        obj.myNum = 4324234223432423423;
+        obj.myNum = 432423495353284928492304982223432423423;
         expect(trace).toHaveBeenCalled();
-        expect(trace.calls.mostRecent().args[0]).toEqual("About to set property 'myNum' to 4324234223... (number) on this object: ");
+        expect(trace.calls.mostRecent().args[0]).toEqual("About to set property 'myNum' to %o ");
+        expect(trace.calls.mostRecent().args[1]).toEqual(4.3242349535328495e+38);
+        expect(trace.calls.mostRecent().args[2]).toEqual(" on this object: ");
+        expect(trace.calls.mostRecent().args[3]).toEqual(obj);
     });
     it("Can show a trace message when a boolean property is written", function(){
         var obj = {available: false};
@@ -140,15 +152,43 @@ describe("debugPropertySet", function(){
         breakpoints.debugPropertySet(obj, "available", "trace");
         obj.available = true;
         expect(trace).toHaveBeenCalled();
-        expect(trace.calls.mostRecent().args[0]).toEqual("About to set property 'available' to true (boolean) on this object: ");
+        expect(trace.calls.mostRecent().args[0]).toEqual("About to set property 'available' to %o ");
+        expect(trace.calls.mostRecent().args[1]).toEqual(true);
+        expect(trace.calls.mostRecent().args[2]).toEqual(" on this object: ");
+        expect(trace.calls.mostRecent().args[3]).toEqual(obj);
     });
     it("Can show a trace message when an object property is written", function(){
-        var obj = {complexObj: [{ name: "Bob", age: 45 }, { name: "Sophie", age: 23 }]};
+        var obj = {complexObj: {someArray: [{ name: "Bob", age: 45 }, { name: "Sophie", age: 23 }]}};
         var trace = spyOn(console, "trace")
         breakpoints.debugPropertySet(obj, "complexObj", "trace");
-        obj.complexObj = [{ name: "Bob", age: 45 }, { name: "Sophie", age: 23 }, { name: "Lewis", age:15 }];
+        obj.complexObj = {someArray: [{ name: "Bob", age: 45 }, { name: "Sophie", age: 23 }, { name: "Lewis", age:15 }]};
         expect(trace).toHaveBeenCalled();
-        expect(trace.calls.mostRecent().args[0]).toEqual("About to set property 'complexObj' to [omitted] (object) on this object: ");
+        expect(trace.calls.mostRecent().args[0]).toEqual("About to set property 'complexObj' to %o ");
+        expect(trace.calls.mostRecent().args[1]).toEqual(Object({ someArray: [ Object({ name: 'Bob', age: 45 }), Object({ name: 'Sophie', age: 23 }), Object({ name: 'Lewis', age: 15 }) ] }));
+        expect(trace.calls.mostRecent().args[2]).toEqual(" on this object: ");
+        expect(trace.calls.mostRecent().args[3]).toEqual(obj);
+    });
+    it("Can show a trace message when an array property is written", function(){
+        var obj = {myArray: [1,2,3]};
+        var trace = spyOn(console, "trace")
+        breakpoints.debugPropertySet(obj, "myArray", "trace");
+        obj.myArray = [1,2,3,4,5];
+        expect(trace).toHaveBeenCalled();
+        expect(trace.calls.mostRecent().args[0]).toEqual("About to set property 'myArray' to %o ");
+        expect(trace.calls.mostRecent().args[1]).toEqual([1,2,3,4,5]);
+        expect(trace.calls.mostRecent().args[2]).toEqual(" on this object: ");
+        expect(trace.calls.mostRecent().args[3]).toEqual(obj);
+    });
+    it("Can show a trace message when a long array property is written", function(){
+        var obj = {myArray: [1,2,3,4,5]};
+        var trace = spyOn(console, "trace")
+        breakpoints.debugPropertySet(obj, "myArray", "trace");
+        obj.myArray = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15];
+        expect(trace).toHaveBeenCalled();
+        expect(trace.calls.mostRecent().args[0]).toEqual("About to set property 'myArray' to %o ");
+        expect(trace.calls.mostRecent().args[1]).toEqual("[1,2,3,4,5,6,7,8,9,10,11,...]");
+        expect(trace.calls.mostRecent().args[2]).toEqual(" on this object: ");
+        expect(trace.calls.mostRecent().args[3]).toEqual(obj);
     });
 });
 

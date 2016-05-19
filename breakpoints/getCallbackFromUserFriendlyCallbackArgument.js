@@ -51,28 +51,25 @@ function getTraceFunction(predefinedBreakpoint) {
         traceFn = function(debugInfo){
             runWithBreakpointsDisabled(function(){
                 if (debugInfo.accessType == "set") {
+                    const MAX_LENGTH = 25;
+
                     var newPropertyValue = debugInfo.newPropertyValue;
                     var newPropertyType = typeof newPropertyValue;
 
-                    if (newPropertyType === "string" || newPropertyType === "number") {
-                        newPropertyValue = newPropertyValue.toString();
-
-                        if (newPropertyValue.length > 10) {
-                            newPropertyValue = newPropertyValue.substring(0, 10) + "...";
+                    if (newPropertyType === "string") {
+                        if (newPropertyValue.length > MAX_LENGTH) {
+                            newPropertyValue = newPropertyValue.substring(0, 25) + "...";
                         }
+                    } else if (newPropertyValue.constructor === Array) {
+                        var newPropertyValueStr = JSON.stringify(newPropertyValue);
 
-                        if (newPropertyType === "string") {
-                            newPropertyValue = "'" + newPropertyValue + "'";
+                        if (newPropertyValueStr.length > MAX_LENGTH) {
+                            newPropertyValue = newPropertyValueStr.substring(0, 25) + "...]";
                         }
                     }
-                    else if (newPropertyType === "boolean") {
-                        // use existing value
-                    } else {
-                        newPropertyValue = "[omitted]"; // all other types are omitted as they are difficult to represent in console
-                    }
 
-                    console.trace("About to " + debugInfo.accessType + " property '" + debugInfo.propertyName + "' to " + newPropertyValue
-                    + " (" + newPropertyType + ") on this object: ", debugInfo.object)
+                    console.trace("About to " + debugInfo.accessType + " property '" + debugInfo.propertyName + "' to %o ", newPropertyValue,
+                    " on this object: ", debugInfo.object);
                 }
                 else {
                     console.trace("About to " + debugInfo.accessType + " property '" + debugInfo.propertyName + "' on this object: ", debugInfo.object);
