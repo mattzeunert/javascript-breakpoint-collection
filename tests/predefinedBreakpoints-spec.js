@@ -174,10 +174,8 @@ describe("debugPropertySet", function(){
         breakpoints.debugPropertySet(obj, "myArray", "trace");
         obj.myArray = [1,2,3,4,5];
         expect(trace).toHaveBeenCalled();
-        expect(trace.calls.mostRecent().args[0]).toEqual("About to set property 'myArray' to %o ");
-        expect(trace.calls.mostRecent().args[1]).toEqual("[1,2,3,4,5]");
-        expect(trace.calls.mostRecent().args[2]).toEqual(" on this object: ");
-        expect(trace.calls.mostRecent().args[3]).toEqual(obj);
+        expect(trace.calls.mostRecent().args[0]).toEqual("About to set property 'myArray' to [1,2,3,4,5] on this object: ");
+        expect(trace.calls.mostRecent().args[1]).toEqual(obj);
     });
     it("Can show a trace message when a long array property is written", function(){
         var obj = {myArray: [1,2,3,4,5]};
@@ -185,10 +183,17 @@ describe("debugPropertySet", function(){
         breakpoints.debugPropertySet(obj, "myArray", "trace");
         obj.myArray = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15];
         expect(trace).toHaveBeenCalled();
-        expect(trace.calls.mostRecent().args[0]).toEqual("About to set property 'myArray' to %o ");
-        expect(trace.calls.mostRecent().args[1]).toEqual("[1,2,3,4,5,6,7,8,9,10,11,...]");
-        expect(trace.calls.mostRecent().args[2]).toEqual(" on this object: ");
-        expect(trace.calls.mostRecent().args[3]).toEqual(obj);
+        expect(trace.calls.mostRecent().args[0]).toEqual("About to set property 'myArray' to [1,2,3,4,5,6,7,8,9,10,11,...] on this object: ");
+        expect(trace.calls.mostRecent().args[1]).toEqual(obj);
+    });
+    it("Can show a trace message when a complex array property is written", function(){
+        var obj = {myArray: []};
+        var trace = spyOn(console, "trace")
+        breakpoints.debugPropertySet(obj, "myArray", "trace");
+        obj.myArray = [window, undefined, null];
+        expect(trace).toHaveBeenCalled();
+        expect(trace.calls.mostRecent().args[0]).toEqual("About to set property 'myArray' to [[object Window],,] on this object: ");
+        expect(trace.calls.mostRecent().args[1]).toEqual(obj);
     });
 });
 

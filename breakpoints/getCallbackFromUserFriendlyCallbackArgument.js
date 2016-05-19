@@ -33,7 +33,12 @@ function getTraceFunction(predefinedBreakpoint) {
     if (predefinedBreakpoint) {
         if (predefinedBreakpoint.getTraceInfo) {
             traceFn = function(){
-                var traceArgs = predefinedBreakpoint.getTraceInfo.apply(null, arguments);
+                var traceArgs = null;
+
+                try {
+                    traceArgs = predefinedBreakpoint.getTraceInfo.apply(null, arguments);
+                } catch (e) {}
+
                 runWithBreakpointsDisabled(function(){
                     console.trace.apply(console, traceArgs);
                 })
@@ -52,6 +57,7 @@ function getTraceFunction(predefinedBreakpoint) {
             runWithBreakpointsDisabled(function(){
                 if (debugInfo.accessType == "set") {
                     const MAX_LENGTH = 25;
+                    var isArray = false;
 
                     var newPropertyValue = debugInfo.newPropertyValue;
                     var newPropertyType = typeof newPropertyValue;
@@ -61,15 +67,27 @@ function getTraceFunction(predefinedBreakpoint) {
                             newPropertyValue = newPropertyValue.substring(0, 25) + "...";
                         }
                     } else if (newPropertyValue.constructor === Array) {
-                        var newPropertyValue = JSON.stringify(newPropertyValue);
+                        isArray = true;
 
-                        if (newPropertyValue.length > MAX_LENGTH) {
-                            newPropertyValue = newPropertyValue.substring(0, 25) + "...]";
+                        try {
+                            newPropertyValue = JSON.stringify(newPropertyValue);
+
+                            if (newPropertyValue.length > MAX_LENGTH) {
+                                newPropertyValue = newPropertyValue.substring(0, 25) + "...]"
+                            }
+                        } catch(e) {
+                            newPropertyValue = newPropertyValue.toString(); // fallback to a shallow version
+                            newPropertyValue = "[" + newPropertyValue.substring(0, 25) + (newPropertyValue.length > MAX_LENGTH ? "...]" : "]");
                         }
                     }
 
-                    console.trace("About to " + debugInfo.accessType + " property '" + debugInfo.propertyName + "' to %o ", newPropertyValue,
-                    " on this object: ", debugInfo.object);
+                    if (isArray) {
+                        console.trace("About to " + debugInfo.accessType + " property '" + debugInfo.propertyName + "' to " + newPropertyValue +
+                        " on this object: ", debugInfo.object);
+                    } else {
+                        console.trace("About to " + debugInfo.accessType + " property '" + debugInfo.propertyName + "' to %o ", newPropertyValue,
+                        " on this object: ", debugInfo.object);
+                    }
                 }
                 else {
                     console.trace("About to " + debugInfo.accessType + " property '" + debugInfo.propertyName + "' on this object: ", debugInfo.object);
