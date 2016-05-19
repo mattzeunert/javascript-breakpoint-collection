@@ -175,7 +175,7 @@ describe("debugPropertySet", function(){
         obj.myArray = [1,2,3,4,5];
         expect(trace).toHaveBeenCalled();
         expect(trace.calls.mostRecent().args[0]).toEqual("About to set property 'myArray' to %o ");
-        expect(trace.calls.mostRecent().args[1]).toEqual([1,2,3,4,5]);
+        expect(trace.calls.mostRecent().args[1]).toEqual("[1,2,3,4,5]");
         expect(trace.calls.mostRecent().args[2]).toEqual(" on this object: ");
         expect(trace.calls.mostRecent().args[3]).toEqual(obj);
     });

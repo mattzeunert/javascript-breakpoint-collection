@@ -61,10 +61,10 @@ function getTraceFunction(predefinedBreakpoint) {
                             newPropertyValue = newPropertyValue.substring(0, 25) + "...";
                         }
                     } else if (newPropertyValue.constructor === Array) {
-                        var newPropertyValueStr = JSON.stringify(newPropertyValue);
+                        var newPropertyValue = JSON.stringify(newPropertyValue);
 
-                        if (newPropertyValueStr.length > MAX_LENGTH) {
-                            newPropertyValue = newPropertyValueStr.substring(0, 25) + "...]";
+                        if (newPropertyValue.length > MAX_LENGTH) {
+                            newPropertyValue = newPropertyValue.substring(0, 25) + "...]";
                         }
                     }
 
