@@ -34,7 +34,7 @@ Run `node ./dev/update-snippet.js`.
 
 ### Upload to Chrome Web Store
 
-Run `./dev/make-dist-directory.sh` and then upload dist.zip.
+Run `./dev/make-webstore-package.sh` and then upload dist.zip.
 
 ## Releases to update
 

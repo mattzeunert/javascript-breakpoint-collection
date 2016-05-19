@@ -2,7 +2,7 @@
   "name": "JavaScript Breakpoint Collection",
   "manifest_version": 2,
   "version": "1.7",
-  "description": "Find code that is responsible for page behavior.",
+  "description": "Find what code is responsible for page behavior.",
   "content_scripts": [
     {
       "matches": ["http://*/*", "https://*/*", "file://*/*"],
