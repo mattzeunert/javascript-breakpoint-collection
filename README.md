@@ -29,7 +29,7 @@ Example trace message:
 
 ## Snippet
 
-Just paste the contents of this file in the console. [Snippet](https://github.com/mattzeunert/javascript-breakpoint-collection/blob/master/dist/javascript-breakpoint-collection.js)
+Just paste the contents of [this file](https://github.com/mattzeunert/javascript-breakpoint-collection/blob/master/dist/javascript-breakpoint-collection.js) in the console.
 
 ## NPM
 
