@@ -32,8 +32,10 @@ Run `node ./dev/update-bookmarklet.js`.
 
 Run `./dev/make-dist-directory.sh` and then upload dist.zip.
 
-## Other releases to update
+## Releases to update
 
-- bookmarklet
+- Chrome extension
+- Bookmarklet
 - NPM module
-- live demo
+- Live demo
+- Snippet
