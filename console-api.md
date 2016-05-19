@@ -71,4 +71,5 @@ added using JS Breakpoint Collection.
 ## Links
 
 [Bookmarklet](http://www.mattzeunert.com/javascript-breakpoint-collection/bookmarklet.html)  
-[Chrome Extension](https://chrome.google.com/webstore/detail/javascript-breakpoint-col/kgpjjblahlmjlfljfpcneapmeblichbp)
+[Chrome Extension](https://chrome.google.com/webstore/detail/javascript-breakpoint-col/kgpjjblahlmjlfljfpcneapmeblichbp)  
+[Snippet](https://github.com/mattzeunert/javascript-breakpoint-collection/blob/master/dist/javascript-breakpoint-collection.js)

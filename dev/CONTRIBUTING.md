@@ -24,6 +24,10 @@ And run the tests:
 
 Run `node ./dev/update-bookmarklet.js`.
 
+## Update the snippet
+
+Run `node ./dev/update-snippet.js`.
+
 ### Update website
 
 `git subtree push  --prefix gh-pages origin gh-pages`
