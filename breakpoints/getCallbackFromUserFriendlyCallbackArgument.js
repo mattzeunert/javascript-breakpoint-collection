@@ -33,15 +33,15 @@ function getTraceFunction(predefinedBreakpoint) {
     if (predefinedBreakpoint) {
         if (predefinedBreakpoint.getTraceInfo) {
             traceFn = function(){
-                var traceArgs = null;
-
                 try {
-                    traceArgs = predefinedBreakpoint.getTraceInfo.apply(null, arguments);
-                } catch (e) {}
+                    var traceArgs = predefinedBreakpoint.getTraceInfo.apply(null, arguments);
 
-                runWithBreakpointsDisabled(function(){
-                    console.trace.apply(console, traceArgs);
-                })
+                    runWithBreakpointsDisabled(function(){
+                        console.trace.apply(console, traceArgs);
+                    });
+                } catch (err) {
+                    console.error("Generating trace message failed", err);
+                }
             }
         }
         else if (predefinedBreakpoint.traceMessage) {
@@ -54,43 +54,47 @@ function getTraceFunction(predefinedBreakpoint) {
     }
     else {
         traceFn = function(debugInfo){
-            runWithBreakpointsDisabled(function(){
-                if (debugInfo.accessType == "set") {
-                    const MAX_LENGTH = 25;
-                    var isArray = false;
+            runWithBreakpointsDisabled(function() {
+                try {
+                    if (debugInfo.accessType == "set") {
+                        const MAX_LENGTH = 25;
+                        var isArray = false;
 
-                    var newPropertyValue = debugInfo.newPropertyValue;
-                    var newPropertyType = typeof newPropertyValue;
+                        var newPropertyValue = debugInfo.newPropertyValue;
+                        var newPropertyType = typeof newPropertyValue;
 
-                    if (newPropertyType === "string") {
-                        if (newPropertyValue.length > MAX_LENGTH) {
-                            newPropertyValue = newPropertyValue.substring(0, 25) + "...";
-                        }
-                    } else if (newPropertyValue.constructor === Array) {
-                        isArray = true;
-
-                        try {
-                            newPropertyValue = JSON.stringify(newPropertyValue);
-
+                        if (newPropertyType === "string") {
                             if (newPropertyValue.length > MAX_LENGTH) {
-                                newPropertyValue = newPropertyValue.substring(0, 25) + "...]"
+                                newPropertyValue = newPropertyValue.substring(0, 25) + "...";
                             }
-                        } catch(e) {
-                            newPropertyValue = newPropertyValue.toString(); // fallback to a shallow version
-                            newPropertyValue = "[" + newPropertyValue.substring(0, 25) + (newPropertyValue.length > MAX_LENGTH ? "...]" : "]");
+                        } else if (typeof newPropertyValue !== "undefined" && newPropertyValue != null && newPropertyValue.constructor === Array) {
+                            isArray = true;
+
+                            try {
+                                newPropertyValue = JSON.stringify(newPropertyValue);
+
+                                if (newPropertyValue.length > MAX_LENGTH) {
+                                    newPropertyValue = newPropertyValue.substring(0, 25) + "...]"
+                                }
+                            } catch(e) {
+                                newPropertyValue = newPropertyValue.toString(); // fallback to a shallow version
+                                newPropertyValue = "[" + newPropertyValue.substring(0, 25) + (newPropertyValue.length > MAX_LENGTH ? "...]" : "]");
+                            }
+                        }
+
+                        if (isArray) {
+                            console.trace("About to " + debugInfo.accessType + " property '" + debugInfo.propertyName + "' to " + newPropertyValue +
+                            " on this object: ", debugInfo.object);
+                        } else {
+                            console.trace("About to " + debugInfo.accessType + " property '" + debugInfo.propertyName + "' to %o ", newPropertyValue,
+                            " on this object: ", debugInfo.object);
                         }
                     }
-
-                    if (isArray) {
-                        console.trace("About to " + debugInfo.accessType + " property '" + debugInfo.propertyName + "' to " + newPropertyValue +
-                        " on this object: ", debugInfo.object);
-                    } else {
-                        console.trace("About to " + debugInfo.accessType + " property '" + debugInfo.propertyName + "' to %o ", newPropertyValue,
-                        " on this object: ", debugInfo.object);
+                    else {
+                        console.trace("About to " + debugInfo.accessType + " property '" + debugInfo.propertyName + "' on this object: ", debugInfo.object);
                     }
-                }
-                else {
-                    console.trace("About to " + debugInfo.accessType + " property '" + debugInfo.propertyName + "' on this object: ", debugInfo.object);
+                } catch (err) {
+                    console.error("Generating trace message failed", err);
                 }
             })
         }
