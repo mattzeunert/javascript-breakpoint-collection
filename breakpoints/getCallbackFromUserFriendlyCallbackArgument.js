@@ -65,7 +65,9 @@ function getTraceFunction(predefinedBreakpoint) {
                             newPropertyValue = "'" + newPropertyValue + "'";
                         }
                     }
-                    else if (newPropertyType !== "boolean") {
+                    else if (newPropertyType === "boolean") {
+                        // use existing value
+                    } else {
                         newPropertyValue = "[omitted]"; // all other types are omitted as they are difficult to represent in console
                     }
 
