@@ -55,7 +55,7 @@ function getTraceFunction(predefinedBreakpoint) {
     else {
         traceFn = function(debugInfo){
             runWithBreakpointsDisabled(function() {
-                getTraceInfo(debugInfo);
+                showTraceMessageForCustomBreakpoints(debugInfo);
             });
         }
     }
@@ -64,18 +64,20 @@ function getTraceFunction(predefinedBreakpoint) {
     return traceFn;
 }
 
-function getTraceInfo(debugInfo) {
-    const MAX_LENGTH = 25;
+function showTraceMessageForCustomBreakpoints(debugInfo) {
+    var truncate = function(str, isArray) {
+        const MAX_LENGTH = 25;
 
-    var truncate = function(str) {
-        return str.substring(0, MAX_LENGTH) + "...";
+        if (str.length > MAX_LENGTH) {
+            return str.substring(0, MAX_LENGTH) + "..." + (isArray ? "]" : "");
+        }
+        return str;
     };
 
     try {
         var message = "About to " + debugInfo.accessType + " property '" + debugInfo.propertyName + "' ";
 
         if (debugInfo.accessType == "set") {
-            const MAX_LENGTH = 25;
             var newPropertyValue = debugInfo.newPropertyValue;
             var newPropertyType = typeof newPropertyValue;
 
@@ -83,19 +85,14 @@ function getTraceInfo(debugInfo) {
                 newPropertyValue.constructor === Array);
 
             if (newPropertyType === "string") {
-                if (newPropertyValue.length > MAX_LENGTH) {
-                    newPropertyValue = truncate(newPropertyValue);
-                }
+                newPropertyValue = truncate(newPropertyValue, false);
             } else if (isArray) {
                 try {
                     newPropertyValue = JSON.stringify(newPropertyValue);
-
-                    if (newPropertyValue.length > MAX_LENGTH) {
-                        newPropertyValue = truncate(newPropertyValue) + "]";
-                    }
+                    newPropertyValue = truncate(newPropertyValue, true);
                 } catch(e) {
                     newPropertyValue = newPropertyValue.toString(); // fallback to a shallow version
-                    newPropertyValue = "[" + (newPropertyValue.length > MAX_LENGTH ? truncate(newPropertyValue) : newPropertyValue) + "]";
+                    newPropertyValue = "[" + truncate(newPropertyValue, true) + "]";
                 }
             }
 
