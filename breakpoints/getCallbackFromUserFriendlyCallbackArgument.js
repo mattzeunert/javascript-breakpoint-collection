@@ -92,7 +92,7 @@ function showTraceMessageForCustomBreakpoints(debugInfo) {
                     newPropertyValue = truncate(newPropertyValue, true);
                 } catch(e) {
                     newPropertyValue = newPropertyValue.toString(); // fallback to a shallow version
-                    newPropertyValue = "[" + truncate(newPropertyValue, true) + "]";
+                    newPropertyValue = "[" + truncate(newPropertyValue, false) + "]";
                 }
             }
 
