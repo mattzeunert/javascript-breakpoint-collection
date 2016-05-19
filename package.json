@@ -2,7 +2,7 @@
   "name": "javascript-breakpoint-collection",
   "version": "1.7.0",
   "description": "",
-  "main": "extension/build/javascript-breakpoint-collection.js",
+  "main": "dist/node.js",
   "scripts": {
     "test": "karma start",
     "build": "webpack",

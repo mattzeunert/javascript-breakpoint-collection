@@ -1,2 +1,4 @@
 node_modules/*
 extension/build/*
+dist/node.js
+dist/node.js.map
