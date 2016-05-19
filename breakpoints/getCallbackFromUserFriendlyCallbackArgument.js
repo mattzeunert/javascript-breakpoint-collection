@@ -33,10 +33,15 @@ function getTraceFunction(predefinedBreakpoint) {
     if (predefinedBreakpoint) {
         if (predefinedBreakpoint.getTraceInfo) {
             traceFn = function(){
-                var traceArgs = predefinedBreakpoint.getTraceInfo.apply(null, arguments);
-                runWithBreakpointsDisabled(function(){
-                    console.trace.apply(console, traceArgs);
-                })
+                try {
+                    var traceArgs = predefinedBreakpoint.getTraceInfo.apply(null, arguments);
+
+                    runWithBreakpointsDisabled(function(){
+                        console.trace.apply(console, traceArgs);
+                    });
+                } catch (err) {
+                    console.error("Generating trace message failed", err);
+                }
             }
         }
         else if (predefinedBreakpoint.traceMessage) {
@@ -49,12 +54,59 @@ function getTraceFunction(predefinedBreakpoint) {
     }
     else {
         traceFn = function(debugInfo){
-            runWithBreakpointsDisabled(function(){
-                console.trace("About to " + debugInfo.accessType + " property '" + debugInfo.propertyName + "' on this object: ", debugInfo.object)
-            })
+            runWithBreakpointsDisabled(function() {
+                showTraceMessageForCustomBreakpoints(debugInfo);
+            });
         }
     }
 
-    traceFn.callbackType = "trace"
-    return traceFn
+    traceFn.callbackType = "trace";
+    return traceFn;
+}
+
+function showTraceMessageForCustomBreakpoints(debugInfo) {
+    var truncate = function(str, isArray) {
+        const MAX_LENGTH = 25;
+
+        if (str.length > MAX_LENGTH) {
+            return str.substring(0, MAX_LENGTH) + "..." + (isArray ? "]" : "");
+        }
+        return str;
+    };
+
+    try {
+        var message = "About to " + debugInfo.accessType + " property '" + debugInfo.propertyName + "' ";
+
+        if (debugInfo.accessType == "set") {
+            var newPropertyValue = debugInfo.newPropertyValue;
+            var newPropertyType = typeof newPropertyValue;
+
+            var isArray = (newPropertyValue !== undefined && newPropertyValue != null &&
+                newPropertyValue.constructor === Array);
+
+            if (newPropertyType === "string") {
+                newPropertyValue = truncate(newPropertyValue, false);
+            } else if (isArray) {
+                try {
+                    newPropertyValue = JSON.stringify(newPropertyValue);
+                    newPropertyValue = truncate(newPropertyValue, true);
+                } catch(e) {
+                    newPropertyValue = newPropertyValue.toString(); // fallback to a shallow version
+                    newPropertyValue = "[" + truncate(newPropertyValue, false) + "]";
+                }
+            }
+
+            if (isArray) {
+                console.trace(message + "to " + newPropertyValue + " on this object: ", debugInfo.object);
+            } else {
+                console.trace(message + "to %o ", newPropertyValue," on this object: ", debugInfo.object);
+            }
+        }
+        else {
+            console.trace(message + "on this object: ", debugInfo.object);
+        }
+    } catch (err) {
+        // in case something else breaks the trace message, we don't want to break the whole app
+        console.error("Generating trace message failed", err);
+    }
 }
