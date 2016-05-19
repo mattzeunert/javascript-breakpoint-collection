@@ -99,9 +99,57 @@ describe("debugPropertySet", function(){
         var obj = {hi: "there"};
         var fn = jasmine.createSpy();
         breakpoints.debugPropertySet(obj, "hi", fn);
-        obj.hi = "hello"
+        obj.hi = "hello";
         expect(fn).toHaveBeenCalled();
     })
+    it("Can show a trace message when a string property is written", function(){
+        var obj = {hi: "there"};
+        var trace = spyOn(console, "trace")
+        breakpoints.debugPropertySet(obj, "hi", "trace");
+        obj.hi = "Bob";
+        expect(trace).toHaveBeenCalled();
+        expect(trace.calls.mostRecent().args[0]).toEqual("About to set property 'hi' to 'Bob' (string) on this object: ");
+    });
+    it("Can show a trace message when a long string property is written", function(){
+        var obj = {hi: "there"};
+        var trace = spyOn(console, "trace")
+        breakpoints.debugPropertySet(obj, "hi", "trace");
+        obj.hi = "Apu Nahasapeemapetilon";
+        expect(trace).toHaveBeenCalled();
+        expect(trace.calls.mostRecent().args[0]).toEqual("About to set property 'hi' to 'Apu Nahasa...' (string) on this object: ");
+    });
+    it("Can show a trace message when a numeric property is written", function(){
+        var obj = {myNum: 0};
+        var trace = spyOn(console, "trace")
+        breakpoints.debugPropertySet(obj, "myNum", "trace");
+        obj.myNum = 12345;
+        expect(trace).toHaveBeenCalled();
+        expect(trace.calls.mostRecent().args[0]).toEqual("About to set property 'myNum' to 12345 (number) on this object: ");
+    });
+    it("Can show a trace message when a long numeric property is written", function(){
+        var obj = {myNum: 0};
+        var trace = spyOn(console, "trace")
+        breakpoints.debugPropertySet(obj, "myNum", "trace");
+        obj.myNum = 4324234223432423423;
+        expect(trace).toHaveBeenCalled();
+        expect(trace.calls.mostRecent().args[0]).toEqual("About to set property 'myNum' to 4324234223... (number) on this object: ");
+    });
+    it("Can show a trace message when a boolean property is written", function(){
+        var obj = {available: false};
+        var trace = spyOn(console, "trace")
+        breakpoints.debugPropertySet(obj, "available", "trace");
+        obj.available = true;
+        expect(trace).toHaveBeenCalled();
+        expect(trace.calls.mostRecent().args[0]).toEqual("About to set property 'available' to true (boolean) on this object: ");
+    });
+    it("Can show a trace message when an object property is written", function(){
+        var obj = {complexObj: [{ name: "Bob", age: 45 }, { name: "Sophie", age: 23 }]};
+        var trace = spyOn(console, "trace")
+        breakpoints.debugPropertySet(obj, "complexObj", "trace");
+        obj.complexObj = [{ name: "Bob", age: 45 }, { name: "Sophie", age: 23 }, { name: "Lewis", age:15 }];
+        expect(trace).toHaveBeenCalled();
+        expect(trace.calls.mostRecent().args[0]).toEqual("About to set property 'complexObj' to [omitted] (object) on this object: ");
+    });
 });
 
 describe("debugPropertyCall", function(){

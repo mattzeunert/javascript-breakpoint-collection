@@ -50,7 +50,31 @@ function getTraceFunction(predefinedBreakpoint) {
     else {
         traceFn = function(debugInfo){
             runWithBreakpointsDisabled(function(){
-                console.trace("About to " + debugInfo.accessType + " property '" + debugInfo.propertyName + "' on this object: ", debugInfo.object)
+                if (debugInfo.accessType == "set") {
+                    var newPropertyValue = debugInfo.newPropertyValue;
+                    var newPropertyType = typeof newPropertyValue;
+
+                    if (newPropertyType === "string" || newPropertyType === "number") {
+                        newPropertyValue = newPropertyValue.toString();
+
+                        if (newPropertyValue.length > 10) {
+                            newPropertyValue = newPropertyValue.substring(0, 10) + "...";
+                        }
+
+                        if (newPropertyType === "string") {
+                            newPropertyValue = "'" + newPropertyValue + "'";
+                        }
+                    }
+                    else if (newPropertyType !== "boolean") {
+                        newPropertyValue = "[omitted]"; // all other types are omitted as they are difficult to represent in console
+                    }
+
+                    console.trace("About to " + debugInfo.accessType + " property '" + debugInfo.propertyName + "' to " + newPropertyValue
+                    + " (" + newPropertyType + ") on this object: ", debugInfo.object)
+                }
+                else {
+                    console.trace("About to " + debugInfo.accessType + " property '" + debugInfo.propertyName + "' on this object: ", debugInfo.object);
+                }
             })
         }
     }
