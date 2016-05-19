@@ -27,6 +27,10 @@ Example trace message:
 
 <a href="http://www.mattzeunert.com/javascript-breakpoint-collection/bookmarklet.html">Get the bookmarklet</a>
 
+## Snippet
+
+Just paste the contents of this file in the console. [Snippet](https://github.com/mattzeunert/javascript-breakpoint-collection/blob/master/dist/javascript-breakpoint-collection.js)
+
 ## NPM
 
 Download the module from NPM:
