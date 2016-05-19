@@ -3,7 +3,7 @@ var webpack = require('webpack');
 
 var toBuild = [
     {
-        entry: ["devtools-panel.js", "./devtools-panel.js"],
+        entry: ["devtools-panel", "./devtools-panel.js"],
         path: __dirname + "/extension/build",
         libraryTarget: "var"
     },
