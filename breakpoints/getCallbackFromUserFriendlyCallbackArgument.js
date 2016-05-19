@@ -65,8 +65,10 @@ function getTraceFunction(predefinedBreakpoint) {
 }
 
 function getTraceInfo(debugInfo) {
+    const MAX_LENGTH = 25;
+
     var truncate = function(str) {
-        return str.substring(0, 25) + "...";
+        return str.substring(0, MAX_LENGTH) + "...";
     };
 
     try {
