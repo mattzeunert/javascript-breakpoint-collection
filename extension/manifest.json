@@ -1,7 +1,7 @@
 {
   "name": "JavaScript Breakpoint Collection",
   "manifest_version": 2,
-  "version": "1.7",
+  "version": "1.7.1",
   "description": "Find what code is responsible for page behavior.",
   "content_scripts": [
     {
@@ -10,7 +10,7 @@
       "js": ["content-script.js"]
     }
   ],
-   "background": {
+  "background": {
     "scripts": ["background.js"]
   },
   "icons": {

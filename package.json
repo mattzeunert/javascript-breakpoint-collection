@@ -18,8 +18,7 @@
     "url": "https://github.com/mattzeunert/javascript-breakpoint-collection/issues"
   },
   "homepage": "https://github.com/mattzeunert/javascript-breakpoint-collection#readme",
-  "dependencies": {
-  },
+  "dependencies": {},
   "devDependencies": {
     "babel-core": "^6.7.4",
     "babel-loader": "^6.2.4",
